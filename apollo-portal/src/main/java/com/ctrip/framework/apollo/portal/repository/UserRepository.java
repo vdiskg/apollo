@@ -15,6 +15,8 @@ public interface UserRepository extends PagingAndSortingRepository<UserPO, Long>
 
   List<UserPO> findByUsernameLikeAndEnabled(String username, int enabled);
 
+  List<UserPO> findByPreferredUsernameLikeAndEnabled(String username, int enabled);
+
   UserPO findByUsername(String username);
 
   List<UserPO> findByUsernameIn(List<String> userNames);

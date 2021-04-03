@@ -22,6 +22,8 @@ public class UserPO {
   private long id;
   @Column(name = "Username", nullable = false)
   private String username;
+  @Column(name = "PreferredUsername", nullable = false)
+  private String preferredUsername;
   @Column(name = "Password", nullable = false)
   private String password;
   @Column(name = "Email", nullable = false)
@@ -43,6 +45,14 @@ public class UserPO {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  public String getPreferredUsername() {
+    return preferredUsername;
+  }
+
+  public void setPreferredUsername(String preferredUsername) {
+    this.preferredUsername = preferredUsername;
   }
 
   public String getEmail() {
@@ -71,7 +81,7 @@ public class UserPO {
 
   public UserInfo toUserInfo() {
     UserInfo userInfo = new UserInfo();
-    userInfo.setName(this.getUsername());
+    userInfo.setName(this.getPreferredUsername());
     userInfo.setUserId(this.getUsername());
     userInfo.setEmail(this.getEmail());
     return userInfo;

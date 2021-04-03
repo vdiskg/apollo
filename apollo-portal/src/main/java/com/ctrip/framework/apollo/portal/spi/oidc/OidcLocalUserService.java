@@ -5,6 +5,7 @@ import com.ctrip.framework.apollo.portal.entity.bo.UserInfo;
 import com.ctrip.framework.apollo.portal.entity.po.UserPO;
 import com.ctrip.framework.apollo.portal.repository.UserRepository;
 import com.ctrip.framework.apollo.portal.spi.UserService;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,8 +46,11 @@ public class OidcLocalUserService implements UserService {
     UserPO managedUser = userRepository.findByUsername(newUserInfo.getUserId());
     if (!StringUtils.isBlank(newUserInfo.getEmail())) {
       managedUser.setEmail(newUserInfo.getEmail());
-      userRepository.save(managedUser);
     }
+    if (!StringUtils.isBlank(newUserInfo.getName())) {
+      managedUser.setPreferredUsername(newUserInfo.getName());
+    }
+    userRepository.save(managedUser);
   }
 
   /**
@@ -60,17 +64,30 @@ public class OidcLocalUserService implements UserService {
 
   @Override
   public List<UserInfo> searchUsers(String keyword, int offset, int limit) {
-    List<UserPO> users;
-    if (StringUtils.isEmpty(keyword)) {
-      users = userRepository.findFirst20ByEnabled(1);
-    } else {
-      users = userRepository.findByUsernameLikeAndEnabled("%" + keyword + "%", 1);
-    }
+    List<UserPO> users = this.findUsers(keyword);
     if (CollectionUtils.isEmpty(users)) {
       return Collections.emptyList();
     }
     return users.stream().map(UserPO::toUserInfo)
         .collect(Collectors.toList());
+  }
+
+  private List<UserPO> findUsers(String keyword) {
+    if (StringUtils.isEmpty(keyword)) {
+      return userRepository.findFirst20ByEnabled(1);
+    }
+    List<UserPO> users = new ArrayList<>();
+    List<UserPO> byUsername = userRepository
+        .findByUsernameLikeAndEnabled("%" + keyword + "%", 1);
+    List<UserPO> byPreferredUsername = userRepository
+        .findByPreferredUsernameLikeAndEnabled("%" + keyword + "%", 1);
+    if (!CollectionUtils.isEmpty(byUsername)) {
+      users.addAll(byUsername);
+    }
+    if (!CollectionUtils.isEmpty(byPreferredUsername)) {
+      users.addAll(byPreferredUsername);
+    }
+    return users;
   }
 
   @Override
