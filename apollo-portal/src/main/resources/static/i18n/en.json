@@ -23,6 +23,7 @@
   "Common.Namespace": "Namespace",
   "Common.AppName": "App Name",
   "Common.AppOwner": "App Owner",
+  "Common.AppOwnerPreferredUsername": "App Owner Preferred Username",
   "Common.AppOwnerLong": "App Owner",
   "Common.AppAdmin": "App Administrators",
   "Common.ClusterName": "Cluster Name",

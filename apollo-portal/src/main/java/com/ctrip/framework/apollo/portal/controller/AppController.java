@@ -1,14 +1,17 @@
 package com.ctrip.framework.apollo.portal.controller;
 
 
+import com.ctrip.framework.apollo.common.dto.AppDTO;
 import com.ctrip.framework.apollo.common.dto.PageDTO;
 import com.ctrip.framework.apollo.common.entity.App;
 import com.ctrip.framework.apollo.common.exception.BadRequestException;
 import com.ctrip.framework.apollo.common.http.MultiResponseEntity;
 import com.ctrip.framework.apollo.common.http.RichResponseEntity;
+import com.ctrip.framework.apollo.common.utils.BeanUtils;
 import com.ctrip.framework.apollo.core.ConfigConsts;
 import com.ctrip.framework.apollo.portal.environment.Env;
 import com.ctrip.framework.apollo.portal.component.PortalSettings;
+import com.ctrip.framework.apollo.portal.entity.bo.UserInfo;
 import com.ctrip.framework.apollo.portal.entity.model.AppModel;
 import com.ctrip.framework.apollo.portal.entity.po.Role;
 import com.ctrip.framework.apollo.portal.entity.vo.EnvClusterInfo;
@@ -19,6 +22,7 @@ import com.ctrip.framework.apollo.portal.service.AppService;
 import com.ctrip.framework.apollo.portal.service.RoleInitializationService;
 import com.ctrip.framework.apollo.portal.service.RolePermissionService;
 import com.ctrip.framework.apollo.portal.spi.UserInfoHolder;
+import com.ctrip.framework.apollo.portal.spi.UserService;
 import com.ctrip.framework.apollo.portal.util.RoleUtils;
 import com.google.common.collect.Sets;
 import org.springframework.context.ApplicationEventPublisher;
@@ -55,6 +59,7 @@ public class AppController {
   private final ApplicationEventPublisher publisher;
   private final RolePermissionService rolePermissionService;
   private final RoleInitializationService roleInitializationService;
+  private final UserService userService;
 
   public AppController(
       final UserInfoHolder userInfoHolder,
@@ -62,13 +67,15 @@ public class AppController {
       final PortalSettings portalSettings,
       final ApplicationEventPublisher publisher,
       final RolePermissionService rolePermissionService,
-      final RoleInitializationService roleInitializationService) {
+      final RoleInitializationService roleInitializationService,
+      final UserService userService) {
     this.userInfoHolder = userInfoHolder;
     this.appService = appService;
     this.portalSettings = portalSettings;
     this.publisher = publisher;
     this.rolePermissionService = rolePermissionService;
     this.roleInitializationService = roleInitializationService;
+    this.userService = userService;
   }
 
   @GetMapping
@@ -166,9 +173,14 @@ public class AppController {
   }
 
   @GetMapping("/{appId:.+}")
-  public App load(@PathVariable String appId) {
-
-    return appService.load(appId);
+  public AppDTO load(@PathVariable String appId) {
+    App app = appService.load(appId);
+    AppDTO appDto = BeanUtils.transform(AppDTO.class, app);
+    UserInfo userInfo = userService.findByUserId(app.getOwnerName());
+    if (userInfo != null) {
+      appDto.setOwnerPreferredUsername(userInfo.getName());
+    }
+    return appDto;
   }
 
 
