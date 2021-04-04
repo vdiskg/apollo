@@ -47,4 +47,5 @@ ALTER TABLE `UserRole`
     MODIFY COLUMN `DataChange_LastModifiedBy` VARCHAR(64) DEFAULT '' COMMENT '最后修改人邮箱前缀';
 
 ALTER TABLE `Users`
-    ADD COLUMN `PreferredUsername` varchar(512) NOT NULL DEFAULT 'default' COMMENT '用户昵称' AFTER `Username`;
+    ADD COLUMN `PreferredUsername` varchar(512) NOT NULL DEFAULT 'default' COMMENT '用户名称' AFTER `Password`;
+UPDATE `Users` SET `PreferredUsername`=`Username` WHERE `PreferredUsername` = 'default';
