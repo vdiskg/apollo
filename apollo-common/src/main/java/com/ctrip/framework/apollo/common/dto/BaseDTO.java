@@ -9,6 +9,10 @@ public class BaseDTO {
 
   protected String dataChangeLastModifiedBy;
 
+  protected String dataChangeCreatedByPreferredUsername;
+
+  protected String dataChangeLastModifiedByPreferredUsername;
+
   protected Date dataChangeCreatedTime;
 
   protected Date dataChangeLastModifiedTime;
@@ -27,6 +31,24 @@ public class BaseDTO {
 
   public void setDataChangeLastModifiedBy(String dataChangeLastModifiedBy) {
     this.dataChangeLastModifiedBy = dataChangeLastModifiedBy;
+  }
+
+  public String getDataChangeCreatedByPreferredUsername() {
+    return dataChangeCreatedByPreferredUsername;
+  }
+
+  public void setDataChangeCreatedByPreferredUsername(
+      String dataChangeCreatedByPreferredUsername) {
+    this.dataChangeCreatedByPreferredUsername = dataChangeCreatedByPreferredUsername;
+  }
+
+  public String getDataChangeLastModifiedByPreferredUsername() {
+    return dataChangeLastModifiedByPreferredUsername;
+  }
+
+  public void setDataChangeLastModifiedByPreferredUsername(
+      String dataChangeLastModifiedByPreferredUsername) {
+    this.dataChangeLastModifiedByPreferredUsername = dataChangeLastModifiedByPreferredUsername;
   }
 
   public Date getDataChangeCreatedTime() {
