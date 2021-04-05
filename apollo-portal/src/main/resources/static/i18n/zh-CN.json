@@ -23,7 +23,6 @@
   "Common.Namespace": "Namespace",
   "Common.AppName": "应用名称",
   "Common.AppOwner": "负责人",
-  "Common.AppOwnerPreferredUsername": "负责人用户名",
   "Common.AppOwnerLong": "应用负责人",
   "Common.AppAdmin": "项目管理员",
   "Common.ClusterName": "集群名称",
