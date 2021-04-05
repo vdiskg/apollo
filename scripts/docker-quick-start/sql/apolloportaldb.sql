@@ -317,9 +317,9 @@ VALUES
     ('configView.memberOnly.envs', 'dev', '只对项目成员显示配置信息的环境列表，多个env以英文逗号分隔'),
     ('apollo.portal.meta.servers', '{}', '各环境Meta Service列表');
 
-INSERT INTO `Users` (`Username`, `Password`, `Email`, `Enabled`)
+INSERT INTO `Users` (`Username`, `Password`, `PreferredUsername`, `Email`, `Enabled`)
 VALUES
-	('apollo', '$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo@acme.com', 1);
+    ('apollo', '$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo', 'apollo@acme.com', 1);
 
 INSERT INTO `Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
 
