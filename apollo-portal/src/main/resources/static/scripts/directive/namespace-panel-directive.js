@@ -460,10 +460,6 @@ function directive($window, $translate, toastr, AppUtil, EventManager, Permissio
                         for (var i = 0; i < result.length; i++) {
                             //to json
                             result[i].changeSets = JSON.parse(result[i].changeSets);
-                            result[i].dataChangeCreatedByInfo = result[i].dataChangeCreatedByPreferredUsername
-                                + '(' + result[i].dataChangeCreatedBy + ')';
-                            result[i].dataChangeLastModifiedByInfo = result[i].dataChangeLastModifiedByPreferredUsername
-                                + '(' + result[i].dataChangeLastModifiedBy + ')';
                             namespace.commits.push(result[i]);
                         }
                         namespace.commitPage += 1;

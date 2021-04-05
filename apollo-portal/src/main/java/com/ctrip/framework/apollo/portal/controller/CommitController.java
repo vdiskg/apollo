@@ -3,7 +3,6 @@ package com.ctrip.framework.apollo.portal.controller;
 import com.ctrip.framework.apollo.common.dto.CommitDTO;
 import com.ctrip.framework.apollo.common.utils.PreferredUsernameUtil;
 import com.ctrip.framework.apollo.portal.component.PermissionValidator;
-import com.ctrip.framework.apollo.portal.entity.bo.UserInfo;
 import com.ctrip.framework.apollo.portal.environment.Env;
 import com.ctrip.framework.apollo.portal.service.CommitService;
 import com.ctrip.framework.apollo.portal.spi.UserService;
@@ -22,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Validated
 @RestController
@@ -54,24 +52,12 @@ public class CommitController {
       return Collections.emptyList();
     }
     Set<String> operatorIdSet = PreferredUsernameUtil.extractOperatorId(dtoList);
-    Map<String, String> preferredUsernameMap = this
-        .findPreferredUsernameMap(new ArrayList<>(operatorIdSet));
+    Map<String, String> preferredUsernameMap = userService
+        .findPreferredUsernameMapByUserIds(new ArrayList<>(operatorIdSet));
     if (CollectionUtils.isEmpty(preferredUsernameMap)) {
       return dtoList;
     }
     dtoList.forEach(dto -> PreferredUsernameUtil.setPreferredUsername(dto, preferredUsernameMap));
     return dtoList;
-  }
-
-  private Map<String, String> findPreferredUsernameMap(List<String> userIds) {
-    if (CollectionUtils.isEmpty(userIds)) {
-      return Collections.emptyMap();
-    }
-    List<UserInfo> userInfoList = userService.findByUserIds(userIds);
-    if (CollectionUtils.isEmpty(userInfoList)) {
-      return Collections.emptyMap();
-    }
-    return userInfoList.stream()
-        .collect(Collectors.toMap(UserInfo::getUserId, UserInfo::getName));
   }
 }

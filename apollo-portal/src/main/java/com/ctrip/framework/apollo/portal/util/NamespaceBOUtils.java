@@ -1,5 +1,6 @@
 package com.ctrip.framework.apollo.portal.util;
 
+import com.ctrip.framework.apollo.common.utils.PreferredUsernameUtil;
 import com.ctrip.framework.apollo.core.ConfigConsts;
 import com.ctrip.framework.apollo.core.enums.ConfigFileFormat;
 import com.ctrip.framework.apollo.core.utils.PropertiesUtil;
@@ -7,8 +8,14 @@ import com.ctrip.framework.apollo.portal.controller.ConfigsExportController;
 import com.ctrip.framework.apollo.portal.entity.bo.ItemBO;
 import com.ctrip.framework.apollo.portal.entity.bo.NamespaceBO;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author wxq
@@ -69,4 +76,31 @@ public class NamespaceBOUtils {
     return configFileContent;
   }
 
+  public static Set<String> extractOperatorId(NamespaceBO namespace) {
+    if (namespace == null) {
+      return Collections.emptySet();
+    }
+    List<ItemBO> items = namespace.getItems();
+    if (CollectionUtils.isEmpty(items)) {
+      return Collections.emptySet();
+    }
+    return items.stream()
+        .map(ItemBO::getItem)
+        .map(PreferredUsernameUtil::extractOperatorId)
+        .flatMap(Collection::stream)
+        .collect(Collectors.toSet());
+  }
+
+  public static void setPreferredUsername(NamespaceBO namespace,
+      Map<String, String> preferredUsernameMap) {
+    if (namespace == null) {
+      return;
+    }
+    List<ItemBO> items = namespace.getItems();
+    if (CollectionUtils.isEmpty(items)) {
+      return;
+    }
+    items.forEach(itemBO -> PreferredUsernameUtil
+        .setPreferredUsername(itemBO.getItem(), preferredUsernameMap));
+  }
 }

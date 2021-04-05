@@ -53,6 +53,9 @@ public class PreferredUsernameUtil {
    */
   public static void setPreferredUsername(BaseDTO dto,
       Map<String, String> preferredUsernameMap) {
+    if (dto == null) {
+      return;
+    }
     if (CollectionUtils.isEmpty(preferredUsernameMap)) {
       return;
     }
