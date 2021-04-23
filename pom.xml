@@ -131,6 +131,7 @@
 		<module>apollo-buildtools</module>
 		<module>apollo-core</module>
 		<module>apollo-client</module>
+		<module>apollo-client-config-data</module>
 		<module>apollo-common</module>
 		<module>apollo-biz</module>
 		<module>apollo-configservice</module>
