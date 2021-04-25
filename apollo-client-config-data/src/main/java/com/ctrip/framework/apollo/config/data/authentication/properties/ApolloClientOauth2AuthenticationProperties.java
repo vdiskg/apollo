@@ -6,7 +6,7 @@ package com.ctrip.framework.apollo.config.data.authentication.properties;
 public class ApolloClientOauth2AuthenticationProperties {
 
   /**
-   * enable oauth2 authentication in webClient
+   * enable oauth2 authentication
    */
   private Boolean enabled = false;
 

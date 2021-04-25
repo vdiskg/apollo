@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
 public class ApolloClientHttpBasicAuthenticationProperties implements InitializingBean {
 
   /**
-   * enable http-basic authentication in webClient
+   * enable http-basic authentication
    */
   private Boolean enabled = false;
 
