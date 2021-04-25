@@ -2,8 +2,11 @@ package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
-import com.ctrip.framework.apollo.config.data.http.WebClientFactory;
-import com.ctrip.framework.apollo.config.data.injector.CustomHttpClientInjectorCustomizer;
+import com.ctrip.framework.apollo.config.data.authentication.ApolloClientAuthenticationPropertiesFactory;
+import com.ctrip.framework.apollo.config.data.authentication.oauth2.ApolloClientAuthorizedClientManagerFactory;
+import com.ctrip.framework.apollo.config.data.authentication.oauth2.ApolloClientReactiveAuthorizedClientManagerFactory;
+import com.ctrip.framework.apollo.config.data.webclient.WebClientFactory;
+import com.ctrip.framework.apollo.config.data.webclient.injector.CustomHttpClientInjectorCustomizer;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
 import com.ctrip.framework.apollo.util.factory.PropertiesFactory;

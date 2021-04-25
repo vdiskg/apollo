@@ -1,4 +1,4 @@
-package com.ctrip.framework.apollo.config.data.http;
+package com.ctrip.framework.apollo.config.data.webclient;
 
 import com.ctrip.framework.apollo.exceptions.ApolloConfigException;
 import com.ctrip.framework.apollo.exceptions.ApolloConfigStatusCodeException;

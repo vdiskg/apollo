@@ -1,4 +1,4 @@
-package com.ctrip.framework.apollo.config.data.http.util;
+package com.ctrip.framework.apollo.config.data.util;
 
 import org.springframework.boot.WebApplicationType;
 import org.springframework.util.ClassUtils;

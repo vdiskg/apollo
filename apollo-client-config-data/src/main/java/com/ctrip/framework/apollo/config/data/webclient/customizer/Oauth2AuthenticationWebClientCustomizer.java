@@ -1,4 +1,4 @@
-package com.ctrip.framework.apollo.config.data.http.customizer;
+package com.ctrip.framework.apollo.config.data.webclient.customizer;
 
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;

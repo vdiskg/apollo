@@ -1,13 +1,13 @@
-package com.ctrip.framework.apollo.config.data.http.properties;
+package com.ctrip.framework.apollo.config.data.authentication.properties;
 
-import com.ctrip.framework.apollo.config.data.http.filter.HttpBasicAuthenticationExchangeFilterFunction;
+import com.ctrip.framework.apollo.config.data.webclient.filter.HttpBasicAuthenticationExchangeFilterFunction;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloWebClientHttpBasicAuthenticationProperties implements InitializingBean {
+public class ApolloClientHttpBasicAuthenticationProperties implements InitializingBean {
 
   /**
    * enable http-basic authentication in webClient
@@ -101,7 +101,7 @@ public class ApolloWebClientHttpBasicAuthenticationProperties implements Initial
 
   @Override
   public String toString() {
-    return "ApolloWebClientHttpBasicAuthenticationProperties{" +
+    return "ApolloClientHttpBasicAuthenticationProperties{" +
         "enabled=" + enabled +
         ", username='" + username + '\'' +
         ", password='" + password + '\'' +

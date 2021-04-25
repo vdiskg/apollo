@@ -1,9 +1,9 @@
-package com.ctrip.framework.apollo.config.data.http.properties;
+package com.ctrip.framework.apollo.config.data.authentication.properties;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloWebClientOauth2AuthenticationProperties {
+public class ApolloClientOauth2AuthenticationProperties {
 
   /**
    * enable oauth2 authentication in webClient
@@ -36,7 +36,7 @@ public class ApolloWebClientOauth2AuthenticationProperties {
 
   @Override
   public String toString() {
-    return "ApolloWebClientOauth2AuthenticationProperties{" +
+    return "ApolloClientOauth2AuthenticationProperties{" +
         "enabled=" + enabled +
         ", defaultClientRegistrationId='" + defaultClientRegistrationId + '\'' +
         '}';

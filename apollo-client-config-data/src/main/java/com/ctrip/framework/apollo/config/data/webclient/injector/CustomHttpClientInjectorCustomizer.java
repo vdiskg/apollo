@@ -1,6 +1,6 @@
-package com.ctrip.framework.apollo.config.data.injector;
+package com.ctrip.framework.apollo.config.data.webclient.injector;
 
-import com.ctrip.framework.apollo.config.data.http.WebClientHttpClient;
+import com.ctrip.framework.apollo.config.data.webclient.WebClientHttpClient;
 import com.ctrip.framework.apollo.core.spi.Ordered;
 import com.ctrip.framework.apollo.spi.ApolloInjectorCustomizer;
 import org.springframework.web.reactive.function.client.WebClient;

@@ -1,4 +1,4 @@
-package com.ctrip.framework.apollo.config.data.http.filter;
+package com.ctrip.framework.apollo.config.data.webclient.filter;
 
 import java.nio.charset.Charset;
 import org.springframework.http.HttpHeaders;

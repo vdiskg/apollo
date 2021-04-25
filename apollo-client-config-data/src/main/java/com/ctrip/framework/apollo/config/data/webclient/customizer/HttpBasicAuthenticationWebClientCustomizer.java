@@ -1,6 +1,6 @@
-package com.ctrip.framework.apollo.config.data.http.customizer;
+package com.ctrip.framework.apollo.config.data.webclient.customizer;
 
-import com.ctrip.framework.apollo.config.data.http.filter.HttpBasicAuthenticationExchangeFilterFunction;
+import com.ctrip.framework.apollo.config.data.webclient.filter.HttpBasicAuthenticationExchangeFilterFunction;
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
 import org.springframework.web.reactive.function.client.WebClient;
 
