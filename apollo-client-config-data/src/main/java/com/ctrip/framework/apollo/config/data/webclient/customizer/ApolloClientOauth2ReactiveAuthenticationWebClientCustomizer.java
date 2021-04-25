@@ -7,11 +7,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class Oauth2ReactiveAuthenticationWebClientCustomizer implements WebClientCustomizer {
+public class ApolloClientOauth2ReactiveAuthenticationWebClientCustomizer implements WebClientCustomizer {
 
     private final ServerOAuth2AuthorizedClientExchangeFilterFunction filterFunction;
 
-    public Oauth2ReactiveAuthenticationWebClientCustomizer(ServerOAuth2AuthorizedClientExchangeFilterFunction filterFunction) {
+    public ApolloClientOauth2ReactiveAuthenticationWebClientCustomizer(ServerOAuth2AuthorizedClientExchangeFilterFunction filterFunction) {
         this.filterFunction = filterFunction;
     }
 

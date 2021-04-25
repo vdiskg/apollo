@@ -6,7 +6,7 @@ import org.springframework.util.ClassUtils;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class WebApplicationTypeUtil {
+public class ApolloClientWebApplicationTypeUtil {
 
   private static final String[] SERVLET_INDICATOR_CLASSES = {"javax.servlet.Servlet",
       "org.springframework.web.context.ConfigurableWebApplicationContext"};

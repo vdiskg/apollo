@@ -2,11 +2,8 @@ package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
-import com.ctrip.framework.apollo.config.data.authentication.ApolloClientAuthenticationPropertiesFactory;
-import com.ctrip.framework.apollo.config.data.authentication.oauth2.ApolloClientAuthorizedClientManagerFactory;
-import com.ctrip.framework.apollo.config.data.authentication.oauth2.ApolloClientReactiveAuthorizedClientManagerFactory;
-import com.ctrip.framework.apollo.config.data.webclient.WebClientFactory;
-import com.ctrip.framework.apollo.config.data.webclient.injector.CustomHttpClientInjectorCustomizer;
+import com.ctrip.framework.apollo.config.data.webclient.ApolloClientWebClientFactory;
+import com.ctrip.framework.apollo.config.data.webclient.injector.ApolloClientCustomHttpClientInjectorCustomizer;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
 import com.ctrip.framework.apollo.util.factory.PropertiesFactory;
@@ -29,7 +26,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigDataResource>, Ordered {
 
-  private final WebClientFactory webClientFactory = new WebClientFactory();
+  private final ApolloClientWebClientFactory apolloClientWebClientFactory = new ApolloClientWebClientFactory();
 
   /**
    * {@link com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer#initialize(org.springframework.core.env.ConfigurableEnvironment)}
@@ -40,8 +37,8 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
     Binder binder = context.getBootstrapContext().get(Binder.class);
     BindHandler bindHandler = this.getBindHandler(context);
     this.setSystemProperties(binder, bindHandler);
-    WebClient webClient = this.webClientFactory.createWebClient(binder, bindHandler);
-    CustomHttpClientInjectorCustomizer.setCustomWebClient(webClient);
+    WebClient webClient = this.apolloClientWebClientFactory.createWebClient(binder, bindHandler);
+    ApolloClientCustomHttpClientInjectorCustomizer.setCustomWebClient(webClient);
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,
         BootstrapRegistry.InstanceSupplier.from(ConfigPropertySourceFactory::new));
     ConfigPropertySourceFactory configPropertySourceFactory = context.getBootstrapContext()

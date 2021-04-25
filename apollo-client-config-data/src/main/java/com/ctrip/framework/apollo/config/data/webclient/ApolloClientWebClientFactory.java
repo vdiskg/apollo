@@ -5,15 +5,14 @@ import com.ctrip.framework.apollo.config.data.authentication.oauth2.ApolloClient
 import com.ctrip.framework.apollo.config.data.authentication.oauth2.ApolloClientReactiveAuthorizedClientManagerFactory;
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientAuthenticationProperties;
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientHttpBasicAuthenticationProperties;
-import com.ctrip.framework.apollo.config.data.util.WebApplicationTypeUtil;
-import com.ctrip.framework.apollo.config.data.webclient.customizer.HttpBasicAuthenticationWebClientCustomizer;
-import com.ctrip.framework.apollo.config.data.webclient.customizer.Oauth2AuthenticationWebClientCustomizer;
-import com.ctrip.framework.apollo.config.data.webclient.customizer.Oauth2ReactiveAuthenticationWebClientCustomizer;
-import com.ctrip.framework.apollo.config.data.webclient.filter.HttpBasicAuthenticationExchangeFilterFunction;
+import com.ctrip.framework.apollo.config.data.util.ApolloClientWebApplicationTypeUtil;
+import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientHttpBasicAuthenticationWebClientCustomizer;
+import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientOauth2AuthenticationWebClientCustomizer;
+import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientOauth2ReactiveAuthenticationWebClientCustomizer;
+import com.ctrip.framework.apollo.config.data.webclient.filter.ApolloClientHttpBasicAuthenticationExchangeFilterFunction;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.boot.context.properties.bind.BindHandler;
-import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientManager;
@@ -24,7 +23,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class WebClientFactory {
+public class ApolloClientWebClientFactory {
 
   private final ApolloClientAuthenticationPropertiesFactory apolloClientAuthenticationPropertiesFactory;
 
@@ -32,7 +31,7 @@ public class WebClientFactory {
 
   private final ApolloClientReactiveAuthorizedClientManagerFactory apolloClientReactiveAuthorizedClientManagerFactory;
 
-  public WebClientFactory() {
+  public ApolloClientWebClientFactory() {
     this.apolloClientAuthenticationPropertiesFactory = new ApolloClientAuthenticationPropertiesFactory();
     this.apolloClientAuthorizedClientManagerFactory = new ApolloClientAuthorizedClientManagerFactory();
     this.apolloClientReactiveAuthorizedClientManagerFactory = new ApolloClientReactiveAuthorizedClientManagerFactory();
@@ -59,7 +58,7 @@ public class WebClientFactory {
     if (oauth2ClientProperties == null) {
       throw new IllegalArgumentException("oauth2ClientProperties must not be null");
     }
-    WebApplicationType webApplicationType = WebApplicationTypeUtil.deduceFromClasspath();
+    WebApplicationType webApplicationType = ApolloClientWebApplicationTypeUtil.deduceFromClasspath();
     if (WebApplicationType.REACTIVE.equals(webApplicationType)) {
       return this
           .getReactiveOauth2WebClient(oauth2ClientProperties, properties, binder, bindHandler);
@@ -81,14 +80,14 @@ public class WebClientFactory {
   private WebClient reactiveOauth2WebClient(
       ReactiveOAuth2AuthorizedClientManager authorizedClientManager,
       ApolloClientAuthenticationProperties properties) {
-    Oauth2ReactiveAuthenticationWebClientCustomizer customizer = this
+    ApolloClientOauth2ReactiveAuthenticationWebClientCustomizer customizer = this
         .reactiveOauth2AuthenticationWebClientCustomizer(authorizedClientManager, properties);
     WebClient.Builder webClientBuilder = WebClient.builder();
     customizer.customize(webClientBuilder);
     return webClientBuilder.build();
   }
 
-  private Oauth2ReactiveAuthenticationWebClientCustomizer reactiveOauth2AuthenticationWebClientCustomizer(
+  private ApolloClientOauth2ReactiveAuthenticationWebClientCustomizer reactiveOauth2AuthenticationWebClientCustomizer(
       ReactiveOAuth2AuthorizedClientManager authorizedClientManager,
       ApolloClientAuthenticationProperties properties) {
     ServerOAuth2AuthorizedClientExchangeFilterFunction filterFunction =
@@ -96,7 +95,7 @@ public class WebClientFactory {
     filterFunction.setDefaultOAuth2AuthorizedClient(true);
     filterFunction
         .setDefaultClientRegistrationId(properties.getOauth2().getDefaultClientRegistrationId());
-    return new Oauth2ReactiveAuthenticationWebClientCustomizer(filterFunction);
+    return new ApolloClientOauth2ReactiveAuthenticationWebClientCustomizer(filterFunction);
   }
 
   /**
@@ -112,14 +111,14 @@ public class WebClientFactory {
 
   private WebClient oauth2WebClient(OAuth2AuthorizedClientManager authorizedClientManager,
       ApolloClientAuthenticationProperties properties) {
-    Oauth2AuthenticationWebClientCustomizer customizer = this
+    ApolloClientOauth2AuthenticationWebClientCustomizer customizer = this
         .oauth2AuthenticationWebClientCustomizer(authorizedClientManager, properties);
     WebClient.Builder webClientBuilder = WebClient.builder();
     customizer.customize(webClientBuilder);
     return webClientBuilder.build();
   }
 
-  private Oauth2AuthenticationWebClientCustomizer oauth2AuthenticationWebClientCustomizer(
+  private ApolloClientOauth2AuthenticationWebClientCustomizer oauth2AuthenticationWebClientCustomizer(
       OAuth2AuthorizedClientManager authorizedClientManager,
       ApolloClientAuthenticationProperties properties) {
     ServletOAuth2AuthorizedClientExchangeFilterFunction filterFunction =
@@ -127,7 +126,7 @@ public class WebClientFactory {
     filterFunction.setDefaultOAuth2AuthorizedClient(true);
     filterFunction
         .setDefaultClientRegistrationId(properties.getOauth2().getDefaultClientRegistrationId());
-    return new Oauth2AuthenticationWebClientCustomizer(filterFunction);
+    return new ApolloClientOauth2AuthenticationWebClientCustomizer(filterFunction);
   }
 
   /**
@@ -141,22 +140,22 @@ public class WebClientFactory {
   }
 
   private WebClient httpBasicWebClient(ApolloClientAuthenticationProperties properties) {
-    HttpBasicAuthenticationWebClientCustomizer customizer = this
+    ApolloClientHttpBasicAuthenticationWebClientCustomizer customizer = this
         .httpBasicAuthenticationWebClientCustomizer(properties);
     WebClient.Builder webClientBuilder = WebClient.builder();
     customizer.customize(webClientBuilder);
     return webClientBuilder.build();
   }
 
-  private HttpBasicAuthenticationWebClientCustomizer httpBasicAuthenticationWebClientCustomizer(
+  private ApolloClientHttpBasicAuthenticationWebClientCustomizer httpBasicAuthenticationWebClientCustomizer(
       ApolloClientAuthenticationProperties properties) {
     ApolloClientHttpBasicAuthenticationProperties httpBasic = properties.getHttpBasic();
     if (httpBasic.validateUsernameAndPassword()) {
-      return new HttpBasicAuthenticationWebClientCustomizer(
-          new HttpBasicAuthenticationExchangeFilterFunction(httpBasic.getUsername(),
+      return new ApolloClientHttpBasicAuthenticationWebClientCustomizer(
+          new ApolloClientHttpBasicAuthenticationExchangeFilterFunction(httpBasic.getUsername(),
               httpBasic.getPassword()));
     }
-    return new HttpBasicAuthenticationWebClientCustomizer(
-        new HttpBasicAuthenticationExchangeFilterFunction(httpBasic.getEncodedCredentials()));
+    return new ApolloClientHttpBasicAuthenticationWebClientCustomizer(
+        new ApolloClientHttpBasicAuthenticationExchangeFilterFunction(httpBasic.getEncodedCredentials()));
   }
 }

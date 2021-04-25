@@ -1,6 +1,6 @@
 package com.ctrip.framework.apollo.config.data.authentication.properties;
 
-import com.ctrip.framework.apollo.config.data.webclient.filter.HttpBasicAuthenticationExchangeFilterFunction;
+import com.ctrip.framework.apollo.config.data.webclient.filter.ApolloClientHttpBasicAuthenticationExchangeFilterFunction;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 
@@ -17,21 +17,21 @@ public class ApolloClientHttpBasicAuthenticationProperties implements Initializi
   /**
    * http-basic authentication username
    *
-   * @see HttpBasicAuthenticationExchangeFilterFunction#HttpBasicAuthenticationExchangeFilterFunction(String, String)
+   * @see ApolloClientHttpBasicAuthenticationExchangeFilterFunction#ApolloClientHttpBasicAuthenticationExchangeFilterFunction(String, String)
    */
   private String username = "";
 
   /**
    * http-basic authentication password
    *
-   * @see HttpBasicAuthenticationExchangeFilterFunction#HttpBasicAuthenticationExchangeFilterFunction(String, String)
+   * @see ApolloClientHttpBasicAuthenticationExchangeFilterFunction#ApolloClientHttpBasicAuthenticationExchangeFilterFunction(String, String)
    */
   private String password = "";
 
   /**
    * http-basic authentication encodedCredentials
    *
-   * @see HttpBasicAuthenticationExchangeFilterFunction#HttpBasicAuthenticationExchangeFilterFunction(String)
+   * @see ApolloClientHttpBasicAuthenticationExchangeFilterFunction#ApolloClientHttpBasicAuthenticationExchangeFilterFunction(String)
    */
   private String encodedCredentials = "";
 

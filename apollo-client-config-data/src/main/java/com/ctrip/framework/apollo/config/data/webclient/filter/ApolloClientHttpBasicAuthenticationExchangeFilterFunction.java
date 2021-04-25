@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
  *
  * @author vdisk <vdisk@foxmail.com>
  */
-public class HttpBasicAuthenticationExchangeFilterFunction implements ExchangeFilterFunction {
+public class ApolloClientHttpBasicAuthenticationExchangeFilterFunction implements ExchangeFilterFunction {
 
   private final String encodedCredentials;
 
@@ -27,7 +27,7 @@ public class HttpBasicAuthenticationExchangeFilterFunction implements ExchangeFi
    * @see HttpHeaders#encodeBasicAuth(String, String, Charset)
    * @see HttpHeaders#setBasicAuth(String)
    */
-  public HttpBasicAuthenticationExchangeFilterFunction(String username, String password) {
+  public ApolloClientHttpBasicAuthenticationExchangeFilterFunction(String username, String password) {
     this(username, password, null);
   }
 
@@ -41,7 +41,7 @@ public class HttpBasicAuthenticationExchangeFilterFunction implements ExchangeFi
    * @see HttpHeaders#encodeBasicAuth(String, String, Charset)
    * @see HttpHeaders#setBasicAuth(String)
    */
-  public HttpBasicAuthenticationExchangeFilterFunction(String username, String password,
+  public ApolloClientHttpBasicAuthenticationExchangeFilterFunction(String username, String password,
       @Nullable Charset charset) {
     this(HttpHeaders.encodeBasicAuth(username, password, charset));
   }
@@ -52,7 +52,7 @@ public class HttpBasicAuthenticationExchangeFilterFunction implements ExchangeFi
    * @param encodedCredentials the encodedCredentials to use
    * @see HttpHeaders#setBasicAuth(String)
    */
-  public HttpBasicAuthenticationExchangeFilterFunction(String encodedCredentials) {
+  public ApolloClientHttpBasicAuthenticationExchangeFilterFunction(String encodedCredentials) {
     this.encodedCredentials = encodedCredentials;
   }
 

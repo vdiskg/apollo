@@ -1,5 +1,8 @@
 package com.ctrip.framework.apollo.config.data.authentication.properties;
 
+import com.ctrip.framework.apollo.config.data.util.ApolloClientWebApplicationTypeUtil;
+import org.springframework.boot.WebApplicationType;
+
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
@@ -18,6 +21,11 @@ public class ApolloClientOauth2AuthenticationProperties {
    */
   private String defaultClientRegistrationId = "";
 
+  /**
+   * the type of oauth2 client to be created
+   */
+  private WebApplicationType webApplicationType = ApolloClientWebApplicationTypeUtil.deduceFromClasspath();
+
   public Boolean getEnabled() {
     return enabled;
   }
@@ -34,11 +42,20 @@ public class ApolloClientOauth2AuthenticationProperties {
     this.defaultClientRegistrationId = defaultClientRegistrationId;
   }
 
+  public WebApplicationType getWebApplicationType() {
+    return webApplicationType;
+  }
+
+  public void setWebApplicationType(WebApplicationType webApplicationType) {
+    this.webApplicationType = webApplicationType;
+  }
+
   @Override
   public String toString() {
     return "ApolloClientOauth2AuthenticationProperties{" +
         "enabled=" + enabled +
         ", defaultClientRegistrationId='" + defaultClientRegistrationId + '\'' +
+        ", webApplicationType=" + webApplicationType +
         '}';
   }
 }

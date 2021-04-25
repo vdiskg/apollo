@@ -17,17 +17,17 @@ import reactor.core.publisher.Mono;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class WebClientHttpClient implements HttpClient {
+public class ApolloWebClientHttpClient implements HttpClient {
 
   private final WebClient webClient;
 
   private final Gson gson;
 
-  public WebClientHttpClient(WebClient webClient) {
+  public ApolloWebClientHttpClient(WebClient webClient) {
     this(webClient, new Gson());
   }
 
-  public WebClientHttpClient(WebClient webClient, Gson gson) {
+  public ApolloWebClientHttpClient(WebClient webClient, Gson gson) {
     this.webClient = webClient;
     this.gson = gson;
   }
