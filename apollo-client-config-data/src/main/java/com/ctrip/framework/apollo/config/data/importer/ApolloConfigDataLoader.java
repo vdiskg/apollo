@@ -2,9 +2,8 @@ package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
+import com.ctrip.framework.apollo.config.data.listening.ApolloClientListeningFactory;
 import com.ctrip.framework.apollo.config.data.properties.ApolloClientSystemPropertyProcessor;
-import com.ctrip.framework.apollo.config.data.webclient.ApolloClientWebClientFactory;
-import com.ctrip.framework.apollo.config.data.webclient.injector.ApolloClientCustomHttpClientInjectorCustomizer;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
 import java.io.IOException;
@@ -18,16 +17,15 @@ import org.springframework.boot.context.config.ConfigDataResourceNotFoundExcepti
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.Ordered;
-import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
 public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigDataResource>, Ordered {
 
-  private final ApolloClientWebClientFactory apolloClientWebClientFactory = new ApolloClientWebClientFactory();
-
   private final ApolloClientSystemPropertyProcessor apolloClientSystemPropertyProcessor = new ApolloClientSystemPropertyProcessor();
+
+  private final ApolloClientListeningFactory apolloClientListeningFactory = new ApolloClientListeningFactory();
 
   /**
    * {@link com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer#initialize(org.springframework.core.env.ConfigurableEnvironment)}
@@ -38,8 +36,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
     Binder binder = context.getBootstrapContext().get(Binder.class);
     BindHandler bindHandler = this.getBindHandler(context);
     this.apolloClientSystemPropertyProcessor.setSystemProperties(binder, bindHandler);
-    WebClient webClient = this.apolloClientWebClientFactory.createWebClient(binder, bindHandler);
-    ApolloClientCustomHttpClientInjectorCustomizer.setCustomWebClient(webClient);
+    this.apolloClientListeningFactory.prepareCustomListening(binder, bindHandler);
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,
         BootstrapRegistry.InstanceSupplier.from(ConfigPropertySourceFactory::new));
     ConfigPropertySourceFactory configPropertySourceFactory = context.getBootstrapContext()

@@ -9,11 +9,6 @@ import org.springframework.boot.WebApplicationType;
 public class ApolloClientOauth2AuthenticationProperties {
 
   /**
-   * enable oauth2 authentication
-   */
-  private Boolean enabled = false;
-
-  /**
    * default client registrationId for oauth2 authentication
    *
    * @see org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction#setDefaultClientRegistrationId(String)
@@ -26,14 +21,6 @@ public class ApolloClientOauth2AuthenticationProperties {
    */
   private WebApplicationType webApplicationType = ApolloClientWebApplicationTypeUtil
       .deduceFromClasspath();
-
-  public Boolean getEnabled() {
-    return enabled;
-  }
-
-  public void setEnabled(Boolean enabled) {
-    this.enabled = enabled;
-  }
 
   public String getDefaultClientRegistrationId() {
     return defaultClientRegistrationId;
@@ -54,8 +41,7 @@ public class ApolloClientOauth2AuthenticationProperties {
   @Override
   public String toString() {
     return "ApolloClientOauth2AuthenticationProperties{" +
-        "enabled=" + enabled +
-        ", defaultClientRegistrationId='" + defaultClientRegistrationId + '\'' +
+        "defaultClientRegistrationId='" + defaultClientRegistrationId + '\'' +
         ", webApplicationType=" + webApplicationType +
         '}';
   }

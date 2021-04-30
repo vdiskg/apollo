@@ -1,10 +1,13 @@
 package com.ctrip.framework.apollo.config.data.webclient;
 
-import com.ctrip.framework.apollo.config.data.authentication.ApolloClientAuthenticationPropertiesFactory;
+import com.ctrip.framework.apollo.config.data.authentication.ApolloClientPropertiesFactory;
 import com.ctrip.framework.apollo.config.data.authentication.oauth2.ApolloClientAuthorizedClientManagerFactory;
 import com.ctrip.framework.apollo.config.data.authentication.oauth2.ApolloClientReactiveAuthorizedClientManagerFactory;
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientAuthenticationProperties;
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientHttpBasicAuthenticationProperties;
+import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientOauth2AuthenticationProperties;
+import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientProperties;
+import com.ctrip.framework.apollo.config.data.enums.ApolloClientAuthenticationType;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientHttpBasicAuthenticationWebClientCustomizer;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientOauth2AuthenticationWebClientCustomizer;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientOauth2ReactiveAuthenticationWebClientCustomizer;
@@ -24,40 +27,51 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 public class ApolloClientWebClientFactory {
 
-  private final ApolloClientAuthenticationPropertiesFactory apolloClientAuthenticationPropertiesFactory;
+  private final ApolloClientPropertiesFactory apolloClientPropertiesFactory;
 
   private final ApolloClientAuthorizedClientManagerFactory apolloClientAuthorizedClientManagerFactory;
 
   private final ApolloClientReactiveAuthorizedClientManagerFactory apolloClientReactiveAuthorizedClientManagerFactory;
 
   public ApolloClientWebClientFactory() {
-    this.apolloClientAuthenticationPropertiesFactory = new ApolloClientAuthenticationPropertiesFactory();
+    this.apolloClientPropertiesFactory = new ApolloClientPropertiesFactory();
     this.apolloClientAuthorizedClientManagerFactory = new ApolloClientAuthorizedClientManagerFactory();
     this.apolloClientReactiveAuthorizedClientManagerFactory = new ApolloClientReactiveAuthorizedClientManagerFactory();
   }
 
-  public WebClient createWebClient(Binder binder, BindHandler bindHandler) {
-    ApolloClientAuthenticationProperties properties = this.apolloClientAuthenticationPropertiesFactory
-        .createApolloClientAuthenticationProperties(binder, bindHandler);
-    if (properties == null || !properties.authenticationEnabled()) {
+  public WebClient createWebClient(ApolloClientProperties apolloClientProperties, Binder binder,
+      BindHandler bindHandler) {
+    ApolloClientAuthenticationProperties properties = apolloClientProperties.getAuthentication();
+    if (properties == null) {
       return WebClient.create();
     }
-    properties.validate();
-    if (properties.getOauth2() != null && properties.getOauth2().getEnabled()) {
-      return this.createOauth2WebClient(properties, binder, bindHandler);
+    ApolloClientAuthenticationType authenticationType = properties.getAuthenticationType();
+    switch (authenticationType) {
+      case NONE:
+        return WebClient.create();
+      case OAUTH2:
+        return this.createOauth2WebClient(properties, binder, bindHandler);
+      case HTTP_BASIC:
+        return this.createHttpBasicWebClient(properties, binder, bindHandler);
+      default:
+        throw new IllegalStateException("Unexpected value: " + authenticationType);
     }
-    return this.createHttpBasicWebClient(properties, binder, bindHandler);
   }
 
   private WebClient createOauth2WebClient(ApolloClientAuthenticationProperties properties,
       Binder binder,
       BindHandler bindHandler) {
-    OAuth2ClientProperties oauth2ClientProperties = this.apolloClientAuthenticationPropertiesFactory
+    ApolloClientOauth2AuthenticationProperties oauth2AuthenticationProperties = properties
+        .getOauth2();
+    if (oauth2AuthenticationProperties == null) {
+      throw new IllegalArgumentException("oauth2AuthenticationProperties must not be null");
+    }
+    OAuth2ClientProperties oauth2ClientProperties = this.apolloClientPropertiesFactory
         .createOauth2ClientProperties(binder, bindHandler);
     if (oauth2ClientProperties == null) {
       throw new IllegalArgumentException("oauth2ClientProperties must not be null");
     }
-    WebApplicationType webApplicationType = properties.getOauth2().getWebApplicationType();
+    WebApplicationType webApplicationType = oauth2AuthenticationProperties.getWebApplicationType();
     if (WebApplicationType.REACTIVE.equals(webApplicationType)) {
       return this
           .getReactiveOauth2WebClient(oauth2ClientProperties, properties, binder, bindHandler);
@@ -154,8 +168,11 @@ public class ApolloClientWebClientFactory {
           new ApolloClientHttpBasicAuthenticationExchangeFilterFunction(httpBasic.getUsername(),
               httpBasic.getPassword()));
     }
-    return new ApolloClientHttpBasicAuthenticationWebClientCustomizer(
-        new ApolloClientHttpBasicAuthenticationExchangeFilterFunction(
-            httpBasic.getEncodedCredentials()));
+    if (httpBasic.validateEncodedCredentials()) {
+      return new ApolloClientHttpBasicAuthenticationWebClientCustomizer(
+          new ApolloClientHttpBasicAuthenticationExchangeFilterFunction(
+              httpBasic.getEncodedCredentials()));
+    }
+    throw new IllegalStateException("username password pair or encodedCredentials expected");
   }
 }

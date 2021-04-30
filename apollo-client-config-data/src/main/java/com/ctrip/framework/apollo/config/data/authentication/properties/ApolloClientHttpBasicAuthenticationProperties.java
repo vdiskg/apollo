@@ -11,11 +11,6 @@ import org.springframework.util.StringUtils;
 public class ApolloClientHttpBasicAuthenticationProperties implements InitializingBean {
 
   /**
-   * enable http-basic authentication
-   */
-  private Boolean enabled = false;
-
-  /**
    * http-basic authentication username
    *
    * @see HttpHeaders#encodeBasicAuth(String, String, Charset)
@@ -44,21 +39,9 @@ public class ApolloClientHttpBasicAuthenticationProperties implements Initializi
   }
 
   public void validate() {
-    if (!this.getEnabled()) {
-      return;
+    if (this.validateUsernameAndPassword() && this.validateEncodedCredentials()) {
+      throw new IllegalStateException("duplicated username password pair && encodedCredentials");
     }
-    if (this.validateUsernameAndPassword()) {
-      if (this.validateEncodedCredentials()) {
-        throw new IllegalStateException("duplicated username password pair && encodedCredentials");
-      }
-      // username password pair only
-      return;
-    }
-    if (this.validateEncodedCredentials()) {
-      // encodedCredentials only
-      return;
-    }
-    throw new IllegalStateException("username password pair or encodedCredentials expected");
   }
 
   public boolean validateUsernameAndPassword() {
@@ -68,14 +51,6 @@ public class ApolloClientHttpBasicAuthenticationProperties implements Initializi
 
   public boolean validateEncodedCredentials() {
     return StringUtils.hasText(this.getEncodedCredentials());
-  }
-
-  public Boolean getEnabled() {
-    return enabled;
-  }
-
-  public void setEnabled(Boolean enabled) {
-    this.enabled = enabled;
   }
 
   public String getUsername() {
@@ -105,7 +80,6 @@ public class ApolloClientHttpBasicAuthenticationProperties implements Initializi
   @Override
   public String toString() {
     return "ApolloClientHttpBasicAuthenticationProperties{" +
-        "enabled=" + enabled +
         ", username='" + username + '\'' +
         ", password='" + password + '\'' +
         ", encodedCredentials='" + encodedCredentials + '\'' +

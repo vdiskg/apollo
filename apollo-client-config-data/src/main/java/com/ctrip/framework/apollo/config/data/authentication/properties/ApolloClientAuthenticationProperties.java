@@ -1,12 +1,17 @@
 package com.ctrip.framework.apollo.config.data.authentication.properties;
 
-import org.springframework.beans.factory.InitializingBean;
+import com.ctrip.framework.apollo.config.data.enums.ApolloClientAuthenticationType;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloClientAuthenticationProperties implements InitializingBean {
+public class ApolloClientAuthenticationProperties {
+
+  /**
+   * authentication type
+   */
+  private ApolloClientAuthenticationType authenticationType = ApolloClientAuthenticationType.NONE;
 
   /**
    * http-basic authentication
@@ -20,23 +25,13 @@ public class ApolloClientAuthenticationProperties implements InitializingBean {
   @NestedConfigurationProperty
   private ApolloClientOauth2AuthenticationProperties oauth2;
 
-  @Override
-  public void afterPropertiesSet() {
-    this.validate();
+  public ApolloClientAuthenticationType getAuthenticationType() {
+    return authenticationType;
   }
 
-  public void validate() {
-    if (this.getOauth2() != null && this.getOauth2().getEnabled()
-        && this.getHttpBasic() != null && this.getHttpBasic().getEnabled()) {
-      throw new IllegalStateException("duplicated authentication enabled");
-    }
-  }
-
-  public boolean authenticationEnabled() {
-    if (this.getOauth2() != null && this.getOauth2().getEnabled()) {
-      return true;
-    }
-    return this.getHttpBasic() != null && this.getHttpBasic().getEnabled();
+  public void setAuthenticationType(
+      ApolloClientAuthenticationType authenticationType) {
+    this.authenticationType = authenticationType;
   }
 
   public ApolloClientHttpBasicAuthenticationProperties getHttpBasic() {
@@ -60,7 +55,8 @@ public class ApolloClientAuthenticationProperties implements InitializingBean {
   @Override
   public String toString() {
     return "ApolloClientAuthenticationProperties{" +
-        "httpBasic=" + httpBasic +
+        "authenticationType=" + authenticationType +
+        ", httpBasic=" + httpBasic +
         ", oauth2=" + oauth2 +
         '}';
   }
