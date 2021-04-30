@@ -9,14 +9,15 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 public class ApolloClientOauth2AuthenticationWebClientCustomizer implements WebClientCustomizer {
 
-    private final ServletOAuth2AuthorizedClientExchangeFilterFunction filterFunction;
+  private final ServletOAuth2AuthorizedClientExchangeFilterFunction filterFunction;
 
-    public ApolloClientOauth2AuthenticationWebClientCustomizer(ServletOAuth2AuthorizedClientExchangeFilterFunction filterFunction) {
-        this.filterFunction = filterFunction;
-    }
+  public ApolloClientOauth2AuthenticationWebClientCustomizer(
+      ServletOAuth2AuthorizedClientExchangeFilterFunction filterFunction) {
+    this.filterFunction = filterFunction;
+  }
 
-    @Override
-    public void customize(WebClient.Builder webClientBuilder) {
-        webClientBuilder.apply(this.filterFunction.oauth2Configuration());
-    }
+  @Override
+  public void customize(WebClient.Builder webClientBuilder) {
+    webClientBuilder.apply(this.filterFunction.oauth2Configuration());
+  }
 }

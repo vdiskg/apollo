@@ -24,7 +24,8 @@ public class ApolloClientOauth2AuthenticationProperties {
   /**
    * the type of oauth2 client to be created
    */
-  private WebApplicationType webApplicationType = ApolloClientWebApplicationTypeUtil.deduceFromClasspath();
+  private WebApplicationType webApplicationType = ApolloClientWebApplicationTypeUtil
+      .deduceFromClasspath();
 
   public Boolean getEnabled() {
     return enabled;

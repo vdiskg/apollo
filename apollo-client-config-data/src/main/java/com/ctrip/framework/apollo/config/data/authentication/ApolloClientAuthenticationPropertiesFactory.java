@@ -16,10 +16,8 @@ public class ApolloClientAuthenticationPropertiesFactory {
   public ApolloClientAuthenticationProperties createApolloClientAuthenticationProperties(
       Binder binder,
       BindHandler bindHandler) {
-    return binder
-        .bind(AUTHENTICATION_PROPERTIES_PREFIX,
-            Bindable.of(ApolloClientAuthenticationProperties.class),
-            bindHandler).orElse(null);
+    return binder.bind(AUTHENTICATION_PROPERTIES_PREFIX,
+        Bindable.of(ApolloClientAuthenticationProperties.class), bindHandler).orElse(null);
   }
 
   public OAuth2ClientProperties createOauth2ClientProperties(Binder binder,

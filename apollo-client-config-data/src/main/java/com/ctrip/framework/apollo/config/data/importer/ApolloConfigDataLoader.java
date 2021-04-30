@@ -2,11 +2,11 @@ package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
+import com.ctrip.framework.apollo.config.data.properties.ApolloClientSystemPropertyProcessor;
 import com.ctrip.framework.apollo.config.data.webclient.ApolloClientWebClientFactory;
 import com.ctrip.framework.apollo.config.data.webclient.injector.ApolloClientCustomHttpClientInjectorCustomizer;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
-import com.ctrip.framework.apollo.util.factory.PropertiesFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,6 @@ import org.springframework.boot.context.config.ConfigDataLoader;
 import org.springframework.boot.context.config.ConfigDataLoaderContext;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.boot.context.properties.bind.BindHandler;
-import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.Ordered;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -28,6 +27,8 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
 
   private final ApolloClientWebClientFactory apolloClientWebClientFactory = new ApolloClientWebClientFactory();
 
+  private final ApolloClientSystemPropertyProcessor apolloClientSystemPropertyProcessor = new ApolloClientSystemPropertyProcessor();
+
   /**
    * {@link com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer#initialize(org.springframework.core.env.ConfigurableEnvironment)}
    */
@@ -36,7 +37,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
       throws IOException, ConfigDataResourceNotFoundException {
     Binder binder = context.getBootstrapContext().get(Binder.class);
     BindHandler bindHandler = this.getBindHandler(context);
-    this.setSystemProperties(binder, bindHandler);
+    this.apolloClientSystemPropertyProcessor.setSystemProperties(binder, bindHandler);
     WebClient webClient = this.apolloClientWebClientFactory.createWebClient(binder, bindHandler);
     ApolloClientCustomHttpClientInjectorCustomizer.setCustomWebClient(webClient);
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,
@@ -54,15 +55,6 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
 
   private BindHandler getBindHandler(ConfigDataLoaderContext context) {
     return context.getBootstrapContext().getOrElse(BindHandler.class, null);
-  }
-
-  private void setSystemProperties(Binder binder, BindHandler bindHandler) {
-    Boolean propertyOrderEnable = binder
-        .bind(PropertiesFactory.APOLLO_PROPERTY_ORDER_ENABLE, Bindable.of(Boolean.class),
-            bindHandler)
-        .orElse(false);
-    System.setProperty(PropertiesFactory.APOLLO_PROPERTY_ORDER_ENABLE,
-        propertyOrderEnable.toString());
   }
 
   @Override

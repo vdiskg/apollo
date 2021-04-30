@@ -1,7 +1,8 @@
 package com.ctrip.framework.apollo.config.data.authentication.properties;
 
-import com.ctrip.framework.apollo.config.data.webclient.filter.ApolloClientHttpBasicAuthenticationExchangeFilterFunction;
+import java.nio.charset.Charset;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 
 /**
@@ -17,21 +18,23 @@ public class ApolloClientHttpBasicAuthenticationProperties implements Initializi
   /**
    * http-basic authentication username
    *
-   * @see ApolloClientHttpBasicAuthenticationExchangeFilterFunction#ApolloClientHttpBasicAuthenticationExchangeFilterFunction(String, String)
+   * @see HttpHeaders#encodeBasicAuth(String, String, Charset)
+   * @see HttpHeaders#setBasicAuth(String)
    */
   private String username = "";
 
   /**
    * http-basic authentication password
    *
-   * @see ApolloClientHttpBasicAuthenticationExchangeFilterFunction#ApolloClientHttpBasicAuthenticationExchangeFilterFunction(String, String)
+   * @see HttpHeaders#encodeBasicAuth(String, String, Charset)
+   * @see HttpHeaders#setBasicAuth(String)
    */
   private String password = "";
 
   /**
    * http-basic authentication encodedCredentials
    *
-   * @see ApolloClientHttpBasicAuthenticationExchangeFilterFunction#ApolloClientHttpBasicAuthenticationExchangeFilterFunction(String)
+   * @see HttpHeaders#setBasicAuth(String)
    */
   private String encodedCredentials = "";
 

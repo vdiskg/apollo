@@ -9,15 +9,15 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 public class ApolloClientHttpBasicAuthenticationWebClientCustomizer implements WebClientCustomizer {
 
-    private final ApolloClientHttpBasicAuthenticationExchangeFilterFunction filterFunction;
+  private final ApolloClientHttpBasicAuthenticationExchangeFilterFunction filterFunction;
 
-    public ApolloClientHttpBasicAuthenticationWebClientCustomizer(
-        ApolloClientHttpBasicAuthenticationExchangeFilterFunction filterFunction) {
-        this.filterFunction = filterFunction;
-    }
+  public ApolloClientHttpBasicAuthenticationWebClientCustomizer(
+      ApolloClientHttpBasicAuthenticationExchangeFilterFunction filterFunction) {
+    this.filterFunction = filterFunction;
+  }
 
-    @Override
-    public void customize(WebClient.Builder webClientBuilder) {
-        webClientBuilder.filter(this.filterFunction);
-    }
+  @Override
+  public void customize(WebClient.Builder webClientBuilder) {
+    webClientBuilder.filter(this.filterFunction);
+  }
 }

@@ -5,7 +5,6 @@ import com.ctrip.framework.apollo.config.data.authentication.oauth2.ApolloClient
 import com.ctrip.framework.apollo.config.data.authentication.oauth2.ApolloClientReactiveAuthorizedClientManagerFactory;
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientAuthenticationProperties;
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientHttpBasicAuthenticationProperties;
-import com.ctrip.framework.apollo.config.data.util.ApolloClientWebApplicationTypeUtil;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientHttpBasicAuthenticationWebClientCustomizer;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientOauth2AuthenticationWebClientCustomizer;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientOauth2ReactiveAuthenticationWebClientCustomizer;
@@ -58,7 +57,7 @@ public class ApolloClientWebClientFactory {
     if (oauth2ClientProperties == null) {
       throw new IllegalArgumentException("oauth2ClientProperties must not be null");
     }
-    WebApplicationType webApplicationType = ApolloClientWebApplicationTypeUtil.deduceFromClasspath();
+    WebApplicationType webApplicationType = properties.getOauth2().getWebApplicationType();
     if (WebApplicationType.REACTIVE.equals(webApplicationType)) {
       return this
           .getReactiveOauth2WebClient(oauth2ClientProperties, properties, binder, bindHandler);
@@ -156,6 +155,7 @@ public class ApolloClientWebClientFactory {
               httpBasic.getPassword()));
     }
     return new ApolloClientHttpBasicAuthenticationWebClientCustomizer(
-        new ApolloClientHttpBasicAuthenticationExchangeFilterFunction(httpBasic.getEncodedCredentials()));
+        new ApolloClientHttpBasicAuthenticationExchangeFilterFunction(
+            httpBasic.getEncodedCredentials()));
   }
 }
