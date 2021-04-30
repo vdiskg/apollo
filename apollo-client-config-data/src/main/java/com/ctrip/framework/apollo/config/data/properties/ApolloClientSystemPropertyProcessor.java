@@ -4,6 +4,7 @@ import com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitialize
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.util.StringUtils;
 
 /**
@@ -13,7 +14,12 @@ public class ApolloClientSystemPropertyProcessor {
 
   public void setSystemProperties(Binder binder, BindHandler bindHandler) {
     for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
-      this.fillSystemPropertyFromBinder(propertyName, binder, bindHandler);
+      if (ConfigurationPropertyName.isValid(propertyName)) {
+        this.fillSystemPropertyFromBinder(propertyName, binder, bindHandler);
+        continue;
+      }
+      this.fillSystemPropertyFromBinder(this.camelCasedToKebabCase(propertyName), binder,
+          bindHandler);
     }
   }
 
@@ -28,5 +34,17 @@ public class ApolloClientSystemPropertyProcessor {
       return;
     }
     System.setProperty(propertyName, propertyValue);
+  }
+
+  private String camelCasedToKebabCase(String source) {
+    StringBuilder stringBuilder = new StringBuilder(source.length() * 2);
+    for (char ch : source.toCharArray()) {
+      if (Character.isUpperCase(ch)) {
+        stringBuilder.append("-").append(Character.toLowerCase(ch));
+        continue;
+      }
+      stringBuilder.append(ch);
+    }
+    return stringBuilder.toString();
   }
 }
