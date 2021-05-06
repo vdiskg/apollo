@@ -10,7 +10,7 @@ public class LogFormatter {
   /**
    * format log message
    *
-   * @param pattern log message patten
+   * @param pattern slf4j log message patten
    * @param args    log message args
    * @return string
    */

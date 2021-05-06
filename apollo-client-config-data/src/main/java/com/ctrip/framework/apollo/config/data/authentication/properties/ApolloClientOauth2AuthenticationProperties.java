@@ -17,7 +17,7 @@ public class ApolloClientOauth2AuthenticationProperties {
   private String defaultClientRegistrationId = "";
 
   /**
-   * the type of oauth2 client to be created
+   * the type of oauth2 client to be created, auto detected from classpath
    */
   private WebApplicationType webApplicationType = ApolloClientWebApplicationTypeUtil
       .deduceFromClasspath();
