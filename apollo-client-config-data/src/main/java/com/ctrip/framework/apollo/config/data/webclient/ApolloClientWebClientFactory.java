@@ -8,10 +8,12 @@ import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloCl
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientOauth2AuthenticationProperties;
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientProperties;
 import com.ctrip.framework.apollo.config.data.enums.ApolloClientAuthenticationType;
+import com.ctrip.framework.apollo.config.data.util.LogFormatter;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientHttpBasicAuthenticationWebClientCustomizer;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientOauth2AuthenticationWebClientCustomizer;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientOauth2ReactiveAuthenticationWebClientCustomizer;
 import com.ctrip.framework.apollo.config.data.webclient.filter.ApolloClientHttpBasicAuthenticationExchangeFilterFunction;
+import org.apache.commons.logging.Log;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.boot.context.properties.bind.BindHandler;
@@ -27,13 +29,16 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 public class ApolloClientWebClientFactory {
 
+  private final Log log;
+
   private final ApolloClientPropertiesFactory apolloClientPropertiesFactory;
 
   private final ApolloClientAuthorizedClientManagerFactory apolloClientAuthorizedClientManagerFactory;
 
   private final ApolloClientReactiveAuthorizedClientManagerFactory apolloClientReactiveAuthorizedClientManagerFactory;
 
-  public ApolloClientWebClientFactory() {
+  public ApolloClientWebClientFactory(Log log) {
+    this.log = log;
     this.apolloClientPropertiesFactory = new ApolloClientPropertiesFactory();
     this.apolloClientAuthorizedClientManagerFactory = new ApolloClientAuthorizedClientManagerFactory();
     this.apolloClientReactiveAuthorizedClientManagerFactory = new ApolloClientReactiveAuthorizedClientManagerFactory();
@@ -43,9 +48,11 @@ public class ApolloClientWebClientFactory {
       BindHandler bindHandler) {
     ApolloClientAuthenticationProperties properties = apolloClientProperties.getAuthentication();
     if (properties == null) {
+      log.debug("apollo client authentication properties is empty, authentication disabled");
       return WebClient.create();
     }
     ApolloClientAuthenticationType authenticationType = properties.getAuthenticationType();
+    log.debug(LogFormatter.format("apollo client authentication type: {}", authenticationType));
     switch (authenticationType) {
       case NONE:
         return WebClient.create();
@@ -73,9 +80,11 @@ public class ApolloClientWebClientFactory {
     }
     WebApplicationType webApplicationType = oauth2AuthenticationProperties.getWebApplicationType();
     if (WebApplicationType.REACTIVE.equals(webApplicationType)) {
+      log.debug("apollo client reactive oauth2 client enabled");
       return this
           .getReactiveOauth2WebClient(oauth2ClientProperties, properties, binder, bindHandler);
     }
+    log.debug("apollo client imperative oauth2 client enabled");
     return this.getOauth2WebClient(oauth2ClientProperties, properties, binder, bindHandler);
   }
 

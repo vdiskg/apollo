@@ -5,6 +5,7 @@ import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloCl
 import com.ctrip.framework.apollo.config.data.enums.ApolloClientMessagingType;
 import com.ctrip.framework.apollo.config.data.webclient.ApolloClientLongPollingMessagingFactory;
 import com.ctrip.framework.apollo.config.data.websocket.ApolloClientWebsocketMessagingFactory;
+import org.apache.commons.logging.Log;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Binder;
 
@@ -13,37 +14,43 @@ import org.springframework.boot.context.properties.bind.Binder;
  */
 public class ApolloClientMessagingFactory {
 
+  private final Log log;
+
   private final ApolloClientPropertiesFactory apolloClientPropertiesFactory;
 
   private final ApolloClientLongPollingMessagingFactory apolloClientLongPollingMessagingFactory;
 
   private final ApolloClientWebsocketMessagingFactory apolloClientWebsocketMessagingFactory;
 
-  public ApolloClientMessagingFactory() {
+  public ApolloClientMessagingFactory(Log log) {
+    this.log = log;
     this.apolloClientPropertiesFactory = new ApolloClientPropertiesFactory();
-    this.apolloClientLongPollingMessagingFactory = new ApolloClientLongPollingMessagingFactory();
-    this.apolloClientWebsocketMessagingFactory = new ApolloClientWebsocketMessagingFactory();
+    this.apolloClientLongPollingMessagingFactory = new ApolloClientLongPollingMessagingFactory(log);
+    this.apolloClientWebsocketMessagingFactory = new ApolloClientWebsocketMessagingFactory(log);
   }
 
   /**
-   * prepare custom listening
+   * prepare custom messaging
    *
    * @param binder      properties binder
    * @param bindHandler properties bind handler
    */
-  public void prepareCustomListening(Binder binder, BindHandler bindHandler) {
+  public void prepareCustomMessaging(Binder binder, BindHandler bindHandler) {
     ApolloClientProperties apolloClientProperties = this.apolloClientPropertiesFactory
         .createApolloClientProperties(binder, bindHandler);
     if (apolloClientProperties == null) {
+      this.log.info("apollo client custom messaging disabled");
       return;
     }
     ApolloClientMessagingType messagingType = apolloClientProperties.getMessagingType();
     switch (messagingType) {
       case LONG_POLLING:
+        this.log.debug("apollo client custom long polling messaging enabled");
         this.apolloClientLongPollingMessagingFactory
             .prepareCustomListening(apolloClientProperties, binder, bindHandler);
         return;
       case WEBSOCKET:
+        this.log.debug("apollo client custom websocket messaging enabled");
         this.apolloClientWebsocketMessagingFactory
             .prepareCustomListening(apolloClientProperties, binder, bindHandler);
         return;

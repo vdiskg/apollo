@@ -1,6 +1,7 @@
 package com.ctrip.framework.apollo.config.data.websocket;
 
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientProperties;
+import org.apache.commons.logging.Log;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Binder;
 
@@ -8,6 +9,12 @@ import org.springframework.boot.context.properties.bind.Binder;
  * @author vdisk <vdisk@foxmail.com>
  */
 public class ApolloClientWebsocketMessagingFactory {
+
+  private final Log log;
+
+  public ApolloClientWebsocketMessagingFactory(Log log) {
+    this.log = log;
+  }
 
   /**
    * prepare custom websocket listening

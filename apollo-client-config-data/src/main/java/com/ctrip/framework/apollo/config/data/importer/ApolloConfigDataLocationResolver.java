@@ -1,10 +1,12 @@
 package com.ctrip.framework.apollo.config.data.importer;
 
+import com.ctrip.framework.apollo.config.data.util.LogFormatter;
 import com.ctrip.framework.apollo.core.ConfigConsts;
 import com.ctrip.framework.apollo.spring.config.PropertySourcesConstants;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.logging.Log;
 import org.springframework.boot.context.config.ConfigDataLocation;
 import org.springframework.boot.context.config.ConfigDataLocationNotFoundException;
 import org.springframework.boot.context.config.ConfigDataLocationResolver;
@@ -23,6 +25,12 @@ public class ApolloConfigDataLocationResolver implements
     ConfigDataLocationResolver<ApolloConfigDataResource>, Ordered {
 
   private static final String PREFIX = "apollo:";
+
+  private final Log log;
+
+  public ApolloConfigDataLocationResolver(Log log) {
+    this.log = log;
+  }
 
   @Override
   public boolean isResolvable(ConfigDataLocationResolverContext context,
@@ -49,8 +57,12 @@ public class ApolloConfigDataLocationResolver implements
         .orElse(ConfigConsts.NAMESPACE_APPLICATION);
     String[] namespaceArray = namespaces.split(",");
     if (namespaceArray.length == 0) {
+      log.debug(LogFormatter.format("apollo client bootstrap namespaces is empty"));
       return Collections.emptyList();
     }
+    log.debug(
+        LogFormatter
+            .format("apollo client bootstrap namespaces: {}", Arrays.toString(namespaceArray)));
     return Collections.singletonList(new ApolloConfigDataResource(Arrays.asList(namespaceArray)));
   }
 

@@ -2,6 +2,7 @@ package com.ctrip.framework.apollo.config.data.webclient;
 
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientProperties;
 import com.ctrip.framework.apollo.config.data.webclient.injector.ApolloClientCustomHttpClientInjectorCustomizer;
+import org.apache.commons.logging.Log;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -11,10 +12,13 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 public class ApolloClientLongPollingMessagingFactory {
 
+  private final Log log;
+
   private final ApolloClientWebClientFactory apolloClientWebClientFactory;
 
-  public ApolloClientLongPollingMessagingFactory() {
-    this.apolloClientWebClientFactory = new ApolloClientWebClientFactory();
+  public ApolloClientLongPollingMessagingFactory(Log log) {
+    this.log = log;
+    this.apolloClientWebClientFactory = new ApolloClientWebClientFactory(log);
   }
 
   /**

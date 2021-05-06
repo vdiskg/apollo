@@ -4,11 +4,13 @@ import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.config.data.messaging.ApolloClientMessagingFactory;
 import com.ctrip.framework.apollo.config.data.properties.ApolloClientSystemPropertyProcessor;
+import com.ctrip.framework.apollo.config.data.util.LogFormatter;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.logging.Log;
 import org.springframework.boot.BootstrapRegistry;
 import org.springframework.boot.context.config.ConfigData;
 import org.springframework.boot.context.config.ConfigDataLoader;
@@ -23,9 +25,17 @@ import org.springframework.core.Ordered;
  */
 public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigDataResource>, Ordered {
 
-  private final ApolloClientSystemPropertyProcessor apolloClientSystemPropertyProcessor = new ApolloClientSystemPropertyProcessor();
+  private final Log log;
 
-  private final ApolloClientMessagingFactory apolloClientMessagingFactory = new ApolloClientMessagingFactory();
+  private final ApolloClientSystemPropertyProcessor apolloClientSystemPropertyProcessor;
+
+  private final ApolloClientMessagingFactory apolloClientMessagingFactory;
+
+  public ApolloConfigDataLoader(Log log) {
+    this.log = log;
+    apolloClientSystemPropertyProcessor = new ApolloClientSystemPropertyProcessor(log);
+    apolloClientMessagingFactory = new ApolloClientMessagingFactory(log);
+  }
 
   /**
    * {@link com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer#initialize(org.springframework.core.env.ConfigurableEnvironment)}
@@ -36,7 +46,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
     Binder binder = context.getBootstrapContext().get(Binder.class);
     BindHandler bindHandler = this.getBindHandler(context);
     this.apolloClientSystemPropertyProcessor.setSystemProperties(binder, bindHandler);
-    this.apolloClientMessagingFactory.prepareCustomListening(binder, bindHandler);
+    this.apolloClientMessagingFactory.prepareCustomMessaging(binder, bindHandler);
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,
         BootstrapRegistry.InstanceSupplier.from(ConfigPropertySourceFactory::new));
     ConfigPropertySourceFactory configPropertySourceFactory = context.getBootstrapContext()
@@ -47,6 +57,8 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
       Config config = ConfigService.getConfig(namespace);
       propertySources.add(configPropertySourceFactory.getConfigPropertySource(namespace, config));
     }
+    log.debug(
+        LogFormatter.format("apollo client loaded namespaces: {}", resource.getNamespaceList()));
     return new ConfigData(propertySources);
   }
 
