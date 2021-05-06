@@ -2,7 +2,7 @@ package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
-import com.ctrip.framework.apollo.config.data.listening.ApolloClientListeningFactory;
+import com.ctrip.framework.apollo.config.data.messaging.ApolloClientMessagingFactory;
 import com.ctrip.framework.apollo.config.data.properties.ApolloClientSystemPropertyProcessor;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
@@ -25,7 +25,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
 
   private final ApolloClientSystemPropertyProcessor apolloClientSystemPropertyProcessor = new ApolloClientSystemPropertyProcessor();
 
-  private final ApolloClientListeningFactory apolloClientListeningFactory = new ApolloClientListeningFactory();
+  private final ApolloClientMessagingFactory apolloClientMessagingFactory = new ApolloClientMessagingFactory();
 
   /**
    * {@link com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer#initialize(org.springframework.core.env.ConfigurableEnvironment)}
@@ -36,7 +36,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
     Binder binder = context.getBootstrapContext().get(Binder.class);
     BindHandler bindHandler = this.getBindHandler(context);
     this.apolloClientSystemPropertyProcessor.setSystemProperties(binder, bindHandler);
-    this.apolloClientListeningFactory.prepareCustomListening(binder, bindHandler);
+    this.apolloClientMessagingFactory.prepareCustomListening(binder, bindHandler);
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,
         BootstrapRegistry.InstanceSupplier.from(ConfigPropertySourceFactory::new));
     ConfigPropertySourceFactory configPropertySourceFactory = context.getBootstrapContext()

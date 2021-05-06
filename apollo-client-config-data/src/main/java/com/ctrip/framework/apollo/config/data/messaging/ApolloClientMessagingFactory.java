@@ -1,28 +1,28 @@
-package com.ctrip.framework.apollo.config.data.listening;
+package com.ctrip.framework.apollo.config.data.messaging;
 
 import com.ctrip.framework.apollo.config.data.authentication.ApolloClientPropertiesFactory;
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientProperties;
-import com.ctrip.framework.apollo.config.data.enums.ApolloClientListeningType;
-import com.ctrip.framework.apollo.config.data.webclient.ApolloClientLongPollingListeningFactory;
-import com.ctrip.framework.apollo.config.data.websocket.ApolloClientWebsocketListeningFactory;
+import com.ctrip.framework.apollo.config.data.enums.ApolloClientMessagingType;
+import com.ctrip.framework.apollo.config.data.webclient.ApolloClientLongPollingMessagingFactory;
+import com.ctrip.framework.apollo.config.data.websocket.ApolloClientWebsocketMessagingFactory;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Binder;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloClientListeningFactory {
+public class ApolloClientMessagingFactory {
 
   private final ApolloClientPropertiesFactory apolloClientPropertiesFactory;
 
-  private final ApolloClientLongPollingListeningFactory apolloClientLongPollingListeningFactory;
+  private final ApolloClientLongPollingMessagingFactory apolloClientLongPollingMessagingFactory;
 
-  private final ApolloClientWebsocketListeningFactory apolloClientWebsocketListeningFactory;
+  private final ApolloClientWebsocketMessagingFactory apolloClientWebsocketMessagingFactory;
 
-  public ApolloClientListeningFactory() {
+  public ApolloClientMessagingFactory() {
     this.apolloClientPropertiesFactory = new ApolloClientPropertiesFactory();
-    this.apolloClientLongPollingListeningFactory = new ApolloClientLongPollingListeningFactory();
-    this.apolloClientWebsocketListeningFactory = new ApolloClientWebsocketListeningFactory();
+    this.apolloClientLongPollingMessagingFactory = new ApolloClientLongPollingMessagingFactory();
+    this.apolloClientWebsocketMessagingFactory = new ApolloClientWebsocketMessagingFactory();
   }
 
   /**
@@ -37,18 +37,18 @@ public class ApolloClientListeningFactory {
     if (apolloClientProperties == null) {
       return;
     }
-    ApolloClientListeningType listeningType = apolloClientProperties.getListeningType();
-    switch (listeningType) {
+    ApolloClientMessagingType messagingType = apolloClientProperties.getMessagingType();
+    switch (messagingType) {
       case LONG_POLLING:
-        this.apolloClientLongPollingListeningFactory
+        this.apolloClientLongPollingMessagingFactory
             .prepareCustomListening(apolloClientProperties, binder, bindHandler);
         return;
       case WEBSOCKET:
-        this.apolloClientWebsocketListeningFactory
+        this.apolloClientWebsocketMessagingFactory
             .prepareCustomListening(apolloClientProperties, binder, bindHandler);
         return;
       default:
-        throw new IllegalStateException("Unexpected value: " + listeningType);
+        throw new IllegalStateException("Unexpected value: " + messagingType);
     }
   }
 }

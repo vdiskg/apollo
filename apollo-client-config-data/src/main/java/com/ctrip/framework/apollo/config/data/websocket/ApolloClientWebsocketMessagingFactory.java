@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.bind.Binder;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloClientWebsocketListeningFactory {
+public class ApolloClientWebsocketMessagingFactory {
 
   /**
    * prepare custom websocket listening

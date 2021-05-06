@@ -1,6 +1,6 @@
 package com.ctrip.framework.apollo.config.data.authentication.properties;
 
-import com.ctrip.framework.apollo.config.data.enums.ApolloClientListeningType;
+import com.ctrip.framework.apollo.config.data.enums.ApolloClientMessagingType;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
@@ -11,7 +11,7 @@ public class ApolloClientProperties {
   /**
    * apollo client listening type
    */
-  private ApolloClientListeningType listeningType = ApolloClientListeningType.LONG_POLLING;
+  private ApolloClientMessagingType messagingType = ApolloClientMessagingType.LONG_POLLING;
 
   /**
    * apollo client authentication properties
@@ -19,13 +19,13 @@ public class ApolloClientProperties {
   @NestedConfigurationProperty
   private ApolloClientAuthenticationProperties authentication;
 
-  public ApolloClientListeningType getListeningType() {
-    return listeningType;
+  public ApolloClientMessagingType getMessagingType() {
+    return messagingType;
   }
 
-  public void setListeningType(
-      ApolloClientListeningType listeningType) {
-    this.listeningType = listeningType;
+  public void setMessagingType(
+      ApolloClientMessagingType messagingType) {
+    this.messagingType = messagingType;
   }
 
   public ApolloClientAuthenticationProperties getAuthentication() {
@@ -40,7 +40,7 @@ public class ApolloClientProperties {
   @Override
   public String toString() {
     return "ApolloClientProperties{" +
-        "listeningType=" + listeningType +
+        "messagingType=" + messagingType +
         ", authentication=" + authentication +
         '}';
   }

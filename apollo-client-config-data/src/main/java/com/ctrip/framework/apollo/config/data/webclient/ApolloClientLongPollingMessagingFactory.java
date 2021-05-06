@@ -9,11 +9,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloClientLongPollingListeningFactory {
+public class ApolloClientLongPollingMessagingFactory {
 
   private final ApolloClientWebClientFactory apolloClientWebClientFactory;
 
-  public ApolloClientLongPollingListeningFactory() {
+  public ApolloClientLongPollingMessagingFactory() {
     this.apolloClientWebClientFactory = new ApolloClientWebClientFactory();
   }
 
