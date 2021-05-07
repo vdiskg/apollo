@@ -1,6 +1,6 @@
 package com.ctrip.framework.apollo.config.data.importer;
 
-import com.ctrip.framework.apollo.config.data.util.LogFormatter;
+import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.core.ConfigConsts;
 import com.ctrip.framework.apollo.spring.config.PropertySourcesConstants;
 import java.util.Arrays;
@@ -57,12 +57,11 @@ public class ApolloConfigDataLocationResolver implements
         .orElse(ConfigConsts.NAMESPACE_APPLICATION);
     String[] namespaceArray = namespaces.split(",");
     if (namespaceArray.length == 0) {
-      log.debug(LogFormatter.format("apollo client bootstrap namespaces is empty"));
+      log.debug(Slf4jLogMessageFormatter.format("apollo client bootstrap namespaces is empty"));
       return Collections.emptyList();
     }
-    log.debug(
-        LogFormatter
-            .format("apollo client bootstrap namespaces: {}", Arrays.toString(namespaceArray)));
+    log.debug(Slf4jLogMessageFormatter
+        .format("apollo client bootstrap namespaces: {}", Arrays.toString(namespaceArray)));
     return Collections.singletonList(new ApolloConfigDataResource(Arrays.asList(namespaceArray)));
   }
 

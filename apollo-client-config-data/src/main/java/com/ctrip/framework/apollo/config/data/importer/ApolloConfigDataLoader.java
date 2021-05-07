@@ -4,7 +4,7 @@ import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.config.data.messaging.ApolloClientMessagingFactory;
 import com.ctrip.framework.apollo.config.data.properties.ApolloClientSystemPropertyProcessor;
-import com.ctrip.framework.apollo.config.data.util.LogFormatter;
+import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
 import java.io.IOException;
@@ -57,8 +57,8 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
       Config config = ConfigService.getConfig(namespace);
       propertySources.add(configPropertySourceFactory.getConfigPropertySource(namespace, config));
     }
-    log.debug(
-        LogFormatter.format("apollo client loaded namespaces: {}", resource.getNamespaceList()));
+    log.debug(Slf4jLogMessageFormatter
+        .format("apollo client loaded namespaces: {}", resource.getNamespaceList()));
     return new ConfigData(propertySources);
   }
 

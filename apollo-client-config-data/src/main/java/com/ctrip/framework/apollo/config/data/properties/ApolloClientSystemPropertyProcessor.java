@@ -1,6 +1,6 @@
 package com.ctrip.framework.apollo.config.data.properties;
 
-import com.ctrip.framework.apollo.config.data.util.LogFormatter;
+import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer;
 import org.apache.commons.logging.Log;
 import org.springframework.boot.context.properties.bind.BindHandler;
@@ -41,8 +41,8 @@ public class ApolloClientSystemPropertyProcessor {
     if (!StringUtils.hasText(propertyValue)) {
       return;
     }
-    log.debug(
-        LogFormatter.format("apollo client set system property key=[{}] value=[{}]", propertyName,
+    log.debug(Slf4jLogMessageFormatter
+        .format("apollo client set system property key=[{}] value=[{}]", propertyName,
             propertyValue));
     System.setProperty(propertyName, propertyValue);
   }

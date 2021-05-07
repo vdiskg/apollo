@@ -8,7 +8,7 @@ import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloCl
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientOauth2AuthenticationProperties;
 import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientProperties;
 import com.ctrip.framework.apollo.config.data.enums.ApolloClientAuthenticationType;
-import com.ctrip.framework.apollo.config.data.util.LogFormatter;
+import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientHttpBasicAuthenticationWebClientCustomizer;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientOauth2AuthenticationWebClientCustomizer;
 import com.ctrip.framework.apollo.config.data.webclient.customizer.ApolloClientOauth2ReactiveAuthenticationWebClientCustomizer;
@@ -52,7 +52,8 @@ public class ApolloClientWebClientFactory {
       return WebClient.create();
     }
     ApolloClientAuthenticationType authenticationType = properties.getAuthenticationType();
-    log.debug(LogFormatter.format("apollo client authentication type: {}", authenticationType));
+    log.debug(Slf4jLogMessageFormatter
+        .format("apollo client authentication type: {}", authenticationType));
     switch (authenticationType) {
       case NONE:
         return WebClient.create();
