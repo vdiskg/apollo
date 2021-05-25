@@ -2,7 +2,7 @@ package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
-import com.ctrip.framework.apollo.config.data.messaging.ApolloClientMessagingFactory;
+import com.ctrip.framework.apollo.config.data.messaging.ApolloClientExtensionMessagingFactory;
 import com.ctrip.framework.apollo.config.data.properties.ApolloClientSystemPropertyProcessor;
 import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
@@ -30,13 +30,14 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
 
   private final ApolloClientSystemPropertyProcessor apolloClientSystemPropertyProcessor;
 
-  private final ApolloClientMessagingFactory apolloClientMessagingFactory;
+  private final ApolloClientExtensionMessagingFactory apolloClientExtensionMessagingFactory;
 
   public ApolloConfigDataLoader(Log log,
       ConfigurableBootstrapContext bootstrapContext) {
     this.log = log;
     this.apolloClientSystemPropertyProcessor = new ApolloClientSystemPropertyProcessor(log);
-    this.apolloClientMessagingFactory = new ApolloClientMessagingFactory(log, bootstrapContext);
+    this.apolloClientExtensionMessagingFactory = new ApolloClientExtensionMessagingFactory(log,
+        bootstrapContext);
   }
 
   /**
@@ -48,7 +49,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
     Binder binder = context.getBootstrapContext().get(Binder.class);
     BindHandler bindHandler = this.getBindHandler(context);
     this.apolloClientSystemPropertyProcessor.setSystemProperties(binder, bindHandler);
-    this.apolloClientMessagingFactory.prepareCustomMessaging(binder, bindHandler);
+    this.apolloClientExtensionMessagingFactory.prepareMessaging(binder, bindHandler);
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,
         BootstrapRegistry.InstanceSupplier.from(ConfigPropertySourceFactory::new));
     ConfigPropertySourceFactory configPropertySourceFactory = context.getBootstrapContext()

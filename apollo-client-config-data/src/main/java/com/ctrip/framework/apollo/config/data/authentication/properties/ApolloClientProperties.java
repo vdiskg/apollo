@@ -14,6 +14,12 @@ public class ApolloClientProperties {
   private ApolloClientMessagingType messagingType = ApolloClientMessagingType.LONG_POLLING;
 
   /**
+   * extension configuration
+   */
+  @NestedConfigurationProperty
+  private ApolloClientExtensionProperties extension;
+
+  /**
    * apollo client authentication properties
    */
   @NestedConfigurationProperty
@@ -26,6 +32,15 @@ public class ApolloClientProperties {
   public void setMessagingType(
       ApolloClientMessagingType messagingType) {
     this.messagingType = messagingType;
+  }
+
+  public ApolloClientExtensionProperties getExtension() {
+    return extension;
+  }
+
+  public void setExtension(
+      ApolloClientExtensionProperties extension) {
+    this.extension = extension;
   }
 
   public ApolloClientAuthenticationProperties getAuthentication() {
@@ -41,6 +56,7 @@ public class ApolloClientProperties {
   public String toString() {
     return "ApolloClientProperties{" +
         "messagingType=" + messagingType +
+        ", extension=" + extension +
         ", authentication=" + authentication +
         '}';
   }
