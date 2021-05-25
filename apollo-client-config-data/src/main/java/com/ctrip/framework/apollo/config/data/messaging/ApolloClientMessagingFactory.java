@@ -7,6 +7,7 @@ import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.config.data.webclient.ApolloClientLongPollingMessagingFactory;
 import com.ctrip.framework.apollo.config.data.websocket.ApolloClientWebsocketMessagingFactory;
 import org.apache.commons.logging.Log;
+import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Binder;
 
@@ -23,10 +24,12 @@ public class ApolloClientMessagingFactory {
 
   private final ApolloClientWebsocketMessagingFactory apolloClientWebsocketMessagingFactory;
 
-  public ApolloClientMessagingFactory(Log log) {
+  public ApolloClientMessagingFactory(Log log,
+      ConfigurableBootstrapContext bootstrapContext) {
     this.log = log;
     this.apolloClientPropertiesFactory = new ApolloClientPropertiesFactory();
-    this.apolloClientLongPollingMessagingFactory = new ApolloClientLongPollingMessagingFactory(log);
+    this.apolloClientLongPollingMessagingFactory = new ApolloClientLongPollingMessagingFactory(log,
+        bootstrapContext);
     this.apolloClientWebsocketMessagingFactory = new ApolloClientWebsocketMessagingFactory(log);
   }
 

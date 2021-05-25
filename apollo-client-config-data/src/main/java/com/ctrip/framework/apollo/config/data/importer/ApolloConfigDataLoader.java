@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.springframework.boot.BootstrapRegistry;
+import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.context.config.ConfigData;
 import org.springframework.boot.context.config.ConfigDataLoader;
 import org.springframework.boot.context.config.ConfigDataLoaderContext;
@@ -31,10 +32,11 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
 
   private final ApolloClientMessagingFactory apolloClientMessagingFactory;
 
-  public ApolloConfigDataLoader(Log log) {
+  public ApolloConfigDataLoader(Log log,
+      ConfigurableBootstrapContext bootstrapContext) {
     this.log = log;
-    apolloClientSystemPropertyProcessor = new ApolloClientSystemPropertyProcessor(log);
-    apolloClientMessagingFactory = new ApolloClientMessagingFactory(log);
+    this.apolloClientSystemPropertyProcessor = new ApolloClientSystemPropertyProcessor(log);
+    this.apolloClientMessagingFactory = new ApolloClientMessagingFactory(log, bootstrapContext);
   }
 
   /**
