@@ -2,8 +2,8 @@ package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
-import com.ctrip.framework.apollo.config.data.messaging.ApolloClientExtensionMessagingFactory;
-import com.ctrip.framework.apollo.config.data.properties.ApolloClientSystemPropertyProcessor;
+import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientExtensionMessagingFactory;
+import com.ctrip.framework.apollo.config.data.system.ApolloClientSystemPropertyProcessor;
 import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;

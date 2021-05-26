@@ -1,7 +1,7 @@
 package com.ctrip.framework.apollo.config.data;
 
-import com.ctrip.framework.apollo.config.data.authentication.ApolloClientPropertiesFactory;
-import com.ctrip.framework.apollo.config.data.authentication.properties.ApolloClientProperties;
+import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientPropertiesFactory;
+import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
