@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @author vdisk <vdisk@foxmail.com>
  */
 @Configuration(proxyBeanMethods = false)
-public class ApolloConfigDataAutoConfiguration {
+public class ApolloClientConfigDataAutoConfiguration {
 
   @ConditionalOnMissingBean(ApolloClientProperties.class)
   @ConfigurationProperties(ApolloClientPropertiesFactory.PROPERTIES_PREFIX)

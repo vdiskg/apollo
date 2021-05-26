@@ -1,6 +1,6 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.ctrip.framework.apollo.config.data.ApolloConfigDataAutoConfiguration
+com.ctrip.framework.apollo.config.data.ApolloClientConfigDataAutoConfiguration
 
 # ConfigData Location Resolvers
 org.springframework.boot.context.config.ConfigDataLocationResolver=\
