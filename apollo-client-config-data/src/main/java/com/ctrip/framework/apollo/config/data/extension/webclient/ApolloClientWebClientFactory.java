@@ -16,14 +16,15 @@
  */
 package com.ctrip.framework.apollo.config.data.extension.webclient;
 
-import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientPropertiesFactory;
 import com.ctrip.framework.apollo.config.data.extension.authentication.oauth2.ApolloClientAuthorizedClientManagerFactory;
 import com.ctrip.framework.apollo.config.data.extension.authentication.oauth2.ApolloClientReactiveAuthorizedClientManagerFactory;
+import com.ctrip.framework.apollo.config.data.extension.enums.ApolloClientAuthenticationType;
+import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientPropertiesFactory;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientAuthenticationProperties;
+import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientExtensionProperties;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientHttpBasicAuthenticationProperties;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientOauth2AuthenticationProperties;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
-import com.ctrip.framework.apollo.config.data.extension.enums.ApolloClientAuthenticationType;
 import com.ctrip.framework.apollo.config.data.extension.webclient.customizer.ApolloClientHttpBasicAuthenticationWebClientCustomizer;
 import com.ctrip.framework.apollo.config.data.extension.webclient.customizer.ApolloClientOauth2AuthenticationWebClientCustomizer;
 import com.ctrip.framework.apollo.config.data.extension.webclient.customizer.ApolloClientOauth2ReactiveAuthenticationWebClientCustomizer;
@@ -62,7 +63,8 @@ public class ApolloClientWebClientFactory {
 
   public WebClient.Builder createWebClient(ApolloClientProperties apolloClientProperties, Binder binder,
       BindHandler bindHandler) {
-    ApolloClientAuthenticationProperties properties = apolloClientProperties.getAuthentication();
+    ApolloClientExtensionProperties extension = apolloClientProperties.getExtension();
+    ApolloClientAuthenticationProperties properties = extension.getAuthentication();
     if (properties == null) {
       log.debug("apollo client authentication properties is empty, authentication disabled");
       return WebClient.builder();

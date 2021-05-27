@@ -16,8 +16,9 @@
  */
 package com.ctrip.framework.apollo.config.data.extension.messaging;
 
-import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import com.ctrip.framework.apollo.config.data.extension.enums.ApolloClientMessagingType;
+import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientExtensionProperties;
+import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import com.ctrip.framework.apollo.config.data.extension.webclient.ApolloClientLongPollingMessagingFactory;
 import com.ctrip.framework.apollo.config.data.extension.websocket.ApolloClientWebsocketMessagingFactory;
 import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
@@ -62,11 +63,12 @@ public class ApolloClientExtensionMessagingFactory {
       this.log.info("apollo client extension is not configured, default to disabled");
       return;
     }
-    if (!apolloClientProperties.getExtension().getEnabled()) {
+    ApolloClientExtensionProperties extension = apolloClientProperties.getExtension();
+    if (!extension.getEnabled()) {
       this.log.info("apollo client extension disabled");
       return;
     }
-    ApolloClientMessagingType messagingType = apolloClientProperties.getMessagingType();
+    ApolloClientMessagingType messagingType = extension.getMessagingType();
     log.debug(Slf4jLogMessageFormatter
         .format("apollo client extension messaging type: {}", messagingType));
     switch (messagingType) {
