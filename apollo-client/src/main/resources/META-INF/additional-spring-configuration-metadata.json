@@ -1,7 +1,7 @@
 {
   "properties": [
     {
-      "name": "apollo.accesskey.secret",
+      "name": "apollo.access-key.secret",
       "type": "java.lang.String",
       "sourceType": "com.ctrip.framework.foundation.internals.provider.DefaultApplicationProvider",
       "description": "apollo client access key.",
@@ -36,7 +36,7 @@
       "defaultValue": false
     },
     {
-      "name": "apollo.cacheDir",
+      "name": "apollo.cache-dir",
       "type": "java.lang.String",
       "sourceType": "com.ctrip.framework.apollo.util.ConfigUtil",
       "description": "local cache directory. the default value on windows is 'c:\\opt\\data', while on mac/linux is '/opt/data'.",

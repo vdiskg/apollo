@@ -18,6 +18,7 @@ package com.ctrip.framework.apollo.util;
 
 import static com.ctrip.framework.apollo.util.factory.PropertiesFactory.APOLLO_PROPERTY_ORDER_ENABLE;
 
+import com.ctrip.framework.apollo.core.ApolloClientSystemConsts;
 import com.google.common.util.concurrent.RateLimiter;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -244,18 +245,18 @@ public class ConfigUtil {
 
   private String getCustomizedCacheRoot() {
     // 1. Get from System Property
-    String cacheRoot = System.getProperty("apollo.cacheDir");
+    String cacheRoot = System.getProperty(ApolloClientSystemConsts.APOLLO_CACHE_DIR);
     if (Strings.isNullOrEmpty(cacheRoot)) {
       // 2. Get from OS environment variable
-      cacheRoot = System.getenv("APOLLO_CACHEDIR");
+      cacheRoot = System.getenv("APOLLO_CACHE_DIR");
     }
     if (Strings.isNullOrEmpty(cacheRoot)) {
       // 3. Get from server.properties
-      cacheRoot = Foundation.server().getProperty("apollo.cacheDir", null);
+      cacheRoot = Foundation.server().getProperty(ApolloClientSystemConsts.APOLLO_CACHE_DIR, null);
     }
     if (Strings.isNullOrEmpty(cacheRoot)) {
       // 4. Get from app.properties
-      cacheRoot = Foundation.app().getProperty("apollo.cacheDir", null);
+      cacheRoot = Foundation.app().getProperty(ApolloClientSystemConsts.APOLLO_CACHE_DIR, null);
     }
 
     return cacheRoot;
