@@ -38,12 +38,7 @@ public class ApolloClientSystemPropertyInitializer {
 
   public void initializeSystemProperty(Binder binder, BindHandler bindHandler) {
     for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
-      if (ConfigurationPropertyName.isValid(propertyName)) {
-        this.fillSystemPropertyFromBinder(propertyName, propertyName, binder, bindHandler);
-        continue;
-      }
-      this.fillSystemPropertyFromBinder(propertyName, this.camelCasedToKebabCase(propertyName),
-          binder, bindHandler);
+      this.fillSystemPropertyFromBinder(propertyName, propertyName, binder, bindHandler);
     }
   }
 
@@ -61,23 +56,5 @@ public class ApolloClientSystemPropertyInitializer {
         .format("apollo client set system property key=[{}] value=[{}]", propertyName,
             propertyValue));
     System.setProperty(propertyName, propertyValue);
-  }
-
-  /**
-   * {@link ConfigurationPropertyName#isValid(java.lang.CharSequence)}
-   *
-   * @param source origin propertyName
-   * @return valid propertyName
-   */
-  private String camelCasedToKebabCase(String source) {
-    StringBuilder stringBuilder = new StringBuilder(source.length() * 2);
-    for (char ch : source.toCharArray()) {
-      if (Character.isUpperCase(ch)) {
-        stringBuilder.append("-").append(Character.toLowerCase(ch));
-        continue;
-      }
-      stringBuilder.append(ch);
-    }
-    return stringBuilder.toString();
   }
 }
