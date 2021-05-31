@@ -29,7 +29,7 @@ import org.springframework.boot.context.properties.source.MapConfigurationProper
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloClientSystemPropertyProcessorTest {
+public class ApolloClientSystemPropertyInitializerTest {
 
     @Test
     public void testSetSystemProperties() {
@@ -39,9 +39,9 @@ public class ApolloClientSystemPropertyProcessorTest {
         }
         MapConfigurationPropertySource propertySource = new MapConfigurationPropertySource(map);
         Binder binder = new Binder(propertySource);
-        ApolloClientSystemPropertyProcessor processor = new ApolloClientSystemPropertyProcessor(
-            LogFactory.getLog(ApolloClientSystemPropertyProcessorTest.class));
-        processor.setSystemProperties(binder, null);
+        ApolloClientSystemPropertyInitializer initializer = new ApolloClientSystemPropertyInitializer(
+            LogFactory.getLog(ApolloClientSystemPropertyInitializerTest.class));
+        initializer.initializeSystemProperty(binder, null);
         for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
             Assert.assertEquals(map.get(propertyName), System.getProperty(propertyName));
         }

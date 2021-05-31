@@ -28,15 +28,15 @@ import org.springframework.util.StringUtils;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloClientSystemPropertyProcessor {
+public class ApolloClientSystemPropertyInitializer {
 
   private final Log log;
 
-  public ApolloClientSystemPropertyProcessor(Log log) {
+  public ApolloClientSystemPropertyInitializer(Log log) {
     this.log = log;
   }
 
-  public void setSystemProperties(Binder binder, BindHandler bindHandler) {
+  public void initializeSystemProperty(Binder binder, BindHandler bindHandler) {
     for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
       if (ConfigurationPropertyName.isValid(propertyName)) {
         this.fillSystemPropertyFromBinder(propertyName, propertyName, binder, bindHandler);

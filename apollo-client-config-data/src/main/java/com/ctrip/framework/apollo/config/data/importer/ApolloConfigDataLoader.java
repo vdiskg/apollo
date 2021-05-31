@@ -19,7 +19,7 @@ package com.ctrip.framework.apollo.config.data.importer;
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientExtensionMessagingFactory;
-import com.ctrip.framework.apollo.config.data.system.ApolloClientSystemPropertyProcessor;
+import com.ctrip.framework.apollo.config.data.system.ApolloClientSystemPropertyInitializer;
 import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
@@ -44,14 +44,14 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
 
   private final Log log;
 
-  private final ApolloClientSystemPropertyProcessor apolloClientSystemPropertyProcessor;
+  private final ApolloClientSystemPropertyInitializer apolloClientSystemPropertyInitializer;
 
   private final ApolloClientExtensionMessagingFactory apolloClientExtensionMessagingFactory;
 
   public ApolloConfigDataLoader(Log log,
       ConfigurableBootstrapContext bootstrapContext) {
     this.log = log;
-    this.apolloClientSystemPropertyProcessor = new ApolloClientSystemPropertyProcessor(log);
+    this.apolloClientSystemPropertyInitializer = new ApolloClientSystemPropertyInitializer(log);
     this.apolloClientExtensionMessagingFactory = new ApolloClientExtensionMessagingFactory(log,
         bootstrapContext);
   }
@@ -64,7 +64,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
       throws IOException, ConfigDataResourceNotFoundException {
     Binder binder = context.getBootstrapContext().get(Binder.class);
     BindHandler bindHandler = this.getBindHandler(context);
-    this.apolloClientSystemPropertyProcessor.setSystemProperties(binder, bindHandler);
+    this.apolloClientSystemPropertyInitializer.initializeSystemProperty(binder, bindHandler);
     this.apolloClientExtensionMessagingFactory.prepareMessaging(binder, bindHandler);
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,
         BootstrapRegistry.InstanceSupplier.from(ConfigPropertySourceFactory::new));
