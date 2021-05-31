@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
 
 /**
@@ -32,7 +33,14 @@ import org.springframework.boot.context.properties.source.MapConfigurationProper
 public class ApolloClientSystemPropertyInitializerTest {
 
     @Test
-    public void testSetSystemProperties() {
+    public void testSystemPropertyNames() {
+        for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
+            Assert.assertTrue(ConfigurationPropertyName.isValid(propertyName));
+        }
+    }
+
+    @Test
+    public void testInitializeSystemProperty() {
         Map<String, String> map = new LinkedHashMap<>();
         for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
             map.put(propertyName, String.valueOf(ThreadLocalRandom.current().nextLong()));
