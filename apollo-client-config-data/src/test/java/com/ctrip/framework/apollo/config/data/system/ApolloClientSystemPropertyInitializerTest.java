@@ -52,6 +52,7 @@ public class ApolloClientSystemPropertyInitializerTest {
         initializer.initializeSystemProperty(binder, null);
         for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
             Assert.assertEquals(map.get(propertyName), System.getProperty(propertyName));
+            System.clearProperty(propertyName);
         }
     }
 }
