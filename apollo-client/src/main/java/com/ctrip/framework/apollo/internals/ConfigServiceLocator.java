@@ -16,6 +16,7 @@
  */
 package com.ctrip.framework.apollo.internals;
 
+import com.ctrip.framework.apollo.core.ApolloClientSystemConsts;
 import com.ctrip.framework.apollo.core.ServiceNameConsts;
 import com.ctrip.framework.foundation.Foundation;
 import java.lang.reflect.Type;
@@ -88,21 +89,21 @@ public class ConfigServiceLocator {
 
   private List<ServiceDTO> getCustomizedConfigService() {
     // 1. Get from System Property
-    String configServices = System.getProperty("apollo.configService");
+    String configServices = System.getProperty(ApolloClientSystemConsts.APOLLO_CONFIG_SERVICE);
     if (Strings.isNullOrEmpty(configServices)) {
       // 2. Get from OS environment variable
-      configServices = System.getenv("APOLLO_CONFIGSERVICE");
+      configServices = System.getenv("APOLLO_CONFIG_SERVICE");
     }
     if (Strings.isNullOrEmpty(configServices)) {
       // 3. Get from server.properties
-      configServices = Foundation.server().getProperty("apollo.configService", null);
+      configServices = Foundation.server().getProperty(ApolloClientSystemConsts.APOLLO_CONFIG_SERVICE, null);
     }
 
     if (Strings.isNullOrEmpty(configServices)) {
       return null;
     }
 
-    logger.warn("Located config services from apollo.configService configuration: {}, will not refresh config services from remote meta service!", configServices);
+    logger.warn("Located config services from apollo.config-service configuration: {}, will not refresh config services from remote meta service!", configServices);
 
     // mock service dto list
     String[] configServiceUrls = configServices.split(",");

@@ -127,11 +127,11 @@ MetaServerProvider的实现可以参考[LegacyMetaServerProvider](https://github
 
 针对以上场景，可以通过直接指定Config Service地址的方式来跳过Meta Server服务发现，按照优先级从高到低分别为：
 
-1. 通过Java System Property `apollo.configService`
-    * 可以通过Java的System Property `apollo.configService`来指定
-    * 在Java程序启动脚本中，可以指定`-Dapollo.configService=http://config-service-url:port`
+1. 通过Java System Property `apollo.config-service`
+    * 可以通过Java的System Property `apollo.config-service`来指定
+    * 在Java程序启动脚本中，可以指定`-Dapollo.config-service=http://config-service-url:port`
         * 如果是运行jar文件，需要注意格式是`java -Dapollo.configService=http://config-service-url:port -jar xxx.jar`
-    * 也可以通过程序指定，如`System.setProperty("apollo.configService", "http://config-service-url:port");`
+    * 也可以通过程序指定，如`System.setProperty("apollo.config-service", "http://config-service-url:port");`
 2. 通过操作系统的System Environment`APOLLO_CONFIGSERVICE`
     * 可以通过操作系统的System Environment `APOLLO_CONFIGSERVICE`来指定
     * 注意key为全大写，且中间是`_`分隔
@@ -173,8 +173,8 @@ batch=2000
     * 也可以通过程序指定，如`System.setProperty("apollo.cache-dir", "/opt/data/some-cache-dir");`
 2. 通过Spring Boot的配置文件
     * 可以在Spring Boot的`application.properties`或`bootstrap.properties`中指定`apollo.cache-dir=/opt/data/some-cache-dir`
-3. 通过操作系统的System Environment`APOLLO_CACHEDIR`
-    * 可以通过操作系统的System Environment `APOLLO_CACHEDIR`来指定
+3. 通过操作系统的System Environment`APOLLO_CACHE_DIR`
+    * 可以通过操作系统的System Environment `APOLLO_CACHE_DIR`来指定
     * 注意key为全大写，且中间是`_`分隔
 4. 通过`server.properties`配置文件
     * 可以在`server.properties`配置文件中指定`apollo.cache-dir=/opt/data/some-cache-dir`

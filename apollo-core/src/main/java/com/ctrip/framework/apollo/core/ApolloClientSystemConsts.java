@@ -31,6 +31,11 @@ public class ApolloClientSystemConsts {
   public static final String APOLLO_META = ConfigConsts.APOLLO_META_KEY;
 
   /**
+   * apollo config service address
+   */
+  public static final String APOLLO_CONFIG_SERVICE = "apollo.config-service";
+
+  /**
    * enable property order
    */
   public static final String APOLLO_PROPERTY_ORDER_ENABLE = "apollo.property.order.enable";

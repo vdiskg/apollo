@@ -84,6 +84,7 @@ public class ApolloApplicationContextInitializer implements
       ApolloClientSystemConsts.APOLLO_CACHE_DIR,
       ApolloClientSystemConsts.APOLLO_ACCESS_KEY_SECRET,
       ApolloClientSystemConsts.APOLLO_META,
+      ApolloClientSystemConsts.APOLLO_CONFIG_SERVICE,
       ApolloClientSystemConsts.APOLLO_PROPERTY_ORDER_ENABLE};
 
   private final ConfigPropertySourceFactory configPropertySourceFactory = SpringInjector
