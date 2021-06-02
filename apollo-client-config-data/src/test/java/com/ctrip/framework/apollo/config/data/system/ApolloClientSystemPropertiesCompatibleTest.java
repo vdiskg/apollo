@@ -1,6 +1,8 @@
 package com.ctrip.framework.apollo.config.data.system;
 
 import com.ctrip.framework.apollo.core.ApolloClientSystemConsts;
+import com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,5 +38,12 @@ public class ApolloClientSystemPropertiesCompatibleTest {
     System.clearProperty("apollo.cacheDir");
     System.clearProperty("apollo.accesskey.secret");
     System.clearProperty("apollo.configService");
+  }
+
+  @After
+  public void clearProperty() {
+    for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
+      System.clearProperty(propertyName);
+    }
   }
 }

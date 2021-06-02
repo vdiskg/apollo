@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import org.apache.commons.logging.LogFactory;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -43,6 +44,7 @@ public class ApolloClientSystemPropertyInitializerTest {
   public void testInitializeSystemProperty() {
     Map<String, String> map = new LinkedHashMap<>();
     for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
+      System.clearProperty(propertyName);
       map.put(propertyName, String.valueOf(ThreadLocalRandom.current().nextLong()));
     }
     MapConfigurationPropertySource propertySource = new MapConfigurationPropertySource(map);
@@ -52,6 +54,12 @@ public class ApolloClientSystemPropertyInitializerTest {
     initializer.initializeSystemProperty(binder, null);
     for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
       Assert.assertEquals(map.get(propertyName), System.getProperty(propertyName));
+    }
+  }
+
+  @After
+  public void clearProperty() {
+    for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
       System.clearProperty(propertyName);
     }
   }

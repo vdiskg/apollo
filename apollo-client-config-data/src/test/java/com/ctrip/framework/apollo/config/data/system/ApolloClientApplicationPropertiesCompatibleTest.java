@@ -1,6 +1,8 @@
 package com.ctrip.framework.apollo.config.data.system;
 
 import com.ctrip.framework.apollo.core.ApolloClientSystemConsts;
+import com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,5 +32,12 @@ public class ApolloClientApplicationPropertiesCompatibleTest {
         this.environment.getProperty(ApolloClientSystemConsts.APOLLO_ACCESS_KEY_SECRET));
     Assert.assertEquals("https://test-1-config-service",
         this.environment.getProperty(ApolloClientSystemConsts.APOLLO_CONFIG_SERVICE));
+  }
+
+  @After
+  public void clearProperty() {
+    for (String propertyName : ApolloApplicationContextInitializer.APOLLO_SYSTEM_PROPERTIES) {
+      System.clearProperty(propertyName);
+    }
   }
 }
