@@ -76,10 +76,11 @@ public class ApolloClientHttpBasicAuthenticationExchangeFilterFunction implement
 
   @Override
   public Mono<ClientResponse> filter(ClientRequest request, ExchangeFunction next) {
-    HttpHeaders headers = request.headers();
-    if (!headers.containsKey(HttpHeaders.AUTHORIZATION)) {
-      headers.setBasicAuth(this.encodedCredentials);
+    if (request.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
+      return next.exchange(request);
     }
-    return next.exchange(request);
+    return next.exchange(ClientRequest.from(request)
+        .headers(headers -> headers.setBasicAuth(this.encodedCredentials))
+        .build());
   }
 }
