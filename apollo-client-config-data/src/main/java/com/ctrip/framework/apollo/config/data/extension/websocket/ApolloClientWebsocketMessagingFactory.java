@@ -16,8 +16,8 @@
  */
 package com.ctrip.framework.apollo.config.data.extension.websocket;
 
-import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientMessagingFactory;
+import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import org.apache.commons.logging.Log;
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.context.properties.bind.BindHandler;

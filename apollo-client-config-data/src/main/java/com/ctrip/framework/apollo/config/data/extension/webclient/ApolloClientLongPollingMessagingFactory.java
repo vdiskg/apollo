@@ -16,8 +16,8 @@
  */
 package com.ctrip.framework.apollo.config.data.extension.webclient;
 
-import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientMessagingFactory;
+import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import com.ctrip.framework.apollo.config.data.extension.webclient.customizer.spi.ApolloClientCustomWebClientCustomizerFactory;
 import com.ctrip.framework.apollo.config.data.extension.webclient.injector.ApolloClientCustomHttpClientInjectorCustomizer;
 import com.ctrip.framework.foundation.internals.ServiceBootstrap;

@@ -61,7 +61,8 @@ public class ApolloClientWebClientFactory {
     this.apolloClientReactiveAuthorizedClientManagerFactory = new ApolloClientReactiveAuthorizedClientManagerFactory();
   }
 
-  public WebClient.Builder createWebClient(ApolloClientProperties apolloClientProperties, Binder binder,
+  public WebClient.Builder createWebClient(ApolloClientProperties apolloClientProperties,
+      Binder binder,
       BindHandler bindHandler) {
     ApolloClientExtensionProperties extension = apolloClientProperties.getExtension();
     ApolloClientAuthenticationProperties properties = extension.getAuthentication();
@@ -110,7 +111,8 @@ public class ApolloClientWebClientFactory {
   /**
    * reactive oauth2 authentication webclient
    */
-  private WebClient.Builder getReactiveOauth2WebClient(OAuth2ClientProperties oauth2ClientProperties,
+  private WebClient.Builder getReactiveOauth2WebClient(
+      OAuth2ClientProperties oauth2ClientProperties,
       ApolloClientAuthenticationProperties properties, Binder binder,
       BindHandler bindHandler) {
     ReactiveOAuth2AuthorizedClientManager authorizedClientManager = this.apolloClientReactiveAuthorizedClientManagerFactory
@@ -173,7 +175,8 @@ public class ApolloClientWebClientFactory {
   /**
    * http basic authentication webclient
    */
-  private WebClient.Builder createHttpBasicWebClient(ApolloClientAuthenticationProperties properties,
+  private WebClient.Builder createHttpBasicWebClient(
+      ApolloClientAuthenticationProperties properties,
       Binder binder,
       BindHandler bindHandler) {
     properties.getHttpBasic().validate();
