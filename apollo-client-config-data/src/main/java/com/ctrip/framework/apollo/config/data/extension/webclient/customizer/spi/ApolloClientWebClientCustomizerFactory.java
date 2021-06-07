@@ -16,6 +16,7 @@
  */
 package com.ctrip.framework.apollo.config.data.extension.webclient.customizer.spi;
 
+import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import com.ctrip.framework.apollo.core.spi.Ordered;
 import org.apache.commons.logging.Log;
 import org.springframework.boot.ConfigurableBootstrapContext;
@@ -27,18 +28,20 @@ import org.springframework.lang.Nullable;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public interface ApolloClientCustomWebClientCustomizerFactory extends Ordered {
+public interface ApolloClientWebClientCustomizerFactory extends Ordered {
 
   /**
    * create a WebClientCustomizer instance
    *
-   * @param binder           properties binder
-   * @param bindHandler      properties binder Handler
-   * @param log              deferred log
-   * @param bootstrapContext bootstrapContext
+   * @param apolloClientProperties apollo client binded properties
+   * @param binder                 properties binder
+   * @param bindHandler            properties binder Handler
+   * @param log                    deferred log
+   * @param bootstrapContext       bootstrapContext
    * @return WebClientCustomizer instance or null
    */
   @Nullable
-  WebClientCustomizer createWebClientCustomizer(Binder binder, BindHandler bindHandler, Log log,
+  WebClientCustomizer createWebClientCustomizer(ApolloClientProperties apolloClientProperties,
+      Binder binder, BindHandler bindHandler, Log log,
       ConfigurableBootstrapContext bootstrapContext);
 }

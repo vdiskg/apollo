@@ -41,6 +41,6 @@ public class ApolloClientWebsocketMessagingFactory implements ApolloClientMessag
   @Override
   public void prepareMessaging(ApolloClientProperties apolloClientProperties, Binder binder,
       BindHandler bindHandler) {
-    throw new UnsupportedOperationException("not complete yet.");
+    throw new UnsupportedOperationException("apollo client websocket support is not complete yet.");
   }
 }
