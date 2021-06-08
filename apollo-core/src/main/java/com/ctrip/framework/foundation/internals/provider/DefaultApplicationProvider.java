@@ -120,7 +120,7 @@ public class DefaultApplicationProvider implements ApplicationProvider {
     }
 
     //2. Try to get app id from OS environment variable
-    m_appId = System.getenv("APP_ID");
+    m_appId = System.getenv(ApolloClientSystemConsts.APP_ID_ENVIRONMENT_VARIABLES);
     if (!Utils.isBlank(m_appId)) {
       m_appId = m_appId.trim();
       logger.info("App ID is set to {} by APP_ID property from OS environment variable", m_appId);
@@ -152,7 +152,7 @@ public class DefaultApplicationProvider implements ApplicationProvider {
     }
 
     //2. Try to get ACCESS KEY SECRET from OS environment variable
-    accessKeySecret = System.getenv("APOLLO_ACCESS_KEY_SECRET");
+    accessKeySecret = System.getenv(ApolloClientSystemConsts.APOLLO_ACCESS_KEY_SECRET_ENVIRONMENT_VARIABLES);
     if (!Utils.isBlank(accessKeySecret)) {
       accessKeySecret = accessKeySecret.trim();
       logger.info(

@@ -248,7 +248,7 @@ public class ConfigUtil {
     String cacheRoot = System.getProperty(ApolloClientSystemConsts.APOLLO_CACHE_DIR);
     if (Strings.isNullOrEmpty(cacheRoot)) {
       // 2. Get from OS environment variable
-      cacheRoot = System.getenv("APOLLO_CACHE_DIR");
+      cacheRoot = System.getenv(ApolloClientSystemConsts.APOLLO_CACHE_DIR_ENVIRONMENT_VARIABLES);
     }
     if (Strings.isNullOrEmpty(cacheRoot)) {
       // 3. Get from server.properties

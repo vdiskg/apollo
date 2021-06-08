@@ -92,7 +92,7 @@ public class ConfigServiceLocator {
     String configServices = System.getProperty(ApolloClientSystemConsts.APOLLO_CONFIG_SERVICE);
     if (Strings.isNullOrEmpty(configServices)) {
       // 2. Get from OS environment variable
-      configServices = System.getenv("APOLLO_CONFIG_SERVICE");
+      configServices = System.getenv(ApolloClientSystemConsts.APOLLO_CONFIG_SERVICE_ENVIRONMENT_VARIABLES);
     }
     if (Strings.isNullOrEmpty(configServices)) {
       // 3. Get from server.properties
