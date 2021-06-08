@@ -14,9 +14,8 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.util;
+package com.ctrip.framework.apollo.core.utils;
 
-import com.ctrip.framework.apollo.core.utils.DeferredLoggerFactory;
 import org.slf4j.Logger;
 
 /**
