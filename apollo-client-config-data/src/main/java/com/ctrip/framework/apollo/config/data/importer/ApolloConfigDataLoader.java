@@ -21,6 +21,7 @@ import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientExtensionMessagingFactory;
 import com.ctrip.framework.apollo.config.data.system.ApolloClientSystemPropertyInitializer;
 import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
+import com.ctrip.framework.apollo.core.utils.DeferredLogger;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
 import java.io.IOException;
@@ -66,6 +67,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
     BindHandler bindHandler = this.getBindHandler(context);
     this.apolloClientSystemPropertyInitializer.initializeSystemProperty(binder, bindHandler);
     this.apolloClientExtensionMessagingFactory.prepareMessaging(binder, bindHandler);
+    DeferredLogger.enable();
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,
         BootstrapRegistry.InstanceSupplier.from(ConfigPropertySourceFactory::new));
     ConfigPropertySourceFactory configPropertySourceFactory = context.getBootstrapContext()

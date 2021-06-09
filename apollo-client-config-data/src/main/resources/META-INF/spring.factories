@@ -9,3 +9,7 @@ com.ctrip.framework.apollo.config.data.importer.ApolloConfigDataLocationResolver
 # ConfigData Loaders
 org.springframework.boot.context.config.ConfigDataLoader=\
 com.ctrip.framework.apollo.config.data.importer.ApolloConfigDataLoader
+
+# Listener
+org.springframework.context.ApplicationListener=\
+com.ctrip.framework.apollo.config.data.listener.ApolloDeferredLoggerApplicationListener
