@@ -19,6 +19,10 @@ package com.ctrip.framework.apollo.config.data.importer;
 import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientExtensionMessagingFactory;
 import com.ctrip.framework.apollo.config.data.system.ApolloClientSystemPropertyInitializer;
 import com.ctrip.framework.apollo.core.utils.DeferredLogger;
+import com.ctrip.framework.apollo.spring.config.PropertySourcesConstants;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.context.properties.bind.BindHandler;
@@ -48,16 +52,19 @@ public class ApolloConfigDataLoaderInitializer {
     this.bootstrapContext = bootstrapContext;
   }
 
-  public void initApolloClient() {
+  public List<EmptyPropertySource> initApolloClient() {
     if (INITIALIZED) {
-      return;
+      return Collections.emptyList();
     }
     synchronized (ApolloConfigDataLoaderInitializer.class) {
       if (INITIALIZED) {
-        return;
+        return Collections.emptyList();
       }
       this.initApolloClientInternal();
       INITIALIZED = true;
+      return Arrays.asList(
+          new EmptyPropertySource(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME),
+          new EmptyPropertySource(PropertySourcesConstants.APOLLO_PROPERTY_SOURCE_NAME));
     }
   }
 

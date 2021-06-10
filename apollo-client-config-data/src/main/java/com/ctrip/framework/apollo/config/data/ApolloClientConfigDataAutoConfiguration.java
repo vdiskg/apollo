@@ -18,6 +18,8 @@ package com.ctrip.framework.apollo.config.data;
 
 import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientPropertiesFactory;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
+import com.ctrip.framework.apollo.spring.config.ConfigPropertySourcesProcessor;
+import com.ctrip.framework.apollo.spring.config.PropertySourcesProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -34,5 +36,11 @@ public class ApolloClientConfigDataAutoConfiguration {
   @Bean
   public static ApolloClientProperties apolloWebClientSecurityProperties() {
     return new ApolloClientProperties();
+  }
+
+  @ConditionalOnMissingBean(PropertySourcesProcessor.class)
+  @Bean
+  public ConfigPropertySourcesProcessor configPropertySourcesProcessor() {
+    return new ConfigPropertySourcesProcessor();
   }
 }

@@ -25,7 +25,8 @@ import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
 import com.ctrip.framework.apollo.spring.util.SpringInjector;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.springframework.boot.BootstrapRegistry;
 import org.springframework.boot.ConfigurableBootstrapContext;
@@ -36,6 +37,7 @@ import org.springframework.boot.context.config.ConfigDataResourceNotFoundExcepti
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.Ordered;
+import org.springframework.core.env.PropertySource;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
@@ -75,7 +77,8 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
         .getBootstrapContext()
         .get(ApolloConfigDataLoaderInitializer.class);
     // init apollo client
-    apolloConfigDataLoaderInitializer.initApolloClient();
+    List<EmptyPropertySource> emptyPropertySourceList = apolloConfigDataLoaderInitializer
+        .initApolloClient();
     // load config
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,
         BootstrapRegistry.InstanceSupplier
@@ -84,11 +87,13 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
         .get(ConfigPropertySourceFactory.class);
     String namespace = resource.getNamespace();
     Config config = ConfigService.getConfig(namespace);
-    ConfigPropertySource propertySource = configPropertySourceFactory
+    ConfigPropertySource configPropertySource = configPropertySourceFactory
         .getConfigPropertySource(namespace, config);
+    List<PropertySource<?>> propertySourceList = new ArrayList<>(emptyPropertySourceList);
+    propertySourceList.add(configPropertySource);
     log.debug(Slf4jLogMessageFormatter
         .format("apollo client loaded namespace [{}]", resource.getNamespace()));
-    return new ConfigData(Collections.singletonList(propertySource));
+    return new ConfigData(propertySourceList);
   }
 
   private BindHandler getBindHandler(ConfigDataLoaderContext context) {
