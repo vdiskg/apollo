@@ -16,7 +16,7 @@
  */
 package com.ctrip.framework.apollo.config.data.importer;
 
-import java.util.List;
+import com.ctrip.framework.apollo.core.ConfigConsts;
 import org.springframework.boot.context.config.ConfigDataResource;
 
 /**
@@ -24,20 +24,29 @@ import org.springframework.boot.context.config.ConfigDataResource;
  */
 public class ApolloConfigDataResource extends ConfigDataResource {
 
-  private final List<String> namespaceList;
+  /**
+   * default resource instance
+   */
+  public static final ApolloConfigDataResource DEFAULT = new ApolloConfigDataResource(
+      ConfigConsts.NAMESPACE_APPLICATION);
 
-  public ApolloConfigDataResource(List<String> namespaceList) {
-    this.namespaceList = namespaceList;
+  /**
+   * apollo config namespace
+   */
+  private final String namespace;
+
+  public ApolloConfigDataResource(String namespace) {
+    this.namespace = namespace;
   }
 
-  public List<String> getNamespaceList() {
-    return namespaceList;
+  public String getNamespace() {
+    return namespace;
   }
 
   @Override
   public String toString() {
     return "ApolloConfigDataResource{" +
-        "namespaceList=" + namespaceList +
+        "namespace='" + namespace + '\'' +
         '}';
   }
 }

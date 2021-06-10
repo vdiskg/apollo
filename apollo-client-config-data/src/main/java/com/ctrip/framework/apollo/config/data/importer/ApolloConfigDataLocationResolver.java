@@ -18,8 +18,6 @@ package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.core.ConfigConsts;
-import com.ctrip.framework.apollo.spring.config.PropertySourcesConstants;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.logging.Log;
@@ -29,10 +27,8 @@ import org.springframework.boot.context.config.ConfigDataLocationResolver;
 import org.springframework.boot.context.config.ConfigDataLocationResolverContext;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.boot.context.config.Profiles;
-import org.springframework.boot.context.properties.bind.BindHandler;
-import org.springframework.boot.context.properties.bind.Bindable;
-import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.Ordered;
+import org.springframework.util.StringUtils;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
@@ -40,7 +36,7 @@ import org.springframework.core.Ordered;
 public class ApolloConfigDataLocationResolver implements
     ConfigDataLocationResolver<ApolloConfigDataResource>, Ordered {
 
-  private static final String PREFIX = "apollo:";
+  private static final String PREFIX = "apollo://";
 
   private final Log log;
 
@@ -65,28 +61,18 @@ public class ApolloConfigDataLocationResolver implements
   public List<ApolloConfigDataResource> resolveProfileSpecific(
       ConfigDataLocationResolverContext context, ConfigDataLocation location, Profiles profiles)
       throws ConfigDataLocationNotFoundException {
-    Binder binder = context.getBinder();
-    BindHandler bindHandler = this.getBindHandler(context);
-    String namespaces = binder
-        .bind(PropertySourcesConstants.APOLLO_BOOTSTRAP_NAMESPACES, Bindable.of(String.class),
-            bindHandler)
-        .orElse(ConfigConsts.NAMESPACE_APPLICATION);
-    String[] namespaceArray = namespaces.split(",");
-    if (namespaceArray.length == 0) {
-      log.debug(Slf4jLogMessageFormatter.format("apollo client bootstrap namespaces is empty"));
-      return Collections.emptyList();
+    String namespace = location.getNonPrefixedValue(PREFIX);
+    if (StringUtils.hasText(namespace)) {
+      log.debug(Slf4jLogMessageFormatter.format("apollo config namespace [{}]", namespace));
+      return Collections.singletonList(new ApolloConfigDataResource(namespace));
     }
-    log.debug(Slf4jLogMessageFormatter
-        .format("apollo client bootstrap namespaces: {}", Arrays.toString(namespaceArray)));
-    return Collections.singletonList(new ApolloConfigDataResource(Arrays.asList(namespaceArray)));
-  }
-
-  private BindHandler getBindHandler(ConfigDataLocationResolverContext context) {
-    return context.getBootstrapContext().getOrElse(BindHandler.class, null);
+    log.debug(Slf4jLogMessageFormatter.format("apollo config namespace is empty, default to [{}]",
+        ConfigConsts.NAMESPACE_APPLICATION));
+    return Collections.singletonList(ApolloConfigDataResource.DEFAULT);
   }
 
   @Override
   public int getOrder() {
-    return -1;
+    return Ordered.HIGHEST_PRECEDENCE + 100;
   }
 }

@@ -21,12 +21,11 @@ import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientExtensionMessagingFactory;
 import com.ctrip.framework.apollo.config.data.system.ApolloClientSystemPropertyInitializer;
 import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
-import com.ctrip.framework.apollo.core.utils.DeferredLogger;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
+import com.ctrip.framework.apollo.spring.util.SpringInjector;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import org.apache.commons.logging.Log;
 import org.springframework.boot.BootstrapRegistry;
 import org.springframework.boot.ConfigurableBootstrapContext;
@@ -45,6 +44,8 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
 
   private final Log log;
 
+  private final ConfigurableBootstrapContext bootstrapContext;
+
   private final ApolloClientSystemPropertyInitializer apolloClientSystemPropertyInitializer;
 
   private final ApolloClientExtensionMessagingFactory apolloClientExtensionMessagingFactory;
@@ -52,6 +53,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
   public ApolloConfigDataLoader(Log log,
       ConfigurableBootstrapContext bootstrapContext) {
     this.log = log;
+    this.bootstrapContext = bootstrapContext;
     this.apolloClientSystemPropertyInitializer = new ApolloClientSystemPropertyInitializer(log);
     this.apolloClientExtensionMessagingFactory = new ApolloClientExtensionMessagingFactory(log,
         bootstrapContext);
@@ -65,22 +67,28 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
       throws IOException, ConfigDataResourceNotFoundException {
     Binder binder = context.getBootstrapContext().get(Binder.class);
     BindHandler bindHandler = this.getBindHandler(context);
-    this.apolloClientSystemPropertyInitializer.initializeSystemProperty(binder, bindHandler);
-    this.apolloClientExtensionMessagingFactory.prepareMessaging(binder, bindHandler);
-    DeferredLogger.enable();
+    context.getBootstrapContext().registerIfAbsent(ApolloConfigDataLoaderInitializer.class,
+        BootstrapRegistry.InstanceSupplier.from(
+            () -> new ApolloConfigDataLoaderInitializer(this.log, binder, bindHandler,
+                this.bootstrapContext)));
+    ApolloConfigDataLoaderInitializer apolloConfigDataLoaderInitializer = context
+        .getBootstrapContext()
+        .get(ApolloConfigDataLoaderInitializer.class);
+    // init apollo client
+    apolloConfigDataLoaderInitializer.initApolloClient();
+    // load config
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,
-        BootstrapRegistry.InstanceSupplier.from(ConfigPropertySourceFactory::new));
+        BootstrapRegistry.InstanceSupplier
+            .from(() -> SpringInjector.getInstance(ConfigPropertySourceFactory.class)));
     ConfigPropertySourceFactory configPropertySourceFactory = context.getBootstrapContext()
         .get(ConfigPropertySourceFactory.class);
-    List<ConfigPropertySource> propertySources = new ArrayList<>(
-        resource.getNamespaceList().size());
-    for (String namespace : resource.getNamespaceList()) {
-      Config config = ConfigService.getConfig(namespace);
-      propertySources.add(configPropertySourceFactory.getConfigPropertySource(namespace, config));
-    }
+    String namespace = resource.getNamespace();
+    Config config = ConfigService.getConfig(namespace);
+    ConfigPropertySource propertySource = configPropertySourceFactory
+        .getConfigPropertySource(namespace, config);
     log.debug(Slf4jLogMessageFormatter
-        .format("apollo client loaded namespaces: {}", resource.getNamespaceList()));
-    return new ConfigData(propertySources);
+        .format("apollo client loaded namespace [{}]", resource.getNamespace()));
+    return new ConfigData(Collections.singletonList(propertySource));
   }
 
   private BindHandler getBindHandler(ConfigDataLoaderContext context) {
