@@ -52,6 +52,11 @@ public class ApolloConfigDataLoaderInitializer {
     this.bootstrapContext = bootstrapContext;
   }
 
+  /**
+   * init apollo client (only once)
+   *
+   * @return empty sources as placeholders or empty list if already initialized
+   */
   public List<EmptyPropertySource> initApolloClient() {
     if (INITIALIZED) {
       return Collections.emptyList();
@@ -62,6 +67,7 @@ public class ApolloConfigDataLoaderInitializer {
       }
       this.initApolloClientInternal();
       INITIALIZED = true;
+      // provide empty sources as placeholders to avoid duplicate loading
       return Arrays.asList(
           new EmptyPropertySource(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME),
           new EmptyPropertySource(PropertySourcesConstants.APOLLO_PROPERTY_SOURCE_NAME));
