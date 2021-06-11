@@ -69,8 +69,8 @@ public class ApolloConfigDataLoaderInitializer {
       INITIALIZED = true;
       // provide empty sources as placeholders to avoid duplicate loading
       return Arrays.asList(
-          new EmptyPropertySource(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME),
-          new EmptyPropertySource(PropertySourcesConstants.APOLLO_PROPERTY_SOURCE_NAME));
+          new EmptyPropertySource(PropertySourcesConstants.APOLLO_PROPERTY_SOURCE_NAME),
+          new EmptyPropertySource(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME));
     }
   }
 

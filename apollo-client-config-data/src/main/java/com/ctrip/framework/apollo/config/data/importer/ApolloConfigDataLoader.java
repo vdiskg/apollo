@@ -61,9 +61,6 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
         bootstrapContext);
   }
 
-  /**
-   * {@link com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer#initialize(org.springframework.core.env.ConfigurableEnvironment)}
-   */
   @Override
   public ConfigData load(ConfigDataLoaderContext context, ApolloConfigDataResource resource)
       throws IOException, ConfigDataResourceNotFoundException {
@@ -89,8 +86,9 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
     Config config = ConfigService.getConfig(namespace);
     ConfigPropertySource configPropertySource = configPropertySourceFactory
         .getConfigPropertySource(namespace, config);
-    List<PropertySource<?>> propertySourceList = new ArrayList<>(emptyPropertySourceList);
+    List<PropertySource<?>> propertySourceList = new ArrayList<>();
     propertySourceList.add(configPropertySource);
+    propertySourceList.addAll(emptyPropertySourceList);
     log.debug(Slf4jLogMessageFormatter
         .format("apollo client loaded namespace [{}]", resource.getNamespace()));
     return new ConfigData(propertySourceList);
