@@ -74,7 +74,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
         .getBootstrapContext()
         .get(ApolloConfigDataLoaderInitializer.class);
     // init apollo client
-    List<EmptyPropertySource> emptyPropertySourceList = apolloConfigDataLoaderInitializer
+    List<ApolloConfigEmptyPropertySource> emptyPropertySourceList = apolloConfigDataLoaderInitializer
         .initApolloClient();
     // load config
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,

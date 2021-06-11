@@ -22,14 +22,14 @@ import org.springframework.core.env.MapPropertySource;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class EmptyPropertySource extends MapPropertySource {
+public class ApolloConfigEmptyPropertySource extends MapPropertySource {
 
   /**
    * Create a new {@code EmptyPropertySource} with the given name.
    *
    * @param name the associated name
    */
-  public EmptyPropertySource(String name) {
+  public ApolloConfigEmptyPropertySource(String name) {
     super(name, Collections.emptyMap());
   }
 }
