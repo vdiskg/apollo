@@ -16,7 +16,7 @@
  */
 package com.ctrip.framework.apollo.config.data.importer;
 
-import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientExtensionMessagingFactory;
+import com.ctrip.framework.apollo.config.data.extension.initialize.ApolloClientExtensionInitializeFactory;
 import com.ctrip.framework.apollo.config.data.system.ApolloClientSystemPropertyInitializer;
 import com.ctrip.framework.apollo.core.utils.DeferredLogger;
 import com.ctrip.framework.apollo.spring.config.PropertySourcesConstants;
@@ -77,8 +77,8 @@ public class ApolloConfigDataLoaderInitializer {
   private void initApolloClientInternal() {
     new ApolloClientSystemPropertyInitializer(this.log)
         .initializeSystemProperty(this.binder, this.bindHandler);
-    new ApolloClientExtensionMessagingFactory(this.log,
-        this.bootstrapContext).prepareMessaging(this.binder, this.bindHandler);
+    new ApolloClientExtensionInitializeFactory(this.log,
+        this.bootstrapContext).initializeExtension(this.binder, this.bindHandler);
     DeferredLogger.enable();
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.config.data.extension.messaging;
+package com.ctrip.framework.apollo.config.data.extension.initialize;
 
 import com.ctrip.framework.apollo.config.data.extension.enums.ApolloClientAuthenticationType;
 import com.ctrip.framework.apollo.config.data.extension.enums.ApolloClientMessagingType;

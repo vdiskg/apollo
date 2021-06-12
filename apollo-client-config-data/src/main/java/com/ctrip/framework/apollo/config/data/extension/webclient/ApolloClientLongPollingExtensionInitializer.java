@@ -16,10 +16,9 @@
  */
 package com.ctrip.framework.apollo.config.data.extension.webclient;
 
-import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientMessagingFactory;
+import com.ctrip.framework.apollo.config.data.extension.initialize.ApolloClientExtensionInitializer;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import com.ctrip.framework.apollo.config.data.extension.webclient.customizer.spi.ApolloClientWebClientCustomizerFactory;
-import com.ctrip.framework.apollo.config.data.extension.webclient.customizer.spi.impl.ApolloClientWebClientAuthenticationCustomizerFactory;
 import com.ctrip.framework.apollo.config.data.extension.webclient.injector.ApolloClientCustomHttpClientInjectorCustomizer;
 import com.ctrip.framework.foundation.internals.ServiceBootstrap;
 import java.util.List;
@@ -34,31 +33,23 @@ import org.springframework.web.reactive.function.client.WebClient;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloClientLongPollingMessagingFactory implements ApolloClientMessagingFactory {
+public class ApolloClientLongPollingExtensionInitializer implements
+    ApolloClientExtensionInitializer {
 
   private final Log log;
 
   private final ConfigurableBootstrapContext bootstrapContext;
 
-  private final ApolloClientWebClientAuthenticationCustomizerFactory apolloClientWebClientAuthenticationCustomizerFactory;
-
-  public ApolloClientLongPollingMessagingFactory(Log log,
+  public ApolloClientLongPollingExtensionInitializer(Log log,
       ConfigurableBootstrapContext bootstrapContext) {
     this.log = log;
     this.bootstrapContext = bootstrapContext;
-    this.apolloClientWebClientAuthenticationCustomizerFactory = new ApolloClientWebClientAuthenticationCustomizerFactory();
   }
 
   @Override
-  public void prepareMessaging(ApolloClientProperties apolloClientProperties, Binder binder,
+  public void initialize(ApolloClientProperties apolloClientProperties, Binder binder,
       BindHandler bindHandler) {
     WebClient.Builder webClientBuilder = WebClient.builder();
-    WebClientCustomizer authenticationCustomizer = this.apolloClientWebClientAuthenticationCustomizerFactory
-        .createWebClientCustomizer(apolloClientProperties, binder, bindHandler, this.log,
-            this.bootstrapContext);
-    if (authenticationCustomizer != null) {
-      authenticationCustomizer.customize(webClientBuilder);
-    }
     List<ApolloClientWebClientCustomizerFactory> factories = ServiceBootstrap
         .loadAllOrdered(ApolloClientWebClientCustomizerFactory.class);
     if (!CollectionUtils.isEmpty(factories)) {

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.config.data.extension.messaging;
+package com.ctrip.framework.apollo.config.data.extension.initialize;
 
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import org.springframework.boot.context.properties.bind.BindHandler;
@@ -23,15 +23,15 @@ import org.springframework.boot.context.properties.bind.Binder;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public interface ApolloClientMessagingFactory {
+public interface ApolloClientExtensionInitializer {
 
   /**
-   * prepare extension messaging
+   * initialize extension
    *
    * @param apolloClientProperties apollo client extension properties
    * @param binder                 properties binder
    * @param bindHandler            properties bind handler
    */
-  void prepareMessaging(ApolloClientProperties apolloClientProperties, Binder binder,
+  void initialize(ApolloClientProperties apolloClientProperties, Binder binder,
       BindHandler bindHandler);
 }

@@ -14,31 +14,33 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.config.data.extension.messaging;
+package com.ctrip.framework.apollo.config.data.extension.websocket;
 
+import com.ctrip.framework.apollo.config.data.extension.initialize.ApolloClientExtensionInitializer;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
+import org.apache.commons.logging.Log;
+import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.context.properties.bind.BindHandler;
-import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloClientPropertiesFactory {
+public class ApolloClientWebsocketExtensionInitializer implements ApolloClientExtensionInitializer {
 
-  public static final String PROPERTIES_PREFIX = "apollo.client";
+  private final Log log;
 
-  public ApolloClientProperties createApolloClientProperties(
-      Binder binder,
-      BindHandler bindHandler) {
-    return binder.bind(PROPERTIES_PREFIX,
-        Bindable.of(ApolloClientProperties.class), bindHandler).orElse(null);
+  private final ConfigurableBootstrapContext bootstrapContext;
+
+  public ApolloClientWebsocketExtensionInitializer(Log log,
+      ConfigurableBootstrapContext bootstrapContext) {
+    this.log = log;
+    this.bootstrapContext = bootstrapContext;
   }
 
-  public OAuth2ClientProperties createOauth2ClientProperties(Binder binder,
+  @Override
+  public void initialize(ApolloClientProperties apolloClientProperties, Binder binder,
       BindHandler bindHandler) {
-    return binder.bind("spring.security.oauth2.client", Bindable.of(OAuth2ClientProperties.class),
-        bindHandler).orElse(null);
+    throw new UnsupportedOperationException("apollo client websocket support is not complete yet.");
   }
 }

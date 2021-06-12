@@ -14,33 +14,31 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.config.data.extension.websocket;
+package com.ctrip.framework.apollo.config.data.extension.initialize;
 
-import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientMessagingFactory;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
-import org.apache.commons.logging.Log;
-import org.springframework.boot.ConfigurableBootstrapContext;
+import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.boot.context.properties.bind.BindHandler;
+import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloClientWebsocketMessagingFactory implements ApolloClientMessagingFactory {
+public class ApolloClientPropertiesFactory {
 
-  private final Log log;
+  public static final String PROPERTIES_PREFIX = "apollo.client";
 
-  private final ConfigurableBootstrapContext bootstrapContext;
-
-  public ApolloClientWebsocketMessagingFactory(Log log,
-      ConfigurableBootstrapContext bootstrapContext) {
-    this.log = log;
-    this.bootstrapContext = bootstrapContext;
+  public ApolloClientProperties createApolloClientProperties(
+      Binder binder,
+      BindHandler bindHandler) {
+    return binder.bind(PROPERTIES_PREFIX,
+        Bindable.of(ApolloClientProperties.class), bindHandler).orElse(null);
   }
 
-  @Override
-  public void prepareMessaging(ApolloClientProperties apolloClientProperties, Binder binder,
+  public OAuth2ClientProperties createOauth2ClientProperties(Binder binder,
       BindHandler bindHandler) {
-    throw new UnsupportedOperationException("apollo client websocket support is not complete yet.");
+    return binder.bind("spring.security.oauth2.client", Bindable.of(OAuth2ClientProperties.class),
+        bindHandler).orElse(null);
   }
 }

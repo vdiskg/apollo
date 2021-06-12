@@ -18,8 +18,6 @@ package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
-import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientExtensionMessagingFactory;
-import com.ctrip.framework.apollo.config.data.system.ApolloClientSystemPropertyInitializer;
 import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySource;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
@@ -48,17 +46,10 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
 
   private final ConfigurableBootstrapContext bootstrapContext;
 
-  private final ApolloClientSystemPropertyInitializer apolloClientSystemPropertyInitializer;
-
-  private final ApolloClientExtensionMessagingFactory apolloClientExtensionMessagingFactory;
-
   public ApolloConfigDataLoader(Log log,
       ConfigurableBootstrapContext bootstrapContext) {
     this.log = log;
     this.bootstrapContext = bootstrapContext;
-    this.apolloClientSystemPropertyInitializer = new ApolloClientSystemPropertyInitializer(log);
-    this.apolloClientExtensionMessagingFactory = new ApolloClientExtensionMessagingFactory(log,
-        bootstrapContext);
   }
 
   @Override

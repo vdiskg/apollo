@@ -14,13 +14,13 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.config.data.extension.messaging;
+package com.ctrip.framework.apollo.config.data.extension.initialize;
 
 import com.ctrip.framework.apollo.config.data.extension.enums.ApolloClientMessagingType;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientExtensionProperties;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
-import com.ctrip.framework.apollo.config.data.extension.webclient.ApolloClientLongPollingMessagingFactory;
-import com.ctrip.framework.apollo.config.data.extension.websocket.ApolloClientWebsocketMessagingFactory;
+import com.ctrip.framework.apollo.config.data.extension.webclient.ApolloClientLongPollingExtensionInitializer;
+import com.ctrip.framework.apollo.config.data.extension.websocket.ApolloClientWebsocketExtensionInitializer;
 import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import org.apache.commons.logging.Log;
 import org.springframework.boot.ConfigurableBootstrapContext;
@@ -30,33 +30,33 @@ import org.springframework.boot.context.properties.bind.Binder;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloClientExtensionMessagingFactory {
+public class ApolloClientExtensionInitializeFactory {
 
   private final Log log;
 
   private final ApolloClientPropertiesFactory apolloClientPropertiesFactory;
 
-  private final ApolloClientLongPollingMessagingFactory apolloClientLongPollingMessagingFactory;
+  private final ApolloClientLongPollingExtensionInitializer apolloClientLongPollingExtensionInitializer;
 
-  private final ApolloClientWebsocketMessagingFactory apolloClientWebsocketMessagingFactory;
+  private final ApolloClientWebsocketExtensionInitializer apolloClientWebsocketExtensionInitializer;
 
-  public ApolloClientExtensionMessagingFactory(Log log,
+  public ApolloClientExtensionInitializeFactory(Log log,
       ConfigurableBootstrapContext bootstrapContext) {
     this.log = log;
     this.apolloClientPropertiesFactory = new ApolloClientPropertiesFactory();
-    this.apolloClientLongPollingMessagingFactory = new ApolloClientLongPollingMessagingFactory(log,
+    this.apolloClientLongPollingExtensionInitializer = new ApolloClientLongPollingExtensionInitializer(log,
         bootstrapContext);
-    this.apolloClientWebsocketMessagingFactory = new ApolloClientWebsocketMessagingFactory(log,
+    this.apolloClientWebsocketExtensionInitializer = new ApolloClientWebsocketExtensionInitializer(log,
         bootstrapContext);
   }
 
   /**
-   * prepare extension messaging
+   * initialize extension
    *
    * @param binder      properties binder
    * @param bindHandler properties bind handler
    */
-  public void prepareMessaging(Binder binder, BindHandler bindHandler) {
+  public void initializeExtension(Binder binder, BindHandler bindHandler) {
     ApolloClientProperties apolloClientProperties = this.apolloClientPropertiesFactory
         .createApolloClientProperties(binder, bindHandler);
     if (apolloClientProperties == null || apolloClientProperties.getExtension() == null) {
@@ -73,12 +73,12 @@ public class ApolloClientExtensionMessagingFactory {
         .format("apollo client extension messaging type: {}", messagingType));
     switch (messagingType) {
       case LONG_POLLING:
-        this.apolloClientLongPollingMessagingFactory
-            .prepareMessaging(apolloClientProperties, binder, bindHandler);
+        this.apolloClientLongPollingExtensionInitializer
+            .initialize(apolloClientProperties, binder, bindHandler);
         return;
       case WEBSOCKET:
-        this.apolloClientWebsocketMessagingFactory
-            .prepareMessaging(apolloClientProperties, binder, bindHandler);
+        this.apolloClientWebsocketExtensionInitializer
+            .initialize(apolloClientProperties, binder, bindHandler);
         return;
       default:
         throw new IllegalStateException("Unexpected value: " + messagingType);

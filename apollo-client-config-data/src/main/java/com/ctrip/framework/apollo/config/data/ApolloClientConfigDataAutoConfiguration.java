@@ -16,7 +16,7 @@
  */
 package com.ctrip.framework.apollo.config.data;
 
-import com.ctrip.framework.apollo.config.data.extension.messaging.ApolloClientPropertiesFactory;
+import com.ctrip.framework.apollo.config.data.extension.initialize.ApolloClientPropertiesFactory;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourcesProcessor;
 import com.ctrip.framework.apollo.spring.config.PropertySourcesProcessor;
