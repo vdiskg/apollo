@@ -16,7 +16,6 @@
  */
 package com.ctrip.framework.apollo.config.data.extension.initialize;
 
-import com.ctrip.framework.apollo.config.data.extension.enums.ApolloClientAuthenticationType;
 import com.ctrip.framework.apollo.config.data.extension.enums.ApolloClientMessagingType;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
 import java.io.IOException;
@@ -24,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
 
@@ -35,28 +35,19 @@ public class ApolloClientPropertiesFactoryTest {
   @Test
   public void testCreateApolloClientProperties() throws IOException {
     Map<String, String> map = new LinkedHashMap<>();
-    map.put("apollo.client.extension.authentication.authentication-type", "http_basic");
-    map.put("apollo.client.extension.authentication.http-basic.username", "test");
-    map.put("apollo.client.extension.authentication.http-basic.password", "pw");
     map.put("apollo.client.extension.enabled", "true");
     map.put("apollo.client.extension.messaging-type", "long_polling");
+    map.put("apollo.client.extension.web-application-type", "none");
     MapConfigurationPropertySource propertySource = new MapConfigurationPropertySource(map);
     Binder binder = new Binder(propertySource);
     ApolloClientPropertiesFactory factory = new ApolloClientPropertiesFactory();
     ApolloClientProperties apolloClientProperties = factory
         .createApolloClientProperties(binder, null);
 
-    Assert.assertEquals(
-        apolloClientProperties.getExtension().getAuthentication().getAuthenticationType(),
-        ApolloClientAuthenticationType.HTTP_BASIC);
-    Assert.assertEquals(
-        apolloClientProperties.getExtension().getAuthentication().getHttpBasic().getUsername(),
-        "test");
-    Assert.assertEquals(
-        apolloClientProperties.getExtension().getAuthentication().getHttpBasic().getPassword(),
-        "pw");
     Assert.assertEquals(apolloClientProperties.getExtension().getEnabled(), true);
     Assert.assertEquals(apolloClientProperties.getExtension().getMessagingType(),
         ApolloClientMessagingType.LONG_POLLING);
+    Assert.assertEquals(apolloClientProperties.getExtension().getWebApplicationType(),
+        WebApplicationType.NONE);
   }
 }

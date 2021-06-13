@@ -17,7 +17,8 @@
 package com.ctrip.framework.apollo.config.data.extension.properties;
 
 import com.ctrip.framework.apollo.config.data.extension.enums.ApolloClientMessagingType;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import com.ctrip.framework.apollo.config.data.util.ApolloClientWebApplicationTypeUtil;
+import org.springframework.boot.WebApplicationType;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
@@ -35,10 +36,11 @@ public class ApolloClientExtensionProperties {
   private ApolloClientMessagingType messagingType = ApolloClientMessagingType.LONG_POLLING;
 
   /**
-   * apollo client authentication properties
+   * the type of the application, it is auto detected from classpath and no necessary to set a value
+   * manually
    */
-  @NestedConfigurationProperty
-  private ApolloClientAuthenticationProperties authentication;
+  private WebApplicationType webApplicationType = ApolloClientWebApplicationTypeUtil
+      .deduceFromClasspath();
 
   public Boolean getEnabled() {
     return enabled;
@@ -57,13 +59,12 @@ public class ApolloClientExtensionProperties {
     this.messagingType = messagingType;
   }
 
-  public ApolloClientAuthenticationProperties getAuthentication() {
-    return authentication;
+  public WebApplicationType getWebApplicationType() {
+    return webApplicationType;
   }
 
-  public void setAuthentication(
-      ApolloClientAuthenticationProperties authentication) {
-    this.authentication = authentication;
+  public void setWebApplicationType(WebApplicationType webApplicationType) {
+    this.webApplicationType = webApplicationType;
   }
 
   @Override
@@ -71,7 +72,7 @@ public class ApolloClientExtensionProperties {
     return "ApolloClientExtensionProperties{" +
         "enabled=" + enabled +
         ", messagingType=" + messagingType +
-        ", authentication=" + authentication +
+        ", webApplicationType=" + webApplicationType +
         '}';
   }
 }

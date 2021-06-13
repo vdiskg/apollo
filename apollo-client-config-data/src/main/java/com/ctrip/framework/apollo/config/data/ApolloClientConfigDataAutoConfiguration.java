@@ -40,7 +40,7 @@ public class ApolloClientConfigDataAutoConfiguration {
 
   @ConditionalOnMissingBean(PropertySourcesProcessor.class)
   @Bean
-  public ConfigPropertySourcesProcessor configPropertySourcesProcessor() {
+  public static ConfigPropertySourcesProcessor configPropertySourcesProcessor() {
     return new ConfigPropertySourcesProcessor();
   }
 }
