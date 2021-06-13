@@ -127,17 +127,17 @@ MetaServerProvider的实现可以参考[LegacyMetaServerProvider](https://github
 
 针对以上场景，可以通过直接指定Config Service地址的方式来跳过Meta Server服务发现，按照优先级从高到低分别为：
 
-1. 通过Java System Property `apollo.config-service`
-    * 可以通过Java的System Property `apollo.config-service`来指定
+1. 通过Java System Property `apollo.config-service`(1.9.0+) 或者 `apollo.configService`(1.9.0之前)
+    * 可以通过Java的System Property `apollo.config-service`(1.9.0+) 或者 `apollo.configService`(1.9.0之前)来指定
     * 在Java程序启动脚本中，可以指定`-Dapollo.config-service=http://config-service-url:port`
         * 如果是运行jar文件，需要注意格式是`java -Dapollo.configService=http://config-service-url:port -jar xxx.jar`
     * 也可以通过程序指定，如`System.setProperty("apollo.config-service", "http://config-service-url:port");`
-2. 通过操作系统的System Environment`APOLLO_CONFIGSERVICE`
-    * 可以通过操作系统的System Environment `APOLLO_CONFIGSERVICE`来指定
+2. 通过操作系统的System Environment `APOLLO_CONFIG_SERVICE`(1.9.0+) 或者 `APOLLO_CONFIGSERVICE`(1.9.0之前)
+    * 可以通过操作系统的System Environment `APOLLO_CONFIG_SERVICE`(1.9.0+) 或者 `APOLLO_CONFIGSERVICE`(1.9.0之前)来指定
     * 注意key为全大写，且中间是`_`分隔
 4. 通过`server.properties`配置文件
-    * 可以在`server.properties`配置文件中指定`apollo.configService=http://config-service-url:port`
-    * 对于Mac/Linux，默认文件位置为`/opt/settings/server.properties`
+    * 可以在`server.properties`配置文件中指定`apollo.config-service=http://config-service-url:port`(1.9.0+) 或者 `apollo.configService=http://config-service-url:port`(1.9.0之前)
+     * 对于Mac/Linux，默认文件位置为`/opt/settings/server.properties`
     * 对于Windows，默认文件位置为`C:\opt\settings\server.properties`
 
 ### 1.2.3 本地缓存路径
@@ -166,18 +166,18 @@ batch=2000
 
 1.0.0版本开始支持以下方式自定义缓存路径，按照优先级从高到低分别为：
 
-1. 通过Java System Property `apollo.cache-dir`
-    * 可以通过Java的System Property `apollo.cache-dir`来指定
-    * 在Java程序启动脚本中，可以指定`-Dapollo.cache-dir=/opt/data/some-cache-dir`
-        * 如果是运行jar文件，需要注意格式是`java -Dapollo.cache-dir=/opt/data/some-cache-dir -jar xxx.jar`
-    * 也可以通过程序指定，如`System.setProperty("apollo.cache-dir", "/opt/data/some-cache-dir");`
+1. 通过Java System Property `apollo.cache-dir`(1.9.0+) 或者 `apollo.cacheDir`(1.9.0之前)
+    * 可以通过Java的System Property `apollo.cache-dir`(1.9.0+) 或者 `apollo.cacheDir`(1.9.0之前)来指定
+    * 在Java程序启动脚本中，可以指定`-Dapollo.cache-dir=/opt/data/some-cache-dir`(1.9.0+) 或者 `apollo.cacheDir=/opt/data/some-cache-dir`(1.9.0之前)
+        * 如果是运行jar文件，需要注意格式是`java -Dapollo.cache-dir=/opt/data/some-cache-dir -jar xxx.jar`(1.9.0+) 或者 `java -Dapollo.cacheDir=/opt/data/some-cache-dir -jar xxx.jar`(1.9.0之前)
+    * 也可以通过程序指定，如`System.setProperty("apollo.cache-dir", "/opt/data/some-cache-dir");`(1.9.0+) 或者 `System.setProperty("apollo.cacheDir", "/opt/data/some-cache-dir");`(1.9.0之前)
 2. 通过Spring Boot的配置文件
-    * 可以在Spring Boot的`application.properties`或`bootstrap.properties`中指定`apollo.cache-dir=/opt/data/some-cache-dir`
-3. 通过操作系统的System Environment`APOLLO_CACHE_DIR`
-    * 可以通过操作系统的System Environment `APOLLO_CACHE_DIR`来指定
+    * 可以在Spring Boot的`application.properties`或`bootstrap.properties`中指定`apollo.cache-dir=/opt/data/some-cache-dir`(1.9.0+) 或者 `apollo.cacheDir=/opt/data/some-cache-dir`(1.9.0之前)
+3. 通过操作系统的System Environment`APOLLO_CACHE_DIR`(1.9.0+) 或者 `APOLLO_CACHEDIR`(1.9.0之前)
+    * 可以通过操作系统的System Environment `APOLLO_CACHE_DIR`(1.9.0+) 或者 `APOLLO_CACHEDIR`(1.9.0之前)来指定
     * 注意key为全大写，且中间是`_`分隔
 4. 通过`server.properties`配置文件
-    * 可以在`server.properties`配置文件中指定`apollo.cache-dir=/opt/data/some-cache-dir`
+    * 可以在`server.properties`配置文件中指定`apollo.cache-dir=/opt/data/some-cache-dir`(1.9.0+) 或者 `apollo.cacheDir=/opt/data/some-cache-dir`(1.9.0之前)
     * 对于Mac/Linux，默认文件位置为`/opt/settings/server.properties`
     * 对于Windows，默认文件位置为`C:\opt\settings\server.properties`
 
@@ -289,18 +289,18 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 Apollo从1.6.0版本开始增加访问密钥机制，从而只有经过身份验证的客户端才能访问敏感配置。如果应用开启了访问密钥，客户端需要配置密钥，否则无法获取配置。
 
 配置方式按照优先级从高到低分别为：
-1. 通过Java System Property `apollo.access-key.secret`
-    * 可以通过Java的System Property `apollo.access-key.secret`来指定
-    * 在Java程序启动脚本中，可以指定`-Dapollo.access-key.secret=1cf998c4e2ad4704b45a98a509d15719`
-        * 如果是运行jar文件，需要注意格式是`java -Dapollo.access-key.secret=1cf998c4e2ad4704b45a98a509d15719 -jar xxx.jar`
-    * 也可以通过程序指定，如`System.setProperty("apollo.access-key.secret", "1cf998c4e2ad4704b45a98a509d15719");`
+1. 通过Java System Property `apollo.access-key.secret`(1.9.0+) 或者 `apollo.accesskey.secret`(1.9.0之前)
+    * 可以通过Java的System Property `apollo.access-key.secret`(1.9.0+) 或者 `apollo.accesskey.secret`(1.9.0之前)来指定
+    * 在Java程序启动脚本中，可以指定`-Dapollo.access-key.secret=1cf998c4e2ad4704b45a98a509d15719`(1.9.0+) 或者 `-Dapollo.accesskey.secret=1cf998c4e2ad4704b45a98a509d15719`(1.9.0之前)
+        * 如果是运行jar文件，需要注意格式是`java -Dapollo.access-key.secret=1cf998c4e2ad4704b45a98a509d15719 -jar xxx.jar`(1.9.0+) 或者 `java -Dapollo.accesskey.secret=1cf998c4e2ad4704b45a98a509d15719 -jar xxx.jar`(1.9.0之前)
+    * 也可以通过程序指定，如`System.setProperty("apollo.access-key.secret", "1cf998c4e2ad4704b45a98a509d15719");`(1.9.0+) 或者 `System.setProperty("apollo.accesskey.secret", "1cf998c4e2ad4704b45a98a509d15719");`(1.9.0之前)
 2. 通过Spring Boot的配置文件
-    * 可以在Spring Boot的`application.properties`或`bootstrap.properties`中指定`apollo.access-key.secret=1cf998c4e2ad4704b45a98a509d15719`
+    * 可以在Spring Boot的`application.properties`或`bootstrap.properties`中指定`apollo.access-key.secret=1cf998c4e2ad4704b45a98a509d15719`(1.9.0+) 或者 `apollo.accesskey.secret=1cf998c4e2ad4704b45a98a509d15719`(1.9.0之前)
 3. 通过操作系统的System Environment
-    * 还可以通过操作系统的System Environment `APOLLO_ACCESS_KEY_SECRET`来指定
+    * 还可以通过操作系统的System Environment `APOLLO_ACCESS_KEY_SECRET`(1.9.0+) 或者 `APOLLO_ACCESSKEY_SECRET`(1.9.0之前)来指定
     * 注意key为全大写
 4. 通过`app.properties`配置文件
-    * 可以在`classpath:/META-INF/app.properties`指定`apollo.access-key.secret=1cf998c4e2ad4704b45a98a509d15719`
+    * 可以在`classpath:/META-INF/app.properties`指定`apollo.access-key.secret=1cf998c4e2ad4704b45a98a509d15719`(1.9.0+) 或者 `apollo.accesskey.secret=1cf998c4e2ad4704b45a98a509d15719`(1.9.0之前)
 
 #### 1.2.4.5 自定义server.properties路径
 
