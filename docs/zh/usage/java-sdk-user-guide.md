@@ -576,6 +576,158 @@ Spring Boot除了支持上述两种集成方式以外，还支持通过applicati
      apollo.bootstrap.eagerLoad.enabled=true
 ```
 
+#### 3.2.1.4 Spring Boot Config Data Loader (Spring Boot 2.4+, Apollo Client 1.9.0+ 推荐)
+
+对于 Spring Boot 2.4 以上版本还支持通过 Config Data Loader 模式来加载配置
+
+##### 3.2.1.4.1 添加 maven 依赖
+apollo-client-config-data 已经依赖了 apollo-client, 所以只需要添加这一个依赖即可, 无需再添加 apollo-client 的依赖
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.ctrip.framework.apollo</groupId>
+        <artifactId>apollo-client-config-data</artifactId>
+        <version>1.9.0</version>
+    </dependency>
+</dependencies>
+```
+##### 3.2.1.4.2 参照前述的方式配置 `app.id`, `env`, `apollo.meta`(或者 `apollo.config-service`), `apollo.cluster`
+
+##### 3.2.1.4.3 配置 `application.properties` 或 `application.yml`
+使用默认的 namespace `application`
+```properties
+# old way
+# apollo.bootstrap.enabled=true
+# 不配置 apollo.bootstrap.namespaces
+# new way
+spring.config.import=apollo://
+
+```
+
+或者
+```properties
+# old way
+# apollo.bootstrap.enabled=true
+# apollo.bootstrap.namespaces=application
+# new way
+spring.config.import=apollo://application
+
+```
+
+使用自定义 namespace
+```properties
+# old way
+# apollo.bootstrap.enabled=true
+# apollo.bootstrap.namespaces=your-namespace
+# new way
+spring.config.import=apollo://your-namespace
+
+```
+
+使用多个 namespaces  
+注: `spring.config.import` 是从后往前加载配置的, 而 `apollo.bootstrap.namespaces` 是从前往后加载的, 刚好相反。为了保证和原有逻辑一致, 请颠倒 namespaces 的顺序
+```properties
+# old way
+# apollo.bootstrap.enabled=true
+# apollo.bootstrap.namespaces=namespace1,namespace2,namespace3
+# new way
+spring.config.import=apollo://namespace3, apollo://namespace2, apollo://namespace1
+
+```
+
+#### 3.2.1.5 Spring Boot Config Data Loader (Spring Boot 2.4+, Apollo Client 1.9.0+ 推荐) + webClient 扩展
+
+对于 Spring Boot 2.4 以上版本还支持通过 Config Data Loader 模式来加载配置  
+Apollo 的 Config Data Loader 还提供了基于 webClient 的 http 客户端来替换原有的 http 客户端, 从而方便的对 http 客户端进行扩展
+
+##### 3.2.1.5.1 添加 maven 依赖
+webClient 可以基于多种实现 (reactor netty httpclient, jetty reactive httpclient, apache httpclient5), 所需添加的依赖如下
+
+###### reactor netty httpclient
+```xml
+<dependencies>
+   <dependency>
+      <groupId>com.ctrip.framework.apollo</groupId>
+      <artifactId>apollo-client-config-data</artifactId>
+      <version>1.9.0</version>
+   </dependency>
+   <!-- webclient -->
+   <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webflux</artifactId>
+   </dependency>
+   <!-- reactor netty httpclient -->
+   <dependency>
+      <groupId>io.projectreactor.netty</groupId>
+      <artifactId>reactor-netty-http</artifactId>
+   </dependency>
+</dependencies>
+```
+
+###### jetty reactive httpclient
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.ctrip.framework.apollo</groupId>
+        <artifactId>apollo-client-config-data</artifactId>
+        <version>1.9.0</version>
+    </dependency>
+    <!-- webclient -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webflux</artifactId>
+    </dependency>
+    <!-- jetty reactive httpclient -->
+    <dependency>
+       <groupId>org.eclipse.jetty</groupId>
+       <artifactId>jetty-reactive-httpclient</artifactId>
+    </dependency>
+</dependencies>
+```
+
+###### apache httpclient5
+spring boot 没有指定 apache httpclient5 的版本, 所以这里需要手动指定一下版本
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.ctrip.framework.apollo</groupId>
+        <artifactId>apollo-client-config-data</artifactId>
+        <version>1.9.0</version>
+    </dependency>
+    <!-- webclient -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webflux</artifactId>
+    </dependency>
+    <!-- apache httpclient5 -->
+    <dependency>
+       <groupId>org.apache.httpcomponents.client5</groupId>
+       <artifactId>httpclient5</artifactId>
+       <version>5.1</version>
+    </dependency>
+    <dependency>
+       <groupId>org.apache.httpcomponents.core5</groupId>
+       <artifactId>httpcore5-reactive</artifactId>
+       <version>5.1</version>
+    </dependency>
+</dependencies>
+```
+
+##### 3.2.1.5.2 参照前述的方式配置 `app.id`, `env`, `apollo.meta`(或者 `apollo.config-service`), `apollo.cluster`
+
+##### 3.2.1.5.3 配置 `application.properties` 或 `application.yml`
+这里以默认 namespace 为例, namespace 的配置详见 3.2.1.4.3
+
+```properties
+spring.config.import=apollo://application
+apollo.client.extension.enabled=true
+
+```
+
+##### 3.2.1.5.4 提供 spi 的实现
+提供接口 `com.ctrip.framework.apollo.config.data.extension.webclient.customizer.spi.ApolloClientWebClientCustomizerFactory` 的 spi 实现  
+在配置了 `apollo.client.extension.enabled=true` 之后, Apollo 的 Config Data Loader 会尝试去加载该 spi 的实现类来定制 webClient
+
 ### 3.2.2 Spring Placeholder的使用
 Spring应用通常会使用Placeholder来注入配置，使用的格式形如${someKey:someDefaultValue}，如${timeout:100}。冒号前面的是key，冒号后面的是默认值。
 
