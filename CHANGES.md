@@ -44,6 +44,7 @@ Apollo 1.9.0
 * [add apollo team introduction and community releated contents](https://github.com/ctripcorp/apollo/pull/3713)
 * [fix oidc sql](https://github.com/ctripcorp/apollo/pull/3720)
 * [feat(apollo-client): add method interestedChangedKeys to ConfigChangeEvent](https://github.com/ctripcorp/apollo/pull/3666)
+* [feature: add Spring Boot 2.4 config data loader support](https://github.com/ctripcorp/apollo/pull/3754)
 ------------------
 All issues and pull requests are [here](https://github.com/ctripcorp/apollo/milestone/6?closed=1)
 
