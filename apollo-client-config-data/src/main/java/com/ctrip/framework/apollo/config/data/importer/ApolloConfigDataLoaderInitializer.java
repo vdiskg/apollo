@@ -18,6 +18,7 @@ package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.config.data.extension.initialize.ApolloClientExtensionInitializeFactory;
 import com.ctrip.framework.apollo.config.data.system.ApolloClientSystemPropertyInitializer;
+import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.core.utils.DeferredLogger;
 import com.ctrip.framework.apollo.spring.config.PropertySourcesConstants;
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.context.properties.bind.BindHandler;
+import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
@@ -71,16 +73,38 @@ public class ApolloConfigDataLoaderInitializer {
       }
       this.initApolloClientInternal();
       INITIALIZED = true;
-      // force disable apollo bootstrap to avoid conflict
-      Map<String, Object> map = new HashMap<>();
-      map.put(PropertySourcesConstants.APOLLO_BOOTSTRAP_ENABLED, "false");
-      map.put(PropertySourcesConstants.APOLLO_BOOTSTRAP_EAGER_LOAD_ENABLED, "false");
+      if (this.forceDisableApolloBootstrap()) {
+        // force disable apollo bootstrap to avoid conflict
+        Map<String, Object> map = new HashMap<>();
+        map.put(PropertySourcesConstants.APOLLO_BOOTSTRAP_ENABLED, "false");
+        map.put(PropertySourcesConstants.APOLLO_BOOTSTRAP_EAGER_LOAD_ENABLED, "false");
+        // provide initial sources as placeholders to avoid duplicate loading
+        return Arrays.asList(
+            new ApolloConfigEmptyPropertySource(
+                PropertySourcesConstants.APOLLO_PROPERTY_SOURCE_NAME),
+            new MapPropertySource(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME,
+                Collections.unmodifiableMap(map)));
+      }
       // provide initial sources as placeholders to avoid duplicate loading
       return Arrays.asList(
           new ApolloConfigEmptyPropertySource(PropertySourcesConstants.APOLLO_PROPERTY_SOURCE_NAME),
-          new MapPropertySource(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME,
-              map));
+          new ApolloConfigEmptyPropertySource(
+              PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME));
     }
+  }
+
+  private boolean forceDisableApolloBootstrap() {
+    Boolean bootstrapEnabled = this.binder
+        .bind(PropertySourcesConstants.APOLLO_BOOTSTRAP_ENABLED, Bindable.of(Boolean.class),
+            this.bindHandler)
+        .orElse(false);
+    if (bootstrapEnabled) {
+      this.log.warn(Slf4jLogMessageFormatter.format(
+          "apollo bootstrap is force disabled. please don't configure the property [{}=true] and [spring.config.import=apollo://...] at the same time",
+          PropertySourcesConstants.APOLLO_BOOTSTRAP_ENABLED));
+      return true;
+    }
+    return false;
   }
 
   private void initApolloClientInternal() {
