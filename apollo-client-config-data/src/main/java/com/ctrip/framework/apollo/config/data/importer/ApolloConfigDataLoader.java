@@ -65,7 +65,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
         .getBootstrapContext()
         .get(ApolloConfigDataLoaderInitializer.class);
     // init apollo client
-    List<ApolloConfigEmptyPropertySource> emptyPropertySourceList = apolloConfigDataLoaderInitializer
+    List<PropertySource<?>> initialPropertySourceList = apolloConfigDataLoaderInitializer
         .initApolloClient();
     // load config
     context.getBootstrapContext().registerIfAbsent(ConfigPropertySourceFactory.class,
@@ -79,7 +79,7 @@ public class ApolloConfigDataLoader implements ConfigDataLoader<ApolloConfigData
         .getConfigPropertySource(namespace, config);
     List<PropertySource<?>> propertySourceList = new ArrayList<>();
     propertySourceList.add(configPropertySource);
-    propertySourceList.addAll(emptyPropertySourceList);
+    propertySourceList.addAll(initialPropertySourceList);
     log.debug(Slf4jLogMessageFormatter
         .format("apollo client loaded namespace [{}]", resource.getNamespace()));
     return new ConfigData(propertySourceList);

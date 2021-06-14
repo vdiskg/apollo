@@ -22,11 +22,15 @@ import com.ctrip.framework.apollo.core.utils.DeferredLogger;
 import com.ctrip.framework.apollo.spring.config.PropertySourcesConstants;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.PropertySource;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
@@ -55,9 +59,9 @@ public class ApolloConfigDataLoaderInitializer {
   /**
    * init apollo client (only once)
    *
-   * @return empty sources as placeholders or empty list if already initialized
+   * @return initial sources as placeholders or empty list if already initialized
    */
-  public List<ApolloConfigEmptyPropertySource> initApolloClient() {
+  public List<PropertySource<?>> initApolloClient() {
     if (INITIALIZED) {
       return Collections.emptyList();
     }
@@ -67,10 +71,15 @@ public class ApolloConfigDataLoaderInitializer {
       }
       this.initApolloClientInternal();
       INITIALIZED = true;
-      // provide empty sources as placeholders to avoid duplicate loading
+      // force disable apollo bootstrap to avoid conflict
+      Map<String, Object> map = new HashMap<>();
+      map.put(PropertySourcesConstants.APOLLO_BOOTSTRAP_ENABLED, "false");
+      map.put(PropertySourcesConstants.APOLLO_BOOTSTRAP_EAGER_LOAD_ENABLED, "false");
+      // provide initial sources as placeholders to avoid duplicate loading
       return Arrays.asList(
           new ApolloConfigEmptyPropertySource(PropertySourcesConstants.APOLLO_PROPERTY_SOURCE_NAME),
-          new ApolloConfigEmptyPropertySource(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME));
+          new MapPropertySource(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME,
+              map));
     }
   }
 
