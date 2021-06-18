@@ -31,6 +31,7 @@ import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 
@@ -93,9 +94,18 @@ public class ApolloConfigDataLoaderInitializer {
     }
   }
 
+  private void initApolloClientInternal() {
+    new ApolloClientSystemPropertyInitializer(this.log)
+        .initializeSystemProperty(this.binder, this.bindHandler);
+    new ApolloClientExtensionInitializeFactory(this.log,
+        this.bootstrapContext).initializeExtension(this.binder, this.bindHandler);
+    DeferredLogger.enable();
+  }
+
   private boolean forceDisableApolloBootstrap() {
-    Boolean bootstrapEnabled = this.binder
-        .bind(PropertySourcesConstants.APOLLO_BOOTSTRAP_ENABLED, Bindable.of(Boolean.class),
+    boolean bootstrapEnabled = this.binder
+        .bind(this.camelCasedToKebabCase(PropertySourcesConstants.APOLLO_BOOTSTRAP_ENABLED),
+            Bindable.of(Boolean.class),
             this.bindHandler)
         .orElse(false);
     if (bootstrapEnabled) {
@@ -104,14 +114,39 @@ public class ApolloConfigDataLoaderInitializer {
           PropertySourcesConstants.APOLLO_BOOTSTRAP_ENABLED));
       return true;
     }
+    boolean bootstrapEagerLoadEnabled = this.binder
+        .bind(this.camelCasedToKebabCase(
+            PropertySourcesConstants.APOLLO_BOOTSTRAP_EAGER_LOAD_ENABLED),
+            Bindable.of(Boolean.class),
+            this.bindHandler)
+        .orElse(false);
+    if (bootstrapEagerLoadEnabled) {
+      this.log.warn(Slf4jLogMessageFormatter.format(
+          "apollo bootstrap eager load is force disabled. please don't configure the property [{}=true] and [spring.config.import=apollo://...] at the same time",
+          PropertySourcesConstants.APOLLO_BOOTSTRAP_EAGER_LOAD_ENABLED));
+      return true;
+    }
     return false;
   }
 
-  private void initApolloClientInternal() {
-    new ApolloClientSystemPropertyInitializer(this.log)
-        .initializeSystemProperty(this.binder, this.bindHandler);
-    new ApolloClientExtensionInitializeFactory(this.log,
-        this.bootstrapContext).initializeExtension(this.binder, this.bindHandler);
-    DeferredLogger.enable();
+  /**
+   * {@link ConfigurationPropertyName#isValid(java.lang.CharSequence)}
+   *
+   * @param source origin propertyName
+   * @return valid propertyName
+   */
+  private String camelCasedToKebabCase(String source) {
+    if (ConfigurationPropertyName.isValid(source)) {
+      return source;
+    }
+    StringBuilder stringBuilder = new StringBuilder(source.length() * 2);
+    for (char ch : source.toCharArray()) {
+      if (Character.isUpperCase(ch)) {
+        stringBuilder.append("-").append(Character.toLowerCase(ch));
+        continue;
+      }
+      stringBuilder.append(ch);
+    }
+    return stringBuilder.toString();
   }
 }
