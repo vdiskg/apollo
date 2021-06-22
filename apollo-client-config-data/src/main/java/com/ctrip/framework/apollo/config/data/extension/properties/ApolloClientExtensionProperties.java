@@ -17,8 +17,6 @@
 package com.ctrip.framework.apollo.config.data.extension.properties;
 
 import com.ctrip.framework.apollo.config.data.extension.enums.ApolloClientMessagingType;
-import com.ctrip.framework.apollo.config.data.util.ApolloClientWebApplicationTypeUtil;
-import org.springframework.boot.WebApplicationType;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
@@ -34,13 +32,6 @@ public class ApolloClientExtensionProperties {
    * apollo client listening type
    */
   private ApolloClientMessagingType messagingType = ApolloClientMessagingType.LONG_POLLING;
-
-  /**
-   * the type of the application, it is auto detected from classpath and no necessary to set a value
-   * manually
-   */
-  private WebApplicationType webApplicationType = ApolloClientWebApplicationTypeUtil
-      .deduceFromClasspath();
 
   public Boolean getEnabled() {
     return enabled;
@@ -59,20 +50,11 @@ public class ApolloClientExtensionProperties {
     this.messagingType = messagingType;
   }
 
-  public WebApplicationType getWebApplicationType() {
-    return webApplicationType;
-  }
-
-  public void setWebApplicationType(WebApplicationType webApplicationType) {
-    this.webApplicationType = webApplicationType;
-  }
-
   @Override
   public String toString() {
     return "ApolloClientExtensionProperties{" +
         "enabled=" + enabled +
         ", messagingType=" + messagingType +
-        ", webApplicationType=" + webApplicationType +
         '}';
   }
 }

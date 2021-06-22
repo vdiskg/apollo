@@ -12,4 +12,5 @@ com.ctrip.framework.apollo.config.data.importer.ApolloConfigDataLoader
 
 # Listener
 org.springframework.context.ApplicationListener=\
-com.ctrip.framework.apollo.config.data.listener.ApolloDeferredLoggerApplicationListener
+com.ctrip.framework.apollo.config.data.listener.ApolloDeferredLoggerApplicationListener,\
+com.ctrip.framework.apollo.config.data.listener.ApolloSpringApplicationRegisterListener

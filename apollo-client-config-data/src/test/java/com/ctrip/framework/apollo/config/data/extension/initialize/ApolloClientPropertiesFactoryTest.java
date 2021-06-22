@@ -23,7 +23,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
 
@@ -37,7 +36,6 @@ public class ApolloClientPropertiesFactoryTest {
     Map<String, String> map = new LinkedHashMap<>();
     map.put("apollo.client.extension.enabled", "true");
     map.put("apollo.client.extension.messaging-type", "long_polling");
-    map.put("apollo.client.extension.web-application-type", "none");
     MapConfigurationPropertySource propertySource = new MapConfigurationPropertySource(map);
     Binder binder = new Binder(propertySource);
     ApolloClientPropertiesFactory factory = new ApolloClientPropertiesFactory();
@@ -47,7 +45,5 @@ public class ApolloClientPropertiesFactoryTest {
     Assert.assertEquals(apolloClientProperties.getExtension().getEnabled(), true);
     Assert.assertEquals(apolloClientProperties.getExtension().getMessagingType(),
         ApolloClientMessagingType.LONG_POLLING);
-    Assert.assertEquals(apolloClientProperties.getExtension().getWebApplicationType(),
-        WebApplicationType.NONE);
   }
 }
