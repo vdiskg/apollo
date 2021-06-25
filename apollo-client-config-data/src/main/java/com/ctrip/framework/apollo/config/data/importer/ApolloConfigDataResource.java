@@ -17,6 +17,7 @@
 package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.core.ConfigConsts;
+import java.util.Objects;
 import org.springframework.boot.context.config.ConfigDataResource;
 
 /**
@@ -41,6 +42,23 @@ public class ApolloConfigDataResource extends ConfigDataResource {
 
   public String getNamespace() {
     return namespace;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ApolloConfigDataResource that = (ApolloConfigDataResource) o;
+    return Objects.equals(namespace, that.namespace);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(namespace);
   }
 
   @Override
