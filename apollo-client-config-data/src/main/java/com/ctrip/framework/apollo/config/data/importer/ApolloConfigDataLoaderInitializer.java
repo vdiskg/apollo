@@ -38,7 +38,7 @@ import org.springframework.core.env.PropertySource;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class ApolloConfigDataLoaderInitializer {
+class ApolloConfigDataLoaderInitializer {
 
   public static volatile boolean INITIALIZED = false;
 
