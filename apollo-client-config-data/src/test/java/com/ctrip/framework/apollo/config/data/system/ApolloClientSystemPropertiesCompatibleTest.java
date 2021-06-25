@@ -40,9 +40,11 @@ public class ApolloClientSystemPropertiesCompatibleTest {
 
   @Test
   public void testSystemPropertiesCompatible() {
-    System.setProperty("apollo.cacheDir", "test-3/cacheDir");
-    System.setProperty("apollo.accesskey.secret", "test-3-secret");
-    System.setProperty("apollo.configService", "https://test-3-config-service");
+    System.setProperty(ApolloClientSystemConsts.DEPRECATED_APOLLO_CACHE_DIR, "test-3/cacheDir");
+    System
+        .setProperty(ApolloClientSystemConsts.DEPRECATED_APOLLO_ACCESS_KEY_SECRET, "test-3-secret");
+    System.setProperty(ApolloClientSystemConsts.DEPRECATED_APOLLO_CONFIG_SERVICE,
+        "https://test-3-config-service");
 
     Assert.assertEquals("test-3/cacheDir",
         this.environment.getProperty(ApolloClientSystemConsts.APOLLO_CACHE_DIR));
@@ -51,9 +53,9 @@ public class ApolloClientSystemPropertiesCompatibleTest {
     Assert.assertEquals("https://test-3-config-service",
         this.environment.getProperty(ApolloClientSystemConsts.APOLLO_CONFIG_SERVICE));
 
-    System.clearProperty("apollo.cacheDir");
-    System.clearProperty("apollo.accesskey.secret");
-    System.clearProperty("apollo.configService");
+    System.clearProperty(ApolloClientSystemConsts.DEPRECATED_APOLLO_CACHE_DIR);
+    System.clearProperty(ApolloClientSystemConsts.DEPRECATED_APOLLO_ACCESS_KEY_SECRET);
+    System.clearProperty(ApolloClientSystemConsts.DEPRECATED_APOLLO_CONFIG_SERVICE);
   }
 
   @After
