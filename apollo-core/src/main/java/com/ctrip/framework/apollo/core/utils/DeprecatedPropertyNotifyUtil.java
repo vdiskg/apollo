@@ -27,6 +27,6 @@ public class DeprecatedPropertyNotifyUtil {
       .getLogger(DeprecatedPropertyNotifyUtil.class);
 
   public static void warn(String deprecatedProperty, String insteadProperty) {
-    log.warn("[{}] is deprecated and will be removed in a future version, please use the [{}] instead.", deprecatedProperty, insteadProperty);
+    log.warn("[{}] is deprecated since 1.9.0 and will be removed in a future version, please use the [{}] instead.", deprecatedProperty, insteadProperty);
   }
 }
