@@ -40,7 +40,7 @@ import org.springframework.core.env.PropertySource;
  */
 class ApolloConfigDataLoaderInitializer {
 
-  public static volatile boolean INITIALIZED = false;
+  private static volatile boolean INITIALIZED = false;
 
   private final Log log;
 
