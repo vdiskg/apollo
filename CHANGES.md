@@ -51,6 +51,7 @@ Apollo 1.9.0
 * [feature: add Spring Boot 2.4 config data loader support](https://github.com/ctripcorp/apollo/pull/3754)
 * [feat(open-api): get authorized apps](https://github.com/ctripcorp/apollo/pull/3647)
 * [feature: shared session for multi apollo portal](https://github.com/ctripcorp/apollo/pull/3786)
+* [feature: add email for select user on apollo portal](https://github.com/ctripcorp/apollo/pull/3797)
 ------------------
 All issues and pull requests are [here](https://github.com/ctripcorp/apollo/milestone/6?closed=1)
 
