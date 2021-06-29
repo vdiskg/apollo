@@ -41,6 +41,7 @@ import com.ctrip.framework.apollo.portal.spi.oidc.OidcLocalUserService;
 import com.ctrip.framework.apollo.portal.spi.oidc.OidcLocalUserServiceImpl;
 import com.ctrip.framework.apollo.portal.spi.oidc.OidcLogoutHandler;
 import com.ctrip.framework.apollo.portal.spi.oidc.OidcUserInfoHolder;
+import com.ctrip.framework.apollo.portal.spi.springsecurity.ApolloPasswordEncoderFactory;
 import com.ctrip.framework.apollo.portal.spi.springsecurity.SpringSecurityUserInfoHolder;
 import com.ctrip.framework.apollo.portal.spi.springsecurity.SpringSecurityUserService;
 import com.google.common.collect.Maps;
@@ -64,7 +65,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
@@ -242,6 +243,12 @@ public class AuthConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(PasswordEncoder.class)
+    public static PasswordEncoder passwordEncoder() {
+      return ApolloPasswordEncoderFactory.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(UserInfoHolder.class)
     public UserInfoHolder springSecurityUserInfoHolder(UserService userService) {
       return new SpringSecurityUserInfoHolder(userService);
@@ -254,10 +261,10 @@ public class AuthConfiguration {
     }
 
     @Bean
-    public JdbcUserDetailsManager jdbcUserDetailsManager(AuthenticationManagerBuilder auth,
-        DataSource datasource) throws Exception {
+    public static JdbcUserDetailsManager jdbcUserDetailsManager(PasswordEncoder passwordEncoder,
+        AuthenticationManagerBuilder auth, DataSource datasource) throws Exception {
       JdbcUserDetailsManager jdbcUserDetailsManager = auth.jdbcAuthentication()
-          .passwordEncoder(new BCryptPasswordEncoder()).dataSource(datasource)
+          .passwordEncoder(passwordEncoder).dataSource(datasource)
           .usersByUsernameQuery("select Username,Password,Enabled from `Users` where Username = ?")
           .authoritiesByUsernameQuery(
               "select Username,Authority from `Authorities` where Username = ?")
@@ -281,8 +288,10 @@ public class AuthConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(UserService.class)
-    public UserService springSecurityUserService() {
-      return new SpringSecurityUserService();
+    public UserService springSecurityUserService(PasswordEncoder passwordEncoder,
+        JdbcUserDetailsManager userDetailsManager,
+        UserRepository userRepository) {
+      return new SpringSecurityUserService(passwordEncoder, userDetailsManager, userRepository);
     }
 
   }
@@ -472,10 +481,17 @@ public class AuthConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(PasswordEncoder.class)
+    public PasswordEncoder passwordEncoder() {
+      return SpringSecurityAuthAutoConfiguration.passwordEncoder();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(JdbcUserDetailsManager.class)
-    public JdbcUserDetailsManager jdbcUserDetailsManager(AuthenticationManagerBuilder auth,
-        DataSource datasource) throws Exception {
-      return new SpringSecurityAuthAutoConfiguration().jdbcUserDetailsManager(auth, datasource);
+    public JdbcUserDetailsManager jdbcUserDetailsManager(PasswordEncoder passwordEncoder,
+        AuthenticationManagerBuilder auth, DataSource datasource) throws Exception {
+      return SpringSecurityAuthAutoConfiguration
+          .jdbcUserDetailsManager(passwordEncoder, auth, datasource);
     }
 
     @Bean
