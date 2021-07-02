@@ -46,8 +46,12 @@ Apollo 1.9.0
 * [feat(apollo-client): add method interestedChangedKeys to ConfigChangeEvent](https://github.com/ctripcorp/apollo/pull/3666)
 * [add More... link for known users](https://github.com/ctripcorp/apollo/pull/3757)
 * [update OIDC documentation](https://github.com/ctripcorp/apollo/pull/3766)
+* [Improve the item-value length limit configuration document](https://github.com/ctripcorp/apollo/pull/3789)
+* [Use queue#take instead of poll](https://github.com/ctripcorp/apollo/pull/3765)
 * [feature: add Spring Boot 2.4 config data loader support](https://github.com/ctripcorp/apollo/pull/3754)
 * [feat(open-api): get authorized apps](https://github.com/ctripcorp/apollo/pull/3647)
+* [feature: shared session for multi apollo portal](https://github.com/ctripcorp/apollo/pull/3786)
+* [feature: add email for select user on apollo portal](https://github.com/ctripcorp/apollo/pull/3797)
 * [feature: add the delegating password encoder for apollo-portal simple auth](https://github.com/ctripcorp/apollo/pull/3804)
 ------------------
 All issues and pull requests are [here](https://github.com/ctripcorp/apollo/milestone/6?closed=1)
