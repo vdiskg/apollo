@@ -48,6 +48,7 @@ Apollo 1.9.0
 * [update OIDC documentation](https://github.com/ctripcorp/apollo/pull/3766)
 * [feature: add Spring Boot 2.4 config data loader support](https://github.com/ctripcorp/apollo/pull/3754)
 * [feat(open-api): get authorized apps](https://github.com/ctripcorp/apollo/pull/3647)
+* [feature: add the delegating password encoder for apollo-portal simple auth](https://github.com/ctripcorp/apollo/pull/3804)
 ------------------
 All issues and pull requests are [here](https://github.com/ctripcorp/apollo/milestone/6?closed=1)
 
