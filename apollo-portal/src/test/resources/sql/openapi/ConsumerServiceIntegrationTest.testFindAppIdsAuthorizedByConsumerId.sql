@@ -249,7 +249,7 @@ INSERT INTO `UserRole` (`Id`, `UserId`, `RoleId`, `DataChange_CreatedBy`, `DataC
 
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
 INSERT INTO `Users` (`Id`, `Username`, `Password`, `UserDisplayName`, `Email`, `Enabled`) VALUES
-(1000, 'apollo', '$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo', 'apollo@acme.com', 1);
+(1000, 'apollo', '{bcrypt}$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo', 'apollo@acme.com', 1);
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
