@@ -17,6 +17,7 @@
 package com.ctrip.framework.apollo.portal.spi.springsecurity;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
@@ -47,8 +48,11 @@ public class PasswordEncoderAdapter implements PasswordEncoder {
       return true;
     }
     String id = this.extractId(encodedPassword);
-    throw new IllegalArgumentException(
-        "There is no PasswordEncoder mapped for the id \"" + id + "\"");
+    if (StringUtils.hasText(id)) {
+      throw new IllegalArgumentException(
+          "There is no PasswordEncoder mapped for the id \"" + id + "\"");
+    }
+    return false;
   }
 
   private String extractId(String prefixEncodedPassword) {
