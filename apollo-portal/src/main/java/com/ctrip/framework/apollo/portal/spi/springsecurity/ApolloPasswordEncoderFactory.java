@@ -66,6 +66,11 @@ public final class ApolloPasswordEncoderFactory {
 
     // placeholder encoder for oidc
     encoders.put(PlaceholderPasswordEncoder.ENCODING_ID, new PlaceholderPasswordEncoder());
-    return new DelegatingPasswordEncoder(encodingId, encoders);
+    DelegatingPasswordEncoder delegatingPasswordEncoder = new DelegatingPasswordEncoder(encodingId,
+        encoders);
+
+    // todo: adapt the old password, and it should be removed in the next feature version of the 1.9.x
+    delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(new PasswordEncoderAdapter(encoders.get(encodingId)));
+    return delegatingPasswordEncoder;
   }
 }
