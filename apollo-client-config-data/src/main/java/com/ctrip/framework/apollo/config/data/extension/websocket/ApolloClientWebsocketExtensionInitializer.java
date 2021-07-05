@@ -18,10 +18,20 @@ package com.ctrip.framework.apollo.config.data.extension.websocket;
 
 import com.ctrip.framework.apollo.config.data.extension.initialize.ApolloClientExtensionInitializer;
 import com.ctrip.framework.apollo.config.data.extension.properties.ApolloClientProperties;
+import io.rsocket.Payload;
+import io.rsocket.RSocket;
+import io.rsocket.core.RSocketClient;
+import io.rsocket.core.RSocketConnector;
+import io.rsocket.transport.netty.client.WebsocketClientTransport;
+import io.rsocket.util.EmptyPayload;
+import java.net.URI;
 import org.apache.commons.logging.Log;
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.messaging.rsocket.RSocketRequester;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
@@ -41,6 +51,11 @@ public class ApolloClientWebsocketExtensionInitializer implements ApolloClientEx
   @Override
   public void initialize(ApolloClientProperties apolloClientProperties, Binder binder,
       BindHandler bindHandler) {
+    WebsocketClientTransport clientTransport = WebsocketClientTransport.create(URI.create(""));
+    clientTransport.header("", "");
+    RSocketClient client = RSocketRequester.builder().transport(clientTransport)
+        .rsocketClient();
+    Flux<Payload> stream = client.requestStream(Mono.just(EmptyPayload.INSTANCE));
     throw new UnsupportedOperationException("apollo client websocket support is not complete yet.");
   }
 }
