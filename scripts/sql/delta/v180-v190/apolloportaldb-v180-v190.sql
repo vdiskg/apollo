@@ -69,4 +69,6 @@ UPDATE `Users` SET `UserDisplayName`=`Username` WHERE `UserDisplayName` = 'defau
 ALTER TABLE `Users`
     MODIFY COLUMN `Password` varchar(512) NOT NULL DEFAULT 'default' COMMENT '密码';
 UPDATE `Users` SET `Password` = REPLACE(`Password`, '{nonsensical}', '{placeholder}') WHERE `Password` LIKE '{nonsensical}%';
-UPDATE `Users` SET `Password` = CONCAT('{bcrypt}', `Password`) WHERE `Password` NOT LIKE '{%}%';
+-- note: add the {bcrypt} prefix for `Users`.`Password` is not mandatory, and it may break the old version of apollo-portal while upgrading.
+-- 注意: 向 `Users`.`Password` 添加 {bcrypt} 是非必须操作, 并且这个操作会导致升级 apollo-portal 集群的过程中旧版的 apollo-portal 无法使用.
+-- UPDATE `Users` SET `Password` = CONCAT('{bcrypt}', `Password`) WHERE `Password` NOT LIKE '{%}%';
