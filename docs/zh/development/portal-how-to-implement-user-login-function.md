@@ -14,7 +14,7 @@ Apollo是配置管理系统，会提供权限管理（Authorization），理论�
 
 |Id|Username|Password|Email|Enabled|
 |-|-|-|-|-|
-|1|apollo|{bcrypt}$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS|apollo@acme.com|1|
+|1|apollo|$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS|apollo@acme.com|1|
 
 ### 2. 重启Portal
 如果是IDE启动的话，确保`-Dapollo_profile=github,auth`
