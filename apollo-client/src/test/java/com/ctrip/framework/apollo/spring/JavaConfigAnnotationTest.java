@@ -956,7 +956,7 @@ public class JavaConfigAnnotationTest extends AbstractSpringIntegrationTest {
     }
 
     public ConfigChangeEvent getConfigChangeEvent() throws InterruptedException {
-      return this.configChangeEventQueue.take();
+      return this.configChangeEventQueue.poll(5, TimeUnit.SECONDS);
     }
   }
 
