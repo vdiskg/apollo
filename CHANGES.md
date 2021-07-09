@@ -53,6 +53,8 @@ Apollo 1.9.0
 * [feature: shared session for multi apollo portal](https://github.com/ctripcorp/apollo/pull/3786)
 * [feature: add email for select user on apollo portal](https://github.com/ctripcorp/apollo/pull/3797)
 * [feature: modify item comment valid size](https://github.com/ctripcorp/apollo/pull/3803)
+* [set default session store-type](https://github.com/ctripcorp/apollo/pull/3812)
+* [speed up the stale issue mark and close phase](https://github.com/ctripcorp/apollo/pull/3808)
 * [feature: add the delegating password encoder for apollo-portal simple auth](https://github.com/ctripcorp/apollo/pull/3804)
 ------------------
 All issues and pull requests are [here](https://github.com/ctripcorp/apollo/milestone/6?closed=1)
