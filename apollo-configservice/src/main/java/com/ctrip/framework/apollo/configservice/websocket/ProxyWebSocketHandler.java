@@ -17,8 +17,6 @@
 package com.ctrip.framework.apollo.configservice.websocket;
 
 import java.net.URI;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.boot.autoconfigure.rsocket.RSocketProperties;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
@@ -32,7 +30,8 @@ import org.springframework.web.socket.client.WebSocketClient;
  */
 public class ProxyWebSocketHandler implements WebSocketHandler {
 
-  private final Map<WebSocketSession, WebSocketSession> downstreamSessionMap = new ConcurrentHashMap<>();
+  public static final String DOWNSTREAM_SESSION_ATTRIBUTE_KEY = DownstreamWebSocketHandler.class
+      .getSimpleName();
 
   private final WebSocketClient webSocketClient;
 
@@ -52,13 +51,14 @@ public class ProxyWebSocketHandler implements WebSocketHandler {
     WebSocketSession downstreamSession = this.webSocketClient
         .doHandshake((DownstreamWebSocketHandler) () -> session,
             new WebSocketHttpHeaders(session.getHandshakeHeaders()), uri).get();
-    this.downstreamSessionMap.put(session, downstreamSession);
+    session.getAttributes().put(DOWNSTREAM_SESSION_ATTRIBUTE_KEY, downstreamSession);
   }
 
   @Override
   public void handleMessage(WebSocketSession session, WebSocketMessage<?> message)
       throws Exception {
-    WebSocketSession downstreamSession = this.downstreamSessionMap.get(session);
+    WebSocketSession downstreamSession = (WebSocketSession) session.getAttributes()
+        .get(DOWNSTREAM_SESSION_ATTRIBUTE_KEY);
     downstreamSession.sendMessage(message);
   }
 
@@ -69,7 +69,8 @@ public class ProxyWebSocketHandler implements WebSocketHandler {
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus)
       throws Exception {
-    WebSocketSession downstreamSession = this.downstreamSessionMap.remove(session);
+    WebSocketSession downstreamSession = (WebSocketSession) session.getAttributes()
+        .get(DOWNSTREAM_SESSION_ATTRIBUTE_KEY);
     downstreamSession.close(closeStatus);
   }
 
