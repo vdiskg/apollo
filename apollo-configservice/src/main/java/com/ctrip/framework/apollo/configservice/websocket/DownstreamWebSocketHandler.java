@@ -24,35 +24,39 @@ import org.springframework.web.socket.WebSocketSession;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class DownstreamWebSocketHandler implements WebSocketHandler {
+@FunctionalInterface
+public interface DownstreamWebSocketHandler extends WebSocketHandler {
 
-  private final WebSocketSession upstreamSession;
+  /**
+   * get upstream websocket session
+   *
+   * @return websocket session
+   */
+  WebSocketSession getUpstreamSession();
 
-  public DownstreamWebSocketHandler(WebSocketSession upstreamSession) {
-    this.upstreamSession = upstreamSession;
+  @Override
+  default void afterConnectionEstablished(WebSocketSession session) throws Exception {
   }
 
   @Override
-  public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
+  default void handleMessage(WebSocketSession session, WebSocketMessage<?> message)
+      throws Exception {
+    this.getUpstreamSession().sendMessage(message);
   }
 
   @Override
-  public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-    this.upstreamSession.sendMessage(message);
+  default void handleTransportError(WebSocketSession session, Throwable exception)
+      throws Exception {
   }
 
   @Override
-  public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+  default void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus)
+      throws Exception {
+    this.getUpstreamSession().close(closeStatus);
   }
 
   @Override
-  public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-    this.upstreamSession.close(closeStatus);
-  }
-
-  @Override
-  public boolean supportsPartialMessages() {
+  default boolean supportsPartialMessages() {
     return false;
   }
 }

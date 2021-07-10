@@ -50,7 +50,7 @@ public class ProxyWebSocketHandler implements WebSocketHandler {
     String mappingPath = this.rsocketProperties.getServer().getMappingPath();
     URI uri = URI.create("ws://localhost:" + port + mappingPath);
     WebSocketSession downstreamSession = this.webSocketClient
-        .doHandshake(new DownstreamWebSocketHandler(session),
+        .doHandshake((DownstreamWebSocketHandler) () -> session,
             new WebSocketHttpHeaders(session.getHandshakeHeaders()), uri).get();
     this.downstreamSessionMap.put(session, downstreamSession);
   }
