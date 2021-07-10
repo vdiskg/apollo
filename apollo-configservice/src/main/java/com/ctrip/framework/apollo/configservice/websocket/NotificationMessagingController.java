@@ -24,8 +24,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.Mono;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
@@ -33,18 +32,18 @@ import reactor.core.publisher.FluxSink;
 @Controller
 public class NotificationMessagingController implements ReleaseMessageListener {
 
-  private final Map<String, FluxSinkContext<List<ApolloConfigNotification>>> contextMap = new ConcurrentHashMap<>();
+  private final Map<String, MonoSinkContext<List<ApolloConfigNotification>>> contextMap = new ConcurrentHashMap<>();
 
   @MessageMapping("/notifications")
-  public Flux<List<ApolloConfigNotification>> notifications() {
-    String fluxSinkId = "";
-    return Flux.<List<ApolloConfigNotification>>create(fluxSink -> {
-          FluxSinkContext<List<ApolloConfigNotification>> old = this.contextMap.put(fluxSinkId, new FluxSinkContext<>(fluxSinkId, fluxSink));
-          if (old != null) {
-            old.close();
-          }
-        }, FluxSink.OverflowStrategy.LATEST)
-        .doFinally(signalType -> this.contextMap.remove(fluxSinkId));
+  public Mono<List<ApolloConfigNotification>> notifications() {
+    String monoSinkId = "";
+    return Mono.<List<ApolloConfigNotification>>create(monoSink -> {
+      MonoSinkContext<List<ApolloConfigNotification>> old = this.contextMap
+          .put(monoSinkId, new MonoSinkContext<>(monoSinkId, monoSink));
+      if (old != null) {
+        old.close();
+      }
+    }).doFinally(signalType -> this.contextMap.remove(monoSinkId));
   }
 
   @Override
