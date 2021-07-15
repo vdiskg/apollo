@@ -33,9 +33,9 @@ import com.google.common.util.concurrent.SettableFuture;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Properties;
-import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Test;
@@ -383,7 +383,8 @@ public class JavaConfigAnnotationTest extends AbstractSpringIntegrationTest {
   }
 
   @Test
-  public void testApolloConfigChangeListenerWithInterestedKeyPrefixes_fire() {
+  public void testApolloConfigChangeListenerWithInterestedKeyPrefixes_fire()
+      throws InterruptedException {
     // default mock, useless here
     // just for speed up test without waiting
     mockConfig(ConfigConsts.NAMESPACE_APPLICATION, mock(Config.class));
@@ -946,7 +947,7 @@ public class JavaConfigAnnotationTest extends AbstractSpringIntegrationTest {
 
     static final String SPECIAL_NAMESPACE = "special-namespace-2021";
 
-    private final Queue<ConfigChangeEvent> configChangeEventQueue = new ArrayBlockingQueue<>(100);
+    private final BlockingQueue<ConfigChangeEvent> configChangeEventQueue = new ArrayBlockingQueue<>(100);
 
     @ApolloConfigChangeListener(value = SPECIAL_NAMESPACE, interestedKeyPrefixes = {"number",
         "logging.level"})
@@ -954,8 +955,8 @@ public class JavaConfigAnnotationTest extends AbstractSpringIntegrationTest {
       this.configChangeEventQueue.add(changeEvent);
     }
 
-    public ConfigChangeEvent getConfigChangeEvent() {
-      return this.configChangeEventQueue.poll();
+    public ConfigChangeEvent getConfigChangeEvent() throws InterruptedException {
+      return this.configChangeEventQueue.poll(5, TimeUnit.SECONDS);
     }
   }
 
