@@ -66,6 +66,7 @@ Apollo 1.9.0
 * [translation of "portal-how-to-enable-webhook-notification.md"](https://github.com/ctripcorp/apollo/pull/3847)
 * [feature: add history detail for not key-value type of namespace](https://github.com/ctripcorp/apollo/pull/3856)
 * [fix show-text-modal number display](https://github.com/ctripcorp/apollo/pull/3851)
+* [Lazy load ConfigUtil](https://github.com/ctripcorp/apollo/pull/3864)
 * [make jdbc session enable default](https://github.com/ctripcorp/apollo/pull/3869)
 
 ------------------
