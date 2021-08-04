@@ -57,7 +57,7 @@ public class ConfigUtil {
   private final RateLimiter warnLogRateLimiter;
   private boolean propertiesOrdered = false;
   private boolean propertyNamesCacheEnabled = false;
-  private boolean m_pureApolloConfig;
+  private boolean m_pureApolloConfig = false;
 
   public ConfigUtil() {
     warnLogRateLimiter = RateLimiter.create(0.017); // 1 warning log output per minute
