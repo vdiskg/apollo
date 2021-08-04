@@ -57,7 +57,7 @@ public class ConfigUtil {
   private final RateLimiter warnLogRateLimiter;
   private boolean propertiesOrdered = false;
   private boolean propertyNamesCacheEnabled = false;
-  private boolean m_pureApolloConfig = false;
+  private boolean pureApolloConfig = false;
 
   public ConfigUtil() {
     warnLogRateLimiter = RateLimiter.create(0.017); // 1 warning log output per minute
@@ -423,10 +423,10 @@ public class ConfigUtil {
   }
 
   public boolean isPureApolloConfig() {
-    return m_pureApolloConfig;
+    return pureApolloConfig;
   }
 
   public void setPureApolloConfig(boolean pureApolloConfig) {
-    m_pureApolloConfig = pureApolloConfig;
+    this.pureApolloConfig = pureApolloConfig;
   }
 }
