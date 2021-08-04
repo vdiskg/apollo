@@ -51,6 +51,7 @@ public class DefaultConfig extends AbstractConfig implements RepositoryChangeLis
   private final AtomicReference<Properties> m_configProperties;
   private final ConfigRepository m_configRepository;
   private final RateLimiter m_warnLogRateLimiter;
+  private final boolean m_pureApolloConfig;
 
   private volatile ConfigSourceType m_sourceType = ConfigSourceType.NONE;
 
@@ -59,14 +60,21 @@ public class DefaultConfig extends AbstractConfig implements RepositoryChangeLis
    *
    * @param namespace        the namespace of this config instance
    * @param configRepository the config repository for this config instance
+   * @param pureApolloConfig only return properties from apollo or not
    */
-  public DefaultConfig(String namespace, ConfigRepository configRepository) {
+  public DefaultConfig(String namespace, ConfigRepository configRepository,
+      boolean pureApolloConfig) {
     m_namespace = namespace;
     m_resourceProperties = loadFromResource(m_namespace);
     m_configRepository = configRepository;
     m_configProperties = new AtomicReference<>();
     m_warnLogRateLimiter = RateLimiter.create(0.017); // 1 warning log output per minute
+    m_pureApolloConfig = pureApolloConfig;
     initialize();
+  }
+
+  public DefaultConfig(String namespace, ConfigRepository configRepository) {
+    this(namespace, configRepository, false);
   }
 
   private void initialize() {
@@ -85,8 +93,11 @@ public class DefaultConfig extends AbstractConfig implements RepositoryChangeLis
 
   @Override
   public String getProperty(String key, String defaultValue) {
-    // step 1: check system properties, i.e. -Dkey=value
-    String value = System.getProperty(key);
+    String value = null;
+    if (!m_pureApolloConfig) {
+      // step 1: check system properties, i.e. -Dkey=value
+      value = System.getProperty(key);
+    }
 
     // step 2: check local cached properties file
     if (value == null && m_configProperties.get() != null) {
@@ -98,7 +109,7 @@ public class DefaultConfig extends AbstractConfig implements RepositoryChangeLis
      * normally system environment variables are in UPPERCASE, however there might be exceptions.
      * so the caller should provide the key in the right case
      */
-    if (value == null) {
+    if (!m_pureApolloConfig && value == null) {
       value = System.getenv(key);
     }
 

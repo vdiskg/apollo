@@ -43,19 +43,22 @@ import com.ctrip.framework.apollo.util.ConfigUtil;
  */
 public class DefaultConfigFactory implements ConfigFactory {
   private static final Logger logger = LoggerFactory.getLogger(DefaultConfigFactory.class);
-  private ConfigUtil m_configUtil;
+  private final ConfigUtil m_configUtil;
+  private final boolean m_pureApolloConfig;
 
   public DefaultConfigFactory() {
-    m_configUtil = ApolloInjector.getInstance(ConfigUtil.class);
+    ConfigUtil configUtil = ApolloInjector.getInstance(ConfigUtil.class);
+    m_configUtil = configUtil;
+    m_pureApolloConfig = configUtil.isPureApolloConfig();
   }
 
   @Override
   public Config create(String namespace) {
     ConfigFileFormat format = determineFileFormat(namespace);
     if (ConfigFileFormat.isPropertiesCompatible(format)) {
-      return new DefaultConfig(namespace, createPropertiesCompatibleFileConfigRepository(namespace, format));
+      return new DefaultConfig(namespace, createPropertiesCompatibleFileConfigRepository(namespace, format), m_pureApolloConfig);
     }
-    return new DefaultConfig(namespace, createLocalConfigRepository(namespace));
+    return new DefaultConfig(namespace, createLocalConfigRepository(namespace), m_pureApolloConfig);
   }
 
   @Override
