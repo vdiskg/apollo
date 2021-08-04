@@ -67,6 +67,7 @@ Apollo 1.9.0
 * [feature: add history detail for not key-value type of namespace](https://github.com/ctripcorp/apollo/pull/3856)
 * [fix show-text-modal number display](https://github.com/ctripcorp/apollo/pull/3851)
 * [Lazy load ConfigUtil](https://github.com/ctripcorp/apollo/pull/3864)
+* [fix apollo config data loader with profiles](https://github.com/ctripcorp/apollo/pull/3870)
 
 ------------------
 All issues and pull requests are [here](https://github.com/ctripcorp/apollo/milestone/6?closed=1)
