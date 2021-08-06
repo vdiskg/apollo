@@ -90,8 +90,9 @@ public abstract class AbstractRepositoryConfig extends AbstractConfig implements
    * @return value
    */
   protected String getPropertyFromRepository(String key) {
-    if (m_configProperties.get() != null) {
-      return m_configProperties.get().getProperty(key);
+    Properties properties = m_configProperties.get();
+    if (properties != null) {
+      return properties.getProperty(key);
     }
     return null;
   }
