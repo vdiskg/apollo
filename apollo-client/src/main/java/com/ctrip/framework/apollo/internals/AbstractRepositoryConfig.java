@@ -104,8 +104,9 @@ public abstract class AbstractRepositoryConfig extends AbstractConfig implements
    * @return value
    */
   protected String getPropertyFromAdditional(String key) {
-    if (m_resourceProperties != null) {
-      return m_resourceProperties.getProperty(key);
+    Properties properties = this.m_resourceProperties;
+    if (properties != null) {
+      return properties.getProperty(key);
     }
     return null;
   }
