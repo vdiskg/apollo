@@ -67,6 +67,9 @@ Apollo 1.9.0
 * [feature: add history detail for not key-value type of namespace](https://github.com/ctripcorp/apollo/pull/3856)
 * [fix show-text-modal number display](https://github.com/ctripcorp/apollo/pull/3851)
 * [Lazy load ConfigUtil](https://github.com/ctripcorp/apollo/pull/3864)
+* [make jdbc session enable default](https://github.com/ctripcorp/apollo/pull/3869)
+* [support json/yaml/xml format for public namespace](https://github.com/ctripcorp/apollo/pull/3836)
+* [Translate application into 应用 not 项目](https://github.com/ctripcorp/apollo/pull/3877)
 * [fix apollo config data loader with profiles](https://github.com/ctripcorp/apollo/pull/3870)
 
 ------------------
