@@ -16,13 +16,15 @@
  */
 package com.ctrip.framework.apollo.internals;
 
+import com.ctrip.framework.apollo.util.ApolloHashMapInitialUtil;
+import java.util.HashSet;
 import java.util.Set;
-
+import org.springframework.util.CollectionUtils;
 
 /**
- * @author Jason Song(song_s@ctrip.com)
+ * @author vdisk <vdisk@foxmail.com>
  */
-public class DefaultConfig extends AbstractRepositoryConfig implements RepositoryChangeListener {
+public class PureApolloConfig extends AbstractRepositoryConfig implements RepositoryChangeListener {
 
   /**
    * Constructor.
@@ -30,30 +32,17 @@ public class DefaultConfig extends AbstractRepositoryConfig implements Repositor
    * @param namespace        the namespace of this config instance
    * @param configRepository the config repository for this config instance
    */
-  public DefaultConfig(String namespace, ConfigRepository configRepository) {
+  public PureApolloConfig(String namespace,
+      ConfigRepository configRepository) {
     super(namespace, configRepository);
   }
 
   @Override
   public String getProperty(String key, String defaultValue) {
-    // step 1: check system properties, i.e. -Dkey=value
-    String value = System.getProperty(key);
+    // step 1: check local cached properties file
+    String value = this.getPropertyFromRepository(key);
 
-    // step 2: check local cached properties file
-    if (value == null) {
-      value = this.getPropertyFromRepository(key);
-    }
-
-    /*
-     * step 3: check env variable, i.e. PATH=...
-     * normally system environment variables are in UPPERCASE, however there might be exceptions.
-     * so the caller should provide the key in the right case
-     */
-    if (value == null) {
-      value = System.getenv(key);
-    }
-
-    // step 4: check properties file from classpath
+    // step 2: check properties file from classpath
     if (value == null) {
       value = this.getPropertyFromAdditional(key);
     }
@@ -65,6 +54,19 @@ public class DefaultConfig extends AbstractRepositoryConfig implements Repositor
 
   @Override
   public Set<String> getPropertyNames() {
-    return this.getPropertyNamesFromRepository();
+    Set<String> fromRepository = this.getPropertyNamesFromRepository();
+    Set<String> fromAdditional = this.getPropertyNamesFromAdditional();
+    if (CollectionUtils.isEmpty(fromRepository)) {
+      return fromAdditional;
+    }
+    if (CollectionUtils.isEmpty(fromAdditional)) {
+      return fromRepository;
+    }
+    int initialCapacity = ApolloHashMapInitialUtil
+        .getInitialCapacity(fromRepository.size() + fromAdditional.size());
+    Set<String> propertyNames = new HashSet<>(initialCapacity);
+    propertyNames.addAll(fromRepository);
+    propertyNames.addAll(fromAdditional);
+    return propertyNames;
   }
 }

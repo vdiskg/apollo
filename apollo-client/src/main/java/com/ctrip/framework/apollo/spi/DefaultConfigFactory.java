@@ -19,6 +19,7 @@ package com.ctrip.framework.apollo.spi;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.PropertiesCompatibleConfigFile;
 import com.ctrip.framework.apollo.internals.PropertiesCompatibleFileConfigRepository;
+import com.ctrip.framework.apollo.internals.PureApolloConfig;
 import com.ctrip.framework.apollo.internals.TxtConfigFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,9 +57,16 @@ public class DefaultConfigFactory implements ConfigFactory {
   public Config create(String namespace) {
     ConfigFileFormat format = determineFileFormat(namespace);
     if (ConfigFileFormat.isPropertiesCompatible(format)) {
-      return new DefaultConfig(namespace, createPropertiesCompatibleFileConfigRepository(namespace, format), m_pureApolloConfig);
+      return this.createConfig(namespace, createPropertiesCompatibleFileConfigRepository(namespace, format));
     }
-    return new DefaultConfig(namespace, createLocalConfigRepository(namespace), m_pureApolloConfig);
+    return this.createConfig(namespace, createLocalConfigRepository(namespace));
+  }
+
+  private Config createConfig(String namespace, ConfigRepository configRepository) {
+    if (m_pureApolloConfig) {
+      return new PureApolloConfig(namespace, configRepository);
+    }
+    return new DefaultConfig(namespace, configRepository);
   }
 
   @Override
