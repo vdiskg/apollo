@@ -14,8 +14,11 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.internals;
+package com.ctrip.framework.apollo.config.data.internals;
 
+import com.ctrip.framework.apollo.internals.AbstractRepositoryConfig;
+import com.ctrip.framework.apollo.internals.ConfigRepository;
+import com.ctrip.framework.apollo.internals.RepositoryChangeListener;
 import com.ctrip.framework.apollo.util.ApolloHashMapInitialUtil;
 import java.util.HashSet;
 import java.util.Set;

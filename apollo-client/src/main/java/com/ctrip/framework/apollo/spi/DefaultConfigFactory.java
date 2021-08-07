@@ -19,7 +19,6 @@ package com.ctrip.framework.apollo.spi;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.PropertiesCompatibleConfigFile;
 import com.ctrip.framework.apollo.internals.PropertiesCompatibleFileConfigRepository;
-import com.ctrip.framework.apollo.internals.PureApolloConfig;
 import com.ctrip.framework.apollo.internals.TxtConfigFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,20 +44,22 @@ import com.ctrip.framework.apollo.util.ConfigUtil;
 public class DefaultConfigFactory implements ConfigFactory {
   private static final Logger logger = LoggerFactory.getLogger(DefaultConfigFactory.class);
   private final ConfigUtil m_configUtil;
-  private final RepositoryConfigFactory m_repositoryConfigFactory;
 
   public DefaultConfigFactory() {
     m_configUtil = ApolloInjector.getInstance(ConfigUtil.class);
-    m_repositoryConfigFactory = ApolloInjector.getInstance(RepositoryConfigFactory.class);
   }
 
   @Override
   public Config create(String namespace) {
     ConfigFileFormat format = determineFileFormat(namespace);
     if (ConfigFileFormat.isPropertiesCompatible(format)) {
-      return this.m_repositoryConfigFactory.createConfig(namespace, createPropertiesCompatibleFileConfigRepository(namespace, format));
+      return this.createRepositoryConfig(namespace, createPropertiesCompatibleFileConfigRepository(namespace, format));
     }
-    return this.m_repositoryConfigFactory.createConfig(namespace, createLocalConfigRepository(namespace));
+    return this.createRepositoryConfig(namespace, createLocalConfigRepository(namespace));
+  }
+
+  protected Config createRepositoryConfig(String namespace, ConfigRepository configRepository) {
+    return new DefaultConfig(namespace, configRepository);
   }
 
   @Override

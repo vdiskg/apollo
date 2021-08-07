@@ -14,19 +14,20 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.spi;
+package com.ctrip.framework.apollo.config.data.internals;
 
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.internals.ConfigRepository;
-import com.ctrip.framework.apollo.internals.PureApolloConfig;
+import com.ctrip.framework.apollo.spi.ConfigFactory;
+import com.ctrip.framework.apollo.spi.DefaultConfigFactory;
 
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class PureApolloRepositoryConfigFactory implements RepositoryConfigFactory {
+public class PureApolloConfigFactory extends DefaultConfigFactory implements ConfigFactory {
 
   @Override
-  public Config createConfig(String namespace, ConfigRepository configRepository) {
+  protected Config createRepositoryConfig(String namespace, ConfigRepository configRepository) {
     return new PureApolloConfig(namespace, configRepository);
   }
 }
