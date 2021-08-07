@@ -83,15 +83,16 @@ public class ApolloMockInjectorCustomizer implements ApolloInjectorCustomizer {
     return this.getInstance(clazz, instanceSupplier);
   }
 
+  @SuppressWarnings("unchecked")
   private <T> T getInstance(Class<T> type, Supplier<T> instanceSupplier) {
-    @SuppressWarnings("unchecked")
     T instance = (T) INSTANCES.get(type);
     if (instance != null) {
       return instance;
     }
+    // prebuild an newInstance to prevent dead lock when recursive call computeIfAbsent
+    // https://bugs.openjdk.java.net/browse/JDK-8062841
     T newInstance = instanceSupplier.get();
-    INSTANCES.put(type, newInstance);
-    return newInstance;
+    return (T) INSTANCES.computeIfAbsent(type, key -> newInstance);
   }
 
   @Override
