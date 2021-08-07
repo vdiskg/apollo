@@ -16,13 +16,14 @@
  */
 package com.ctrip.framework.apollo.config.data.importer;
 
-import com.ctrip.framework.apollo.build.ApolloInjector;
 import com.ctrip.framework.apollo.config.data.extension.initialize.ApolloClientExtensionInitializeFactory;
+import com.ctrip.framework.apollo.config.data.injector.ApolloConfigDataInjectorCustomizer;
 import com.ctrip.framework.apollo.config.data.system.ApolloClientSystemPropertyInitializer;
 import com.ctrip.framework.apollo.config.data.util.Slf4jLogMessageFormatter;
 import com.ctrip.framework.apollo.core.utils.DeferredLogger;
+import com.ctrip.framework.apollo.spi.PureApolloRepositoryConfigFactory;
+import com.ctrip.framework.apollo.spi.RepositoryConfigFactory;
 import com.ctrip.framework.apollo.spring.config.PropertySourcesConstants;
-import com.ctrip.framework.apollo.util.ConfigUtil;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -102,8 +103,8 @@ class ApolloConfigDataLoaderInitializer {
     new ApolloClientExtensionInitializeFactory(this.log,
         this.bootstrapContext).initializeExtension(this.binder, this.bindHandler);
     DeferredLogger.enable();
-    ConfigUtil configUtil = ApolloInjector.getInstance(ConfigUtil.class);
-    configUtil.setPureApolloConfig(true);
+    ApolloConfigDataInjectorCustomizer.register(RepositoryConfigFactory.class,
+        PureApolloRepositoryConfigFactory::new);
   }
 
   private boolean forceDisableApolloBootstrap() {

@@ -45,28 +45,20 @@ import com.ctrip.framework.apollo.util.ConfigUtil;
 public class DefaultConfigFactory implements ConfigFactory {
   private static final Logger logger = LoggerFactory.getLogger(DefaultConfigFactory.class);
   private final ConfigUtil m_configUtil;
-  private final boolean m_pureApolloConfig;
+  private final RepositoryConfigFactory m_repositoryConfigFactory;
 
   public DefaultConfigFactory() {
-    ConfigUtil configUtil = ApolloInjector.getInstance(ConfigUtil.class);
-    m_configUtil = configUtil;
-    m_pureApolloConfig = configUtil.isPureApolloConfig();
+    m_configUtil = ApolloInjector.getInstance(ConfigUtil.class);
+    m_repositoryConfigFactory = ApolloInjector.getInstance(RepositoryConfigFactory.class);
   }
 
   @Override
   public Config create(String namespace) {
     ConfigFileFormat format = determineFileFormat(namespace);
     if (ConfigFileFormat.isPropertiesCompatible(format)) {
-      return this.createConfig(namespace, createPropertiesCompatibleFileConfigRepository(namespace, format));
+      return this.m_repositoryConfigFactory.createConfig(namespace, createPropertiesCompatibleFileConfigRepository(namespace, format));
     }
-    return this.createConfig(namespace, createLocalConfigRepository(namespace));
-  }
-
-  private Config createConfig(String namespace, ConfigRepository configRepository) {
-    if (m_pureApolloConfig) {
-      return new PureApolloConfig(namespace, configRepository);
-    }
-    return new DefaultConfig(namespace, configRepository);
+    return this.m_repositoryConfigFactory.createConfig(namespace, createLocalConfigRepository(namespace));
   }
 
   @Override

@@ -17,9 +17,12 @@
 package com.ctrip.framework.apollo.config.data.importer;
 
 import com.ctrip.framework.apollo.Config;
-import com.ctrip.framework.apollo.build.ApolloInjector;
+import com.ctrip.framework.apollo.config.data.injector.ApolloConfigDataInjectorCustomizer;
+import com.ctrip.framework.apollo.config.data.injector.ApolloMockInjectorCustomizer;
 import com.ctrip.framework.apollo.spi.DefaultConfigFactory;
-import com.ctrip.framework.apollo.util.ConfigUtil;
+import com.ctrip.framework.apollo.spi.DefaultRepositoryConfigFactory;
+import com.ctrip.framework.apollo.spi.PureApolloRepositoryConfigFactory;
+import com.ctrip.framework.apollo.spi.RepositoryConfigFactory;
 import com.github.stefanbirkner.systemlambda.SystemLambda;
 import org.junit.After;
 import org.junit.Assert;
@@ -34,13 +37,22 @@ public class PureApolloConfigTest {
   @Before
   public void before() {
     System.setProperty("env", "local");
+    ApolloConfigDataInjectorCustomizer.register(RepositoryConfigFactory.class,
+        PureApolloRepositoryConfigFactory::new);
+  }
+
+  @After
+  public void after() {
+    System.clearProperty("spring.profiles.active");
+    System.clearProperty("env");
+    ApolloMockInjectorCustomizer.clear();
   }
 
   @Test
   public void testDefaultConfigWithSystemProperties() {
     System.setProperty("spring.profiles.active", "test");
-    ConfigUtil configUtil = ApolloInjector.getInstance(ConfigUtil.class);
-    configUtil.setPureApolloConfig(false);
+    ApolloMockInjectorCustomizer.register(RepositoryConfigFactory.class,
+        DefaultRepositoryConfigFactory::new);
     DefaultConfigFactory defaultConfigFactory = new DefaultConfigFactory();
     Config config = defaultConfigFactory.create("application");
     Assert.assertEquals(config.getProperty("spring.profiles.active", null), "test");
@@ -49,8 +61,6 @@ public class PureApolloConfigTest {
   @Test
   public void testPureApolloConfigWithSystemProperties() {
     System.setProperty("spring.profiles.active", "test");
-    ConfigUtil configUtil = ApolloInjector.getInstance(ConfigUtil.class);
-    configUtil.setPureApolloConfig(true);
     DefaultConfigFactory defaultConfigFactory = new DefaultConfigFactory();
     Config config = defaultConfigFactory.create("application");
     Assert.assertNull(config.getProperty("spring.profiles.active", null));
@@ -62,8 +72,8 @@ public class PureApolloConfigTest {
         "SPRING_PROFILES_ACTIVE",
         "test-env")
         .execute(() -> {
-          ConfigUtil configUtil = ApolloInjector.getInstance(ConfigUtil.class);
-          configUtil.setPureApolloConfig(false);
+          ApolloMockInjectorCustomizer.register(RepositoryConfigFactory.class,
+              DefaultRepositoryConfigFactory::new);
           DefaultConfigFactory defaultConfigFactory = new DefaultConfigFactory();
           Config config = defaultConfigFactory.create("application");
           Assert.assertEquals(config.getProperty("SPRING_PROFILES_ACTIVE", null), "test-env");
@@ -76,17 +86,9 @@ public class PureApolloConfigTest {
         "SPRING_PROFILES_ACTIVE",
         "test-env")
         .execute(() -> {
-          ConfigUtil configUtil = ApolloInjector.getInstance(ConfigUtil.class);
-          configUtil.setPureApolloConfig(true);
           DefaultConfigFactory defaultConfigFactory = new DefaultConfigFactory();
           Config config = defaultConfigFactory.create("application");
           Assert.assertNull(config.getProperty("SPRING_PROFILES_ACTIVE", null));
         });
-  }
-
-  @After
-  public void after() {
-    System.clearProperty("spring.profiles.active");
-    System.clearProperty("env");
   }
 }

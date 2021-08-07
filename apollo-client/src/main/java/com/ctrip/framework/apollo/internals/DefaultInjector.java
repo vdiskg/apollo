@@ -24,6 +24,8 @@ import com.ctrip.framework.apollo.spi.ConfigRegistry;
 import com.ctrip.framework.apollo.spi.DefaultConfigFactory;
 import com.ctrip.framework.apollo.spi.DefaultConfigFactoryManager;
 import com.ctrip.framework.apollo.spi.DefaultConfigRegistry;
+import com.ctrip.framework.apollo.spi.DefaultRepositoryConfigFactory;
+import com.ctrip.framework.apollo.spi.RepositoryConfigFactory;
 import com.ctrip.framework.apollo.tracer.Tracer;
 import com.ctrip.framework.apollo.util.ConfigUtil;
 import com.ctrip.framework.apollo.util.factory.DefaultPropertiesFactory;
@@ -99,6 +101,7 @@ public class DefaultInjector implements Injector {
       bind(ConfigFactoryManager.class).to(DefaultConfigFactoryManager.class).in(Singleton.class);
       bind(ConfigRegistry.class).to(DefaultConfigRegistry.class).in(Singleton.class);
       bind(ConfigFactory.class).to(DefaultConfigFactory.class).in(Singleton.class);
+      bind(RepositoryConfigFactory.class).to(DefaultRepositoryConfigFactory.class).in(Singleton.class);
       bind(ConfigUtil.class).in(Singleton.class);
       bind(HttpClient.class).to(DefaultHttpClient.class).in(Singleton.class);
       bind(ConfigServiceLocator.class).in(Singleton.class);
