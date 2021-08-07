@@ -20,7 +20,7 @@ import com.ctrip.framework.apollo.internals.ConfigRepository;
 import com.ctrip.framework.apollo.internals.DefaultConfig;
 import com.ctrip.framework.apollo.internals.RepositoryChangeListener;
 import com.ctrip.framework.apollo.util.ApolloHashMapInitialUtil;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import org.springframework.util.CollectionUtils;
 
@@ -67,7 +67,7 @@ public class PureApolloConfig extends DefaultConfig implements RepositoryChangeL
     }
     int initialCapacity = ApolloHashMapInitialUtil
         .getInitialCapacity(fromRepository.size() + fromAdditional.size());
-    Set<String> propertyNames = new HashSet<>(initialCapacity);
+    Set<String> propertyNames = new LinkedHashSet<>(initialCapacity);
     propertyNames.addAll(fromRepository);
     propertyNames.addAll(fromAdditional);
     return propertyNames;
