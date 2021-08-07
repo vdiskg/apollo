@@ -16,6 +16,8 @@
  */
 package com.ctrip.framework.apollo.internals;
 
+import com.ctrip.framework.apollo.util.ApolloHashMapInitialUtil;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -65,6 +67,17 @@ public class DefaultConfig extends AbstractRepositoryConfig implements Repositor
 
   @Override
   public Set<String> getPropertyNames() {
-    return this.getPropertyNamesFromRepository();
+    Set<String> fromRepository = this.getPropertyNamesFromRepository();
+    Set<String> fromAdditional = this.getPropertyNamesFromAdditional();
+    Set<String> fromSystemProperty = this.stringPropertyNames(System.getProperties());
+    Set<String> fromEnv = System.getenv().keySet();
+    int initialCapacity = ApolloHashMapInitialUtil.getInitialCapacity(
+        fromRepository.size() + fromAdditional.size() + fromSystemProperty.size() + fromEnv.size());
+    Set<String> propertyNames = new HashSet<>(initialCapacity);
+    propertyNames.addAll(fromRepository);
+    propertyNames.addAll(fromAdditional);
+    propertyNames.addAll(fromSystemProperty);
+    propertyNames.addAll(fromEnv);
+    return propertyNames;
   }
 }
