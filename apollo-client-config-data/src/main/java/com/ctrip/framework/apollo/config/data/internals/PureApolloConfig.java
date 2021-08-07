@@ -16,8 +16,8 @@
  */
 package com.ctrip.framework.apollo.config.data.internals;
 
-import com.ctrip.framework.apollo.internals.AbstractRepositoryConfig;
 import com.ctrip.framework.apollo.internals.ConfigRepository;
+import com.ctrip.framework.apollo.internals.DefaultConfig;
 import com.ctrip.framework.apollo.internals.RepositoryChangeListener;
 import com.ctrip.framework.apollo.util.ApolloHashMapInitialUtil;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ import org.springframework.util.CollectionUtils;
 /**
  * @author vdisk <vdisk@foxmail.com>
  */
-public class PureApolloConfig extends AbstractRepositoryConfig implements RepositoryChangeListener {
+public class PureApolloConfig extends DefaultConfig implements RepositoryChangeListener {
 
   /**
    * Constructor.
