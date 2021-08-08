@@ -19,8 +19,7 @@ package com.ctrip.framework.apollo.config.data.internals;
 import com.ctrip.framework.apollo.internals.ConfigRepository;
 import com.ctrip.framework.apollo.internals.DefaultConfig;
 import com.ctrip.framework.apollo.internals.RepositoryChangeListener;
-import com.ctrip.framework.apollo.util.ApolloHashMapInitialUtil;
-import java.util.LinkedHashSet;
+import com.google.common.collect.Sets;
 import java.util.Set;
 import org.springframework.util.CollectionUtils;
 
@@ -57,6 +56,7 @@ public class PureApolloConfig extends DefaultConfig implements RepositoryChangeL
 
   @Override
   public Set<String> getPropertyNames() {
+    // pure apollo config only contains the property from repository and the property from additional
     Set<String> fromRepository = this.getPropertyNamesFromRepository();
     Set<String> fromAdditional = this.getPropertyNamesFromAdditional();
     if (CollectionUtils.isEmpty(fromRepository)) {
@@ -65,9 +65,8 @@ public class PureApolloConfig extends DefaultConfig implements RepositoryChangeL
     if (CollectionUtils.isEmpty(fromAdditional)) {
       return fromRepository;
     }
-    int initialCapacity = ApolloHashMapInitialUtil
-        .getInitialCapacity(fromRepository.size() + fromAdditional.size());
-    Set<String> propertyNames = new LinkedHashSet<>(initialCapacity);
+    Set<String> propertyNames = Sets
+        .newLinkedHashSetWithExpectedSize(fromRepository.size() + fromAdditional.size());
     propertyNames.addAll(fromRepository);
     propertyNames.addAll(fromAdditional);
     return propertyNames;

@@ -52,7 +52,7 @@ public class PureApolloConfigTest {
         DefaultConfigFactory::new);
     ConfigFactory configFactory = ApolloInjector.getInstance(ConfigFactory.class);
     Config config = configFactory.create("application");
-    Assert.assertEquals(config.getProperty("spring.profiles.active", null), "test");
+    Assert.assertEquals("test", config.getProperty("spring.profiles.active", null));
   }
 
   @Test
@@ -75,7 +75,7 @@ public class PureApolloConfigTest {
               DefaultConfigFactory::new);
           ConfigFactory configFactory = ApolloInjector.getInstance(ConfigFactory.class);
           Config config = configFactory.create("application");
-          Assert.assertEquals(config.getProperty("SPRING_PROFILES_ACTIVE", null), "test-env");
+          Assert.assertEquals("test-env", config.getProperty("SPRING_PROFILES_ACTIVE", null));
         });
   }
 

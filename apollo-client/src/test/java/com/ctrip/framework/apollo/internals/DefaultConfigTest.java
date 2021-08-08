@@ -27,7 +27,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.ctrip.framework.apollo.enums.ConfigSourceType;
-import com.ctrip.framework.apollo.util.ApolloHashMapInitialUtil;
 import com.ctrip.framework.apollo.util.OrderedProperties;
 import com.ctrip.framework.apollo.util.factory.PropertiesFactory;
 import com.google.common.collect.Maps;
@@ -35,10 +34,10 @@ import com.google.common.collect.Sets;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -76,7 +75,6 @@ public class DefaultConfigTest {
   private Properties someProperties;
   private ConfigSourceType someSourceType;
   private PropertiesFactory propertiesFactory;
-  private Set<String> basePropertyNames;
 
   @Before
   public void setUp() throws Exception {
@@ -95,18 +93,6 @@ public class DefaultConfigTest {
     someResourceDir.mkdirs();
     someNamespace = "someName";
     configRepository = mock(ConfigRepository.class);
-    basePropertyNames = this.getBasePropertyNames();
-  }
-
-  private Set<String> getBasePropertyNames() {
-    Set<String> fromSystemProperty = System.getProperties().stringPropertyNames();
-    Set<String> fromEnv = System.getenv().keySet();
-    int initialCapacity = ApolloHashMapInitialUtil.getInitialCapacity(
-        fromSystemProperty.size() + fromEnv.size());
-    Set<String> propertyNames = new LinkedHashSet<>(initialCapacity);
-    propertyNames.addAll(fromSystemProperty);
-    propertyNames.addAll(fromEnv);
-    return propertyNames;
   }
 
   @After
@@ -851,16 +837,10 @@ public class DefaultConfigTest {
 
     DefaultConfig defaultConfig = new DefaultConfig(someNamespace, configRepository);
 
-    Set<String> somePropertyNames = someProperties.stringPropertyNames();
-    int initialCapacity = ApolloHashMapInitialUtil.getInitialCapacity(
-        somePropertyNames.size() + this.basePropertyNames.size());
-    Set<String> expectedPropertyNames = new LinkedHashSet<>(initialCapacity);
-    expectedPropertyNames.addAll(somePropertyNames);
-    expectedPropertyNames.addAll(this.basePropertyNames);
     Set<String> propertyNames = defaultConfig.getPropertyNames();
 
-    assertEquals(10 + this.basePropertyNames.size(), propertyNames.size());
-    assertEquals(expectedPropertyNames, propertyNames);
+    assertEquals(10, propertyNames.size());
+    assertEquals(someProperties.stringPropertyNames(), propertyNames);
   }
 
   @Test
@@ -884,16 +864,10 @@ public class DefaultConfigTest {
 
     DefaultConfig defaultConfig = new DefaultConfig(someNamespace, configRepository);
 
-    Set<String> somePropertyNames = someProperties.stringPropertyNames();
-    int initialCapacity = ApolloHashMapInitialUtil.getInitialCapacity(
-        somePropertyNames.size() + this.basePropertyNames.size());
-    Set<String> expectedPropertyNames = new LinkedHashSet<>(initialCapacity);
-    expectedPropertyNames.addAll(somePropertyNames);
-    expectedPropertyNames.addAll(this.basePropertyNames);
     Set<String> propertyNames = defaultConfig.getPropertyNames();
 
-    assertEquals(10 + this.basePropertyNames.size(), propertyNames.size());
-    assertEquals(expectedPropertyNames, propertyNames);
+    assertEquals(10, propertyNames.size());
+    assertEquals(someProperties.stringPropertyNames(), propertyNames);
   }
 
   @Test
@@ -904,7 +878,7 @@ public class DefaultConfigTest {
             new DefaultConfig(someNamespace, configRepository);
 
     Set<String> propertyNames = defaultConfig.getPropertyNames();
-    assertEquals(this.basePropertyNames, propertyNames);
+    assertEquals(Collections.emptySet(), propertyNames);
   }
 
   @Test
