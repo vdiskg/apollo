@@ -204,7 +204,7 @@ public class DefaultConfig extends AbstractConfig implements RepositoryChangeLis
     return m_sourceType;
   }
 
-  protected Set<String> stringPropertyNames(Properties properties) {
+  private Set<String> stringPropertyNames(Properties properties) {
     //jdk9以下版本Properties#enumerateStringProperties方法存在性能问题，keys() + get(k) 重复迭代, jdk9之后改为entrySet遍历.
     Map<String, String> h = Maps.newLinkedHashMapWithExpectedSize(properties.size());
     for (Map.Entry<Object, Object> e : properties.entrySet()) {
