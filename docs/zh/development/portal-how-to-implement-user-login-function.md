@@ -335,6 +335,52 @@ SERVER_PORT=8070
 export JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=github,oidc"
 ```
 
+### 3. 配置 apollo-portal 启用 https
+#### 3.1 添加反向代理 header
+这里以 nginx 为例, 将以下配置直接添加或者 include (推荐) 到 nginx 的 http 配置段内
+```nginx
+server {
+    listen 80 default_server;
+
+    location / {
+        # 把 80 端口的请求全部都重定向到 https
+        return 301 https://$http_host$request_uri;
+    }
+}
+server {
+    # nginx 版本较低不支持 http2 的, 则配置 listen 443 ssl;
+    listen 443 ssl http2;
+    server_name xxx;
+
+    # ssl 证书, nginx 需要使用完整证书链的证书
+    ssl_certificate /etc/nginx/ssl/xxx.crt;
+    ssl_certificate_key /etc/nginx/ssl/xxx.key;
+    # ... 其余 ssl 配置
+
+    location / {
+        proxy_pass http://apollo-portal-dev:8070;
+        proxy_set_header x-real-ip $remote_addr;
+        proxy_set_header x-forwarded-for $proxy_add_x_forwarded_for;
+        # ！！！这里必须是 $http_host, 如果配置成 $host 会导致跳转的时候端口错误
+        proxy_set_header host $http_host;
+        proxy_set_header x-forwarded-proto $scheme;
+        proxy_http_version 1.1;
+    }
+}
+
+```
+
+#### 3.2 application-oidc.yml 添加配置
+在 `application-oidc.yml` 里添加配置项 `server.forward-headers-strategy=framework`
+```yml
+server:
+  forward-headers-strategy: framework
+
+```
+
+#### 3.3 添加 OpenID Connect 登录服务的重定向地址白名单
+处于安全考虑, 一般来说 OpenID Connect 登录服务对重定向的地址会有白名单限制, 所以需要将 apollo-portal 的 https 地址添加到白名单才能正常重定向
+
 ## 实现方式四： 接入公司的统一登录认证系统
 
 这种实现方式的前提是公司已经有统一的登录认证系统，最常见的比如SSO、LDAP等。接入时，实现以下SPI。其中UserService和UserInfoHolder是必须要实现的。

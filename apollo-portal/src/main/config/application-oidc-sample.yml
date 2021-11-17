@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+server:
+  # apollo-portal 开启 https 时需要配置该项
+  forward-headers-strategy: framework
 spring:
   security:
     oauth2:
