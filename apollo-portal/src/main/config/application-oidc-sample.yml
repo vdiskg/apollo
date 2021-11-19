@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 server:
-  # apollo-portal 开启 https 时需要配置该项
+  # 解析反向代理请求头
   forward-headers-strategy: framework
 spring:
   security:

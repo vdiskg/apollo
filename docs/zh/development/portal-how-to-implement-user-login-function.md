@@ -240,6 +240,9 @@ export JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=github,ldap"
 
 #### 1.1 最小配置
 ```yml
+server:
+  # 解析反向代理请求头
+  forward-headers-strategy: framework
 spring:
   security:
     oauth2:
@@ -274,6 +277,9 @@ spring:
 * 如果 OpenID Connect 登录服务支持 client_credentials 模式, 还可以再配置一个 client_credentials 类型的 registration, 用于 apollo-portal 作为客户端请求其它被 oidc 保护的资源
 * 如果 OpenID Connect 登录服务支持 jwt, 还可以配置 ${spring.security.oauth2.resourceserver.jwt.issuer-uri}, 以支持通过 jwt 访问 apollo-portal
 ```yml
+server:
+  # 解析反向代理请求头
+  forward-headers-strategy: framework
 spring:
   security:
     oauth2:
@@ -370,10 +376,11 @@ server {
 
 ```
 
-#### 3.2 application-oidc.yml 添加配置
-在 `application-oidc.yml` 里添加配置项 `server.forward-headers-strategy=framework`
+#### 3.2 检查 application-oidc.yml 配置
+在 `application-oidc.yml` 里必须存在配置项 `server.forward-headers-strategy=framework`
 ```yml
 server:
+  # 解析反向代理请求头
   forward-headers-strategy: framework
 
 ```
