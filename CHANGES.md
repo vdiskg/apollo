@@ -24,7 +24,6 @@ Apollo 2.0.0
 * [Optimize top navbar style](https://github.com/apolloconfig/apollo/pull/4073)
 * [Support export/import configs by apollo env](https://github.com/apolloconfig/apollo/pull/3947)
 * [Catch LinkageError for ClassLoaderUtil.isClassPresent in case class is present but is failed to load](https://github.com/apolloconfig/apollo/pull/4097)
-* [add oidc https doc](https://github.com/apolloconfig/apollo/pull/4104)
 
 ------------------
 All issues and pull requests are [here](https://github.com/ctripcorp/apollo/milestone/8?closed=1)
