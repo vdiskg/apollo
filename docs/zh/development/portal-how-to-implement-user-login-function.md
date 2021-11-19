@@ -386,7 +386,7 @@ server:
 ```
 
 #### 3.3 添加 OpenID Connect 登录服务的重定向地址白名单
-处于安全考虑, 一般来说 OpenID Connect 登录服务对重定向的地址会有白名单限制, 所以需要将 apollo-portal 的 https 地址添加到白名单才能正常重定向
+出于安全考虑, 一般来说 OpenID Connect 登录服务对重定向的地址会有白名单限制, 所以需要将 apollo-portal 的 https 地址添加到白名单才能正常重定向
 
 ## 实现方式四： 接入公司的统一登录认证系统
 
