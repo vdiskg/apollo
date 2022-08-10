@@ -17,6 +17,7 @@
 package com.ctrip.framework.apollo.portal.spi.oidc;
 
 import com.ctrip.framework.apollo.portal.entity.bo.UserInfo;
+import com.ctrip.framework.apollo.portal.spi.configuration.OidcExtendProperties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.slf4j.Logger;
@@ -37,11 +38,14 @@ public class OidcAuthenticationSuccessEventListener implements
 
   private final OidcLocalUserService oidcLocalUserService;
 
+  private final OidcExtendProperties oidcExtendProperties;
+
   private final ConcurrentMap<String, String> userIdCache = new ConcurrentHashMap<>();
 
   public OidcAuthenticationSuccessEventListener(
-      OidcLocalUserService oidcLocalUserService) {
+      OidcLocalUserService oidcLocalUserService, OidcExtendProperties oidcExtendProperties) {
     this.oidcLocalUserService = oidcLocalUserService;
+    this.oidcExtendProperties = oidcExtendProperties;
   }
 
   @Override
@@ -61,7 +65,7 @@ public class OidcAuthenticationSuccessEventListener implements
   private void oidcUserLogin(OidcUser oidcUser) {
     UserInfo newUserInfo = new UserInfo();
     newUserInfo.setUserId(oidcUser.getSubject());
-    newUserInfo.setName(oidcUser.getPreferredUsername());
+    newUserInfo.setName(OidcUserInfoUtil.getUserDisplayName(oidcUser, this.oidcExtendProperties));
     newUserInfo.setEmail(oidcUser.getEmail());
     if (this.contains(oidcUser.getSubject())) {
       this.oidcLocalUserService.updateUserInfo(newUserInfo);
