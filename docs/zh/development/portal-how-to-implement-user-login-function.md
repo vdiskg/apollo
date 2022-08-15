@@ -329,6 +329,16 @@ spring:
           issuer-uri: https://host:port/auth/realms/apollo
 ```
 
+#### 1.3 用户显示名配置
+
+用户的显示名支持自定义配置, 在 `application-oidc.yml` 添加配置项即可
+
+* oidc 登录用户的显示名配置项为 `spring.security.oidc.user-display-name-claim-name`,
+  未配置的情况下默认取 `StandardClaimNames#PREFERRED_USERNAME`,
+  该字段为空则尝试获取 `StandardClaimNames#NAME`
+* oidc jwt 方式登录用户的显示名配置项为 `spring.security.oidc.jwt-user-display-name-claim-name`,
+  无默认值
+
 ### 2. 配置 `startup.sh`
 
 修改`scripts/startup.sh`，指定`spring.profiles.active`为`github,oidc`。
