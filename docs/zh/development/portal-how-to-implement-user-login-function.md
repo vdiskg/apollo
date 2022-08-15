@@ -337,8 +337,7 @@ spring:
   详见 https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims , 非标准个性化 claim
   name 请咨询你的 OpenID Connect 登录服务管理员
 * oidc 登录用户的显示名配置项为 `spring.security.oidc.user-display-name-claim-name`,
-  未配置的情况下默认取 `StandardClaimNames#PREFERRED_USERNAME`,
-  该字段为空则尝试获取 `StandardClaimNames#NAME`
+  未配置的情况下默认取 `preferred_username`, 该字段为空则尝试获取 `name`
 * oidc jwt 方式登录用户的显示名配置项为 `spring.security.oidc.jwt-user-display-name-claim-name`,
   无默认值
 
