@@ -19,6 +19,7 @@ package com.ctrip.framework.apollo.portal.spi.oidc;
 import com.ctrip.framework.apollo.core.utils.StringUtils;
 import com.ctrip.framework.apollo.portal.spi.configuration.OidcExtendProperties;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 public class OidcUserInfoUtil {
 
@@ -33,7 +34,7 @@ public class OidcUserInfoUtil {
    * @param oidcExtendProperties claimName properties
    * @return userDisplayName
    */
-  public static String getUserDisplayName(OidcUser oidcUser,
+  public static String getOidcUserDisplayName(OidcUser oidcUser,
       OidcExtendProperties oidcExtendProperties) {
     String userDisplayNameClaimName = oidcExtendProperties.getUserDisplayNameClaimName();
     if (!StringUtils.isBlank(userDisplayNameClaimName)) {
@@ -44,5 +45,21 @@ public class OidcUserInfoUtil {
       return preferredUsername;
     }
     return oidcUser.getFullName();
+  }
+
+  /**
+   * get userDisplayName from jwt
+   *
+   * @param jwt                  the user
+   * @param oidcExtendProperties claimName properties
+   * @return userDisplayName
+   */
+  public static String getJwtUserDisplayName(Jwt jwt,
+      OidcExtendProperties oidcExtendProperties) {
+    String jwtUserDisplayNameClaimName = oidcExtendProperties.getJwtUserDisplayNameClaimName();
+    if (!StringUtils.isBlank(jwtUserDisplayNameClaimName)) {
+      return jwt.getClaimAsString(jwtUserDisplayNameClaimName);
+    }
+    return null;
   }
 }

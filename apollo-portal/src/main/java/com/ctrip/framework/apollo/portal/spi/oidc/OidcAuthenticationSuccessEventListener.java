@@ -65,7 +65,8 @@ public class OidcAuthenticationSuccessEventListener implements
   private void oidcUserLogin(OidcUser oidcUser) {
     UserInfo newUserInfo = new UserInfo();
     newUserInfo.setUserId(oidcUser.getSubject());
-    newUserInfo.setName(OidcUserInfoUtil.getUserDisplayName(oidcUser, this.oidcExtendProperties));
+    newUserInfo.setName(
+        OidcUserInfoUtil.getOidcUserDisplayName(oidcUser, this.oidcExtendProperties));
     newUserInfo.setEmail(oidcUser.getEmail());
     if (this.contains(oidcUser.getSubject())) {
       this.oidcLocalUserService.updateUserInfo(newUserInfo);
@@ -92,6 +93,7 @@ public class OidcAuthenticationSuccessEventListener implements
     }
     UserInfo newUserInfo = new UserInfo();
     newUserInfo.setUserId(jwt.getSubject());
+    newUserInfo.setName(OidcUserInfoUtil.getJwtUserDisplayName(jwt, this.oidcExtendProperties));
     this.oidcLocalUserService.createLocalUser(newUserInfo);
   }
 }

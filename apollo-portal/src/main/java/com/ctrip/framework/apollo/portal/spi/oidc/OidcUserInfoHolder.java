@@ -65,7 +65,8 @@ public class OidcUserInfoHolder implements UserInfoHolder {
       UserInfo userInfo = new UserInfo();
       OidcUser oidcUser = (OidcUser) principal;
       userInfo.setUserId(oidcUser.getSubject());
-      userInfo.setName(OidcUserInfoUtil.getUserDisplayName(oidcUser, this.oidcExtendProperties));
+      userInfo.setName(
+          OidcUserInfoUtil.getOidcUserDisplayName(oidcUser, this.oidcExtendProperties));
       userInfo.setEmail(oidcUser.getEmail());
       return userInfo;
     }
@@ -73,6 +74,7 @@ public class OidcUserInfoHolder implements UserInfoHolder {
       Jwt jwt = (Jwt) principal;
       UserInfo userInfo = new UserInfo();
       userInfo.setUserId(jwt.getSubject());
+      userInfo.setName(OidcUserInfoUtil.getJwtUserDisplayName(jwt, this.oidcExtendProperties));
       return userInfo;
     }
     log.debug("principal is neither oidcUser nor jwt, principal=[{}]", principal);

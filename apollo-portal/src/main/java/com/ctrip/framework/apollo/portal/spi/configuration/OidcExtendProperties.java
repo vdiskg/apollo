@@ -29,11 +29,24 @@ public class OidcExtendProperties {
    */
   private String userDisplayNameClaimName;
 
+  /**
+   * jwt claim name of the userDisplayName {@link UserPO#getUserDisplayName()}
+   */
+  private String jwtUserDisplayNameClaimName;
+
   public String getUserDisplayNameClaimName() {
     return userDisplayNameClaimName;
   }
 
   public void setUserDisplayNameClaimName(String userDisplayNameClaimName) {
     this.userDisplayNameClaimName = userDisplayNameClaimName;
+  }
+
+  public String getJwtUserDisplayNameClaimName() {
+    return jwtUserDisplayNameClaimName;
+  }
+
+  public void setJwtUserDisplayNameClaimName(String jwtUserDisplayNameClaimName) {
+    this.jwtUserDisplayNameClaimName = jwtUserDisplayNameClaimName;
   }
 }
