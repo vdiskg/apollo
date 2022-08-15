@@ -333,11 +333,61 @@ spring:
 
 用户的显示名支持自定义配置, 在 `application-oidc.yml` 添加配置项即可
 
+* 可以使用的 oidc 标准 claim name
+  详见 https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims , 非标准个性化 claim
+  name 请咨询你的 OpenID Connect 登录服务管理员
 * oidc 登录用户的显示名配置项为 `spring.security.oidc.user-display-name-claim-name`,
   未配置的情况下默认取 `StandardClaimNames#PREFERRED_USERNAME`,
   该字段为空则尝试获取 `StandardClaimNames#NAME`
 * oidc jwt 方式登录用户的显示名配置项为 `spring.security.oidc.jwt-user-display-name-claim-name`,
   无默认值
+
+##### 1.3.1 用户显示名配置示例
+
+* 例如在进行 oidc 登录时使用 `name` 作为显示名, 则配置如下
+
+```yml
+spring:
+  security:
+    oidc:
+      user-display-name-claim-name: "name"
+
+```
+
+* 例如在进行 oidc 登录时使用 `email` 作为显示名, 则配置如下
+
+```yml
+spring:
+  security:
+    oidc:
+      user-display-name-claim-name: "email"
+
+```
+
+* jwt 的标准 claim name (https://tools.ietf.org/html/rfc7519#section-4) 里面没有适合作为用户显示名的字段,
+  所以需要 OpenID Connect 登录服务管理员添加非标准的个性化字段
+* 例如使用 oidc jwt 登录时, OpenID Connect 登录服务提供了一个名为 `user_display_name` 的个性化字段,
+  你想要将这个字段作为显示名, 则配置如下
+
+```yml
+spring:
+  security:
+    oidc:
+      jwt-user-display-name-claim-name: "user_display_name"
+
+```
+
+* 支持同时配置 oidc 登录名 和 oidc jwt 登录名, 例如根据登录方式不同, 进行 oidc 登录时候使用 `name`
+  作为显示名, 进行 oidc jwt 登录时使用 `user_display_name` 作为显示名, 则配置如下
+
+```yml
+spring:
+  security:
+    oidc:
+      user-display-name-claim-name: "name"
+      jwt-user-display-name-claim-name: "user_display_name"
+
+```
 
 ### 2. 配置 `startup.sh`
 
@@ -431,6 +481,6 @@ server:
 
 注意，以上1-5这几步都是SSO的代码，不是Apollo的代码，Apollo的代码只需要你实现第6步。
 
->注：运行时使用不同的实现是通过[Profiles](http://docs.spring.io/autorepo/docs/spring-boot/current/reference/html/boot-features-profiles.html)实现的，比如你自己的sso实现是在`custom` profile中的话，在打包脚本中可以指定-Dapollo_profile=github,custom。其中`github`是Apollo必须的一个profile，用于数据库的配置，`custom`是你自己实现的profile。同时需要注意在[AuthConfiguration](https://github.com/apolloconfig/apollo/blob/master/apollo-portal/src/main/java/com/ctrip/framework/apollo/portal/spi/configuration/AuthConfiguration.java)中修改默认实现的条件
-，从`@ConditionalOnMissingProfile({"ctrip", "auth", "ldap"})`改为`@ConditionalOnMissingProfile({"ctrip", "auth", "ldap", "custom"})`。
+> 注：运行时使用不同的实现是通过[Profiles](http://docs.spring.io/autorepo/docs/spring-boot/current/reference/html/boot-features-profiles.html)实现的，比如你自己的sso实现是在`custom` profile中的话，在打包脚本中可以指定-Dapollo_profile=github,custom。其中`github`是Apollo必须的一个profile，用于数据库的配置，`custom`是你自己实现的profile。同时需要注意在[AuthConfiguration](https://github.com/apolloconfig/apollo/blob/master/apollo-portal/src/main/java/com/ctrip/framework/apollo/portal/spi/configuration/AuthConfiguration.java)中修改默认实现的条件
+> ，从`@ConditionalOnMissingProfile({"ctrip", "auth", "ldap"})`改为`@ConditionalOnMissingProfile({"ctrip", "auth", "ldap", "custom"})`。
 
