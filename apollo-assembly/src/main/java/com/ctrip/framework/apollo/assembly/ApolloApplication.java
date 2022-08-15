@@ -42,7 +42,7 @@ public class ApolloApplication {
      */
     ConfigurableApplicationContext commonContext =
         new SpringApplicationBuilder(ApolloApplication.class).web(WebApplicationType.NONE).run(args);
-    logger.info(commonContext.getId() + " isActive: " + commonContext.isActive());
+    logger.info(commonContext.getId() + " commonContext isActive: " + commonContext.isActive());
 
     /**
      * ConfigService
@@ -50,8 +50,8 @@ public class ApolloApplication {
     if (commonContext.getEnvironment().containsProperty("configservice")) {
       ConfigurableApplicationContext configContext =
           new SpringApplicationBuilder(ConfigServiceApplication.class).parent(commonContext)
-              .sources(RefreshScope.class).run(args);
-      logger.info(configContext.getId() + " isActive: " + configContext.isActive());
+              .sources(RefreshScope.class).environmentPrefix("config").run(args);
+      logger.info(configContext.getId() + " configContext isActive: " + configContext.isActive() + "\n\n\n\n ========================================");
     }
 
     /**
@@ -60,8 +60,8 @@ public class ApolloApplication {
     if (commonContext.getEnvironment().containsProperty("adminservice")) {
       ConfigurableApplicationContext adminContext =
           new SpringApplicationBuilder(AdminServiceApplication.class).parent(commonContext)
-              .sources(RefreshScope.class).run(args);
-      logger.info(adminContext.getId() + " isActive: " + adminContext.isActive());
+              .sources(RefreshScope.class).environmentPrefix("config").run(args);
+      logger.info(adminContext.getId() + " adminContext isActive: " + adminContext.isActive() + "\n\n\n\n ========================================");
     }
 
     /**
@@ -70,8 +70,8 @@ public class ApolloApplication {
     if (commonContext.getEnvironment().containsProperty("portal")) {
       ConfigurableApplicationContext portalContext =
           new SpringApplicationBuilder(PortalApplication.class).parent(commonContext)
-              .sources(RefreshScope.class).run(args);
-      logger.info(portalContext.getId() + " isActive: " + portalContext.isActive());
+              .sources(RefreshScope.class).environmentPrefix("portal").run(args);
+      logger.info(portalContext.getId() + " portalContext isActive: " + portalContext.isActive() + "\n\n\n\n ========================================");
     }
   }
 

@@ -17,9 +17,11 @@
 package com.ctrip.framework.apollo.common;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandler;
 import org.springframework.security.web.firewall.RequestRejectedHandler;
@@ -38,4 +40,9 @@ public class ApolloCommonConfig {
     return new HttpStatusRequestRejectedHandler(HttpStatus.BAD_REQUEST.value());
   }
 
+  @Primary
+  @Bean
+  public DataSourceProperties dataSourceProperties() {
+    return new DataSourceProperties();
+  }
 }
