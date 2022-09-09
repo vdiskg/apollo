@@ -336,14 +336,14 @@ spring:
 * 可以使用的 oidc 标准 claim name
   详见 https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims , 非标准个性化 claim
   name 请咨询你的 OpenID Connect 登录服务管理员
-* oidc 登录用户的显示名配置项为 `spring.security.oidc.user-display-name-claim-name`,
+* oidc 交互式登录用户的显示名配置项为 `spring.security.oidc.user-display-name-claim-name`,
   未配置的情况下默认取 `preferred_username`, 该字段为空则尝试获取 `name`
 * oidc jwt 方式登录用户的显示名配置项为 `spring.security.oidc.jwt-user-display-name-claim-name`,
   无默认值
 
 ##### 1.3.1 用户显示名配置示例
 
-* 例如在进行 oidc 登录时使用 `name` 作为显示名, 则配置如下
+* 例如在进行 oidc 交互式登录时使用 `name` 作为显示名, 则配置如下
 
 ```yml
 spring:
@@ -353,7 +353,7 @@ spring:
 
 ```
 
-* 例如在进行 oidc 登录时使用 `email` 作为显示名, 则配置如下
+* 例如在进行 oidc 交互式登录时使用 `email` 作为显示名, 则配置如下
 
 ```yml
 spring:
@@ -376,8 +376,9 @@ spring:
 
 ```
 
-* 支持同时配置 oidc 登录名 和 oidc jwt 登录名, 例如根据登录方式不同, 进行 oidc 登录时候使用 `name`
-  作为显示名, 进行 oidc jwt 登录时使用 `user_display_name` 作为显示名, 则配置如下
+* 支持同时配置 oidc 交互式登录名 和 oidc jwt 登录名
+* 例如根据登录方式不同, 进行 oidc 交互式登录时候使用 `name` 作为显示名,
+  进行 oidc jwt 登录时使用 `user_display_name` 作为显示名, 则配置如下
 
 ```yml
 spring:
