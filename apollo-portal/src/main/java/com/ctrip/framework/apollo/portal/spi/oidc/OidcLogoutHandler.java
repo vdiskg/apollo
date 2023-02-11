@@ -28,10 +28,6 @@ public class OidcLogoutHandler implements LogoutHandler {
 
   @Override
   public void logout(HttpServletRequest request, HttpServletResponse response) {
-    try {
-      response.sendRedirect(request.getContextPath() + "/logout");
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    // do nothing here
   }
 }

@@ -390,6 +390,7 @@ public class AuthConfiguration {
                   this.clientRegistrationRepository)));
       http.oauth2Client();
       http.logout(configure -> {
+        configure.logoutUrl("/user/logout");
         OidcClientInitiatedLogoutSuccessHandler logoutSuccessHandler = new OidcClientInitiatedLogoutSuccessHandler(
             this.clientRegistrationRepository);
         logoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}");
