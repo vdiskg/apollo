@@ -73,6 +73,8 @@
 		<nacos-discovery-api.version>1.4.0</nacos-discovery-api.version>
 		<common-lang3.version>3.12.0</common-lang3.version>
 		<mysql-connector-java.version>8.0.29</mysql-connector-java.version>
+        <protobuf.version>3.21.9</protobuf.version>
+        <grpc.version>1.50.2</grpc.version>
 		<!-- Plugins Version -->
 		<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
 		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
@@ -88,6 +90,7 @@
 
 	<modules>
 		<module>apollo-buildtools</module>
+        <module>apollo-api</module>
 		<module>apollo-common</module>
 		<module>apollo-biz</module>
 		<module>apollo-configservice</module>
@@ -247,6 +250,20 @@
 				<artifactId>javax.mail</artifactId>
 				<version>${javax.mail.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-bom</artifactId>
+                <version>${protobuf.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-bom</artifactId>
+                <version>${grpc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 			<!-- JDK 11+ -->
 			<dependency>
 				<groupId>org.javassist</groupId>
