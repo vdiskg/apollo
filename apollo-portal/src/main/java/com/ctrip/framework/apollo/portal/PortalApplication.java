@@ -18,9 +18,13 @@ package com.ctrip.framework.apollo.portal;
 
 import com.ctrip.framework.apollo.common.ApolloCommonConfig;
 import com.ctrip.framework.apollo.openapi.PortalOpenApiConfig;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -34,11 +38,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
     PortalApplication.class, PortalOpenApiConfig.class})
 public class PortalApplication {
 
+  private static final Logger log = LoggerFactory.getLogger(PortalApplication.class);
+
   public static void main(String[] args) throws Exception {
     System.setProperty("spring.session.store-type", "none");
     System.setProperty(
         "logging.level.com.ctrip.framework.apollo.portal.spi.oidc.OidcAuthenticationSuccessEventListener",
         "trace");
-    SpringApplication.run(PortalApplication.class, args);
+    ConfigurableApplicationContext context = SpringApplication.run(PortalApplication.class, args);
+    String property = context.getEnvironment().getProperty("spring.session.store-type");
+    log.info("spring.session.store-type=" + property);
+    System.out.println("spring.session.store-type=" + property);
   }
 }
