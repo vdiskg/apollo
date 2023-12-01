@@ -25,14 +25,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.context.scope.refresh.RefreshScope;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class,
-    HibernateJpaAutoConfiguration.class, ApolloAuditAutoConfiguration.class})
+@SpringBootApplication(exclude = {
+    HibernateJpaAutoConfiguration.class,
+    ApolloAuditAutoConfiguration.class,
+})
 public class ApolloApplication {
 
   private static final Logger logger = LoggerFactory.getLogger(ApolloApplication.class);
@@ -43,37 +44,31 @@ public class ApolloApplication {
      */
     ConfigurableApplicationContext commonContext =
         new SpringApplicationBuilder(ApolloApplication.class).web(WebApplicationType.NONE).run(args);
-    logger.info(commonContext.getId() + " isActive: " + commonContext.isActive());
+    logger.info("commonContext [{}] isActive: {}", commonContext.getId(), commonContext.isActive());
 
     /**
      * ConfigService
      */
-    if (commonContext.getEnvironment().containsProperty("configservice")) {
-      ConfigurableApplicationContext configContext =
-          new SpringApplicationBuilder(ConfigServiceApplication.class).parent(commonContext)
-              .sources(RefreshScope.class).run(args);
-      logger.info(configContext.getId() + " isActive: " + configContext.isActive());
-    }
+    ConfigurableApplicationContext configContext =
+        new SpringApplicationBuilder(ConfigServiceApplication.class).parent(commonContext)
+            .sources(RefreshScope.class).run(args);
+    logger.info("configContext [{}] isActive: {}", configContext.getId(), configContext.isActive());
 
     /**
      * AdminService
      */
-    if (commonContext.getEnvironment().containsProperty("adminservice")) {
-      ConfigurableApplicationContext adminContext =
-          new SpringApplicationBuilder(AdminServiceApplication.class).parent(commonContext)
-              .sources(RefreshScope.class).run(args);
-      logger.info(adminContext.getId() + " isActive: " + adminContext.isActive());
-    }
+    ConfigurableApplicationContext adminContext =
+        new SpringApplicationBuilder(AdminServiceApplication.class).parent(commonContext)
+            .sources(RefreshScope.class).run(args);
+    logger.info("adminContext [{}] isActive: {}" , adminContext.getId(), adminContext.isActive());
 
     /**
      * Portal
      */
-    if (commonContext.getEnvironment().containsProperty("portal")) {
-      ConfigurableApplicationContext portalContext =
-          new SpringApplicationBuilder(PortalApplication.class).parent(commonContext)
-              .sources(RefreshScope.class).run(args);
-      logger.info(portalContext.getId() + " isActive: " + portalContext.isActive());
-    }
+    ConfigurableApplicationContext portalContext =
+        new SpringApplicationBuilder(PortalApplication.class).parent(commonContext)
+            .sources(RefreshScope.class).run(args);
+    logger.info("portalContext [{}] isActive: {}", portalContext.getId(), portalContext.isActive());
   }
 
 }

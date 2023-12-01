@@ -14,8 +14,6 @@
 # limitations under the License.
 #
 spring:
-  application:
-    name: apollo-portal
   profiles:
     active: ${apollo_profile}
   jpa:
@@ -33,7 +31,6 @@ spring:
       max-file-size: 200MB  # import data configs
       max-request-size: 200MB
 server:
-  port: 8070
   compression:
     enabled: true
   tomcat:
@@ -43,10 +40,6 @@ server:
       cookie:
         # prevent csrf
         same-site: Lax
-
-logging:
-  file:
-    name: /opt/logs/apollo-portal.log
 
 management:
   health:

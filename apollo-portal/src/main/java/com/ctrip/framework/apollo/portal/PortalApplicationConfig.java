@@ -14,22 +14,19 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.biz;
+package com.ctrip.framework.apollo.portal;
 
 import com.ctrip.framework.apollo.common.jpa.TablePrefixNamingStrategy;
 import com.ctrip.framework.apollo.common.jpa.TablePrefixProperties;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-@EnableAutoConfiguration
 @Configuration
-@ComponentScan(basePackageClasses = ApolloBizConfig.class)
-public class ApolloBizConfig {
+public class PortalApplicationConfig {
 
   @Bean
-  public static TablePrefixNamingStrategy tablePrefixNamingStrategy(TablePrefixProperties tablePrefixProperties) {
-    return new TablePrefixNamingStrategy(tablePrefixProperties.getConfigPrefix());
+  public static TablePrefixNamingStrategy tablePrefixNamingStrategy(
+      TablePrefixProperties tablePrefixProperties) {
+    return new TablePrefixNamingStrategy(tablePrefixProperties.getPortalPrefix());
   }
 }

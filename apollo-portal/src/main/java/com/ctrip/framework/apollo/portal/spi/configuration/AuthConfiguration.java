@@ -18,6 +18,7 @@
 package com.ctrip.framework.apollo.portal.spi.configuration;
 
 import com.ctrip.framework.apollo.common.condition.ConditionalOnMissingProfile;
+import com.ctrip.framework.apollo.common.jpa.TablePrefixProperties;
 import com.ctrip.framework.apollo.core.utils.StringUtils;
 import com.ctrip.framework.apollo.portal.repository.AuthorityRepository;
 import com.ctrip.framework.apollo.portal.repository.UserRepository;
@@ -121,7 +122,8 @@ public class AuthConfiguration {
             PasswordEncoder passwordEncoder,
             AuthenticationManagerBuilder auth,
             DataSource datasource,
-            EntityManagerFactory entityManagerFactory) throws Exception {
+            EntityManagerFactory entityManagerFactory,
+            TablePrefixProperties tablePrefixProperties) throws Exception {
       char openQuote = '`';
       char closeQuote = '`';
       try {
@@ -133,19 +135,20 @@ public class AuthConfiguration {
       } catch (Throwable ex) {
         //ignore
       }
+      String portalPrefix = tablePrefixProperties.getPortalPrefix();
       JdbcUserDetailsManager jdbcUserDetailsManager = auth.jdbcAuthentication()
               .passwordEncoder(passwordEncoder).dataSource(datasource)
-              .usersByUsernameQuery(MessageFormat.format("SELECT {0}Username{1}, {0}Password{1}, {0}Enabled{1} FROM {0}Users{1} WHERE {0}Username{1} = ?", openQuote, closeQuote))
-              .authoritiesByUsernameQuery(MessageFormat.format("SELECT {0}Username{1}, {0}Authority{1} FROM {0}Authorities{1} WHERE {0}Username{1} = ?", openQuote, closeQuote))
+              .usersByUsernameQuery(MessageFormat.format("SELECT {0}Username{1}, {0}Password{1}, {0}Enabled{1} FROM {0}{2}Users{1} WHERE {0}Username{1} = ?", openQuote, closeQuote, portalPrefix))
+              .authoritiesByUsernameQuery(MessageFormat.format("SELECT {0}Username{1}, {0}Authority{1} FROM {0}{2}Authorities{1} WHERE {0}Username{1} = ?", openQuote, closeQuote, portalPrefix))
               .getUserDetailsService();
 
-      jdbcUserDetailsManager.setUserExistsSql(MessageFormat.format("SELECT {0}Username{1} FROM {0}Users{1} WHERE {0}Username{1} = ?", openQuote, closeQuote));
-      jdbcUserDetailsManager.setCreateUserSql(MessageFormat.format("INSERT INTO {0}Users{1} ({0}Username{1}, {0}Password{1}, {0}Enabled{1}) values (?,?,?)", openQuote, closeQuote));
-      jdbcUserDetailsManager.setUpdateUserSql(MessageFormat.format("UPDATE {0}Users{1} SET {0}Password{1} = ?, {0}Enabled{1} = ? WHERE {0}Id{1} = (SELECT u.{0}Id{1} FROM (SELECT {0}Id{1} FROM {0}Users{1} WHERE {0}Username{1} = ?) AS u)", openQuote, closeQuote));
-      jdbcUserDetailsManager.setDeleteUserSql(MessageFormat.format("DELETE FROM {0}Users{1} WHERE {0}Id{1} = (SELECT u.{0}Id{1} FROM (SELECT {0}Id{1} FROM {0}Users{1} WHERE {0}Username{1} = ?) AS u)", openQuote, closeQuote));
-      jdbcUserDetailsManager.setCreateAuthoritySql(MessageFormat.format("INSERT INTO {0}Authorities{1} ({0}Username{1}, {0}Authority{1}) values (?,?)", openQuote, closeQuote));
-      jdbcUserDetailsManager.setDeleteUserAuthoritiesSql(MessageFormat.format("DELETE FROM {0}Authorities{1} WHERE {0}Id{1} in (SELECT a.{0}Id{1} FROM (SELECT {0}Id{1} FROM {0}Authorities{1} WHERE {0}Username{1} = ?) AS a)", openQuote, closeQuote));
-      jdbcUserDetailsManager.setChangePasswordSql(MessageFormat.format("UPDATE {0}Users{1} SET {0}Password{1} = ? WHERE {0}Id{1} = (SELECT u.{0}Id{1} FROM (SELECT {0}Id{1} FROM {0}Users{1} WHERE {0}Username{1} = ?) AS u)", openQuote, closeQuote));
+      jdbcUserDetailsManager.setUserExistsSql(MessageFormat.format("SELECT {0}Username{1} FROM {0}{2}Users{1} WHERE {0}Username{1} = ?", openQuote, closeQuote, portalPrefix));
+      jdbcUserDetailsManager.setCreateUserSql(MessageFormat.format("INSERT INTO {0}{2}Users{1} ({0}Username{1}, {0}Password{1}, {0}Enabled{1}) values (?,?,?)", openQuote, closeQuote, portalPrefix));
+      jdbcUserDetailsManager.setUpdateUserSql(MessageFormat.format("UPDATE {0}{2}Users{1} SET {0}Password{1} = ?, {0}Enabled{1} = ? WHERE {0}Id{1} = (SELECT u.{0}Id{1} FROM (SELECT {0}Id{1} FROM {0}{2}Users{1} WHERE {0}Username{1} = ?) AS u)", openQuote, closeQuote, portalPrefix));
+      jdbcUserDetailsManager.setDeleteUserSql(MessageFormat.format("DELETE FROM {0}{2}Users{1} WHERE {0}Id{1} = (SELECT u.{0}Id{1} FROM (SELECT {0}Id{1} FROM {0}{2}Users{1} WHERE {0}Username{1} = ?) AS u)", openQuote, closeQuote, portalPrefix));
+      jdbcUserDetailsManager.setCreateAuthoritySql(MessageFormat.format("INSERT INTO {0}{2}Authorities{1} ({0}Username{1}, {0}Authority{1}) values (?,?)", openQuote, closeQuote, portalPrefix));
+      jdbcUserDetailsManager.setDeleteUserAuthoritiesSql(MessageFormat.format("DELETE FROM {0}{2}Authorities{1} WHERE {0}Id{1} in (SELECT a.{0}Id{1} FROM (SELECT {0}Id{1} FROM {0}{2}Authorities{1} WHERE {0}Username{1} = ?) AS a)", openQuote, closeQuote, portalPrefix));
+      jdbcUserDetailsManager.setChangePasswordSql(MessageFormat.format("UPDATE {0}{2}Users{1} SET {0}Password{1} = ? WHERE {0}Id{1} = (SELECT u.{0}Id{1} FROM (SELECT {0}Id{1} FROM {0}{2}Users{1} WHERE {0}Username{1} = ?) AS u)", openQuote, closeQuote, portalPrefix));
 
       return jdbcUserDetailsManager;
     }
@@ -364,9 +367,10 @@ public class AuthConfiguration {
             PasswordEncoder passwordEncoder,
             AuthenticationManagerBuilder auth,
             DataSource datasource,
-            EntityManagerFactory entityManagerFactory) throws Exception {
+            EntityManagerFactory entityManagerFactory,
+        TablePrefixProperties tablePrefixProperties) throws Exception {
       return SpringSecurityAuthAutoConfiguration
-          .jdbcUserDetailsManager(passwordEncoder, auth, datasource, entityManagerFactory);
+          .jdbcUserDetailsManager(passwordEncoder, auth, datasource, entityManagerFactory, tablePrefixProperties);
     }
 
     @Bean
