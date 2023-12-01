@@ -21,312 +21,318 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-# Dump of table app
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_App`;
+
+
+
+
+
+
+
+
+
 
 CREATE TABLE `P_0_App` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
-  `Name` varchar(500) NOT NULL DEFAULT 'default' COMMENT '应用名',
-  `OrgId` varchar(32) NOT NULL DEFAULT 'default' COMMENT '部门Id',
-  `OrgName` varchar(64) NOT NULL DEFAULT 'default' COMMENT '部门名字',
-  `OwnerName` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'ownerName',
-  `OwnerEmail` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'ownerEmail',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
+  `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
+  `Name` varchar(500) NOT NULL DEFAULT 'default' ,
+  `OrgId` varchar(32) NOT NULL DEFAULT 'default' ,
+  `OrgName` varchar(64) NOT NULL DEFAULT 'default' ,
+  `OwnerName` varchar(500) NOT NULL DEFAULT 'default' ,
+  `OwnerEmail` varchar(500) NOT NULL DEFAULT 'default' ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_AppId_DeletedAt` (`AppId`,`DeletedAt`),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`),
-  KEY `IX_Name` (`Name`(191))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用表';
+  UNIQUE KEY (`AppId`,`DeletedAt`),
+  KEY (`DataChange_LastTime`),
+  KEY (`Name`)
+) ;
 
 
 
-# Dump of table appnamespace
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_AppNamespace`;
+
+
+
 
 CREATE TABLE `P_0_AppNamespace` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-  `Name` varchar(32) NOT NULL DEFAULT '' COMMENT 'namespace名字，注意，需要全局唯一',
-  `AppId` varchar(64) NOT NULL DEFAULT '' COMMENT 'app id',
-  `Format` varchar(32) NOT NULL DEFAULT 'properties' COMMENT 'namespace的format类型',
-  `IsPublic` bit(1) NOT NULL DEFAULT b'0' COMMENT 'namespace是否为公共',
-  `Comment` varchar(64) NOT NULL DEFAULT '' COMMENT '注释',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
+  `Name` varchar(32) NOT NULL DEFAULT '' ,
+  `AppId` varchar(64) NOT NULL DEFAULT '' ,
+  `Format` varchar(32) NOT NULL DEFAULT 'properties' ,
+  `IsPublic` boolean NOT NULL DEFAULT FALSE ,
+  `Comment` varchar(64) NOT NULL DEFAULT '' ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_AppId_Name_DeletedAt` (`AppId`,`Name`,`DeletedAt`),
-  KEY `Name_AppId` (`Name`,`AppId`),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用namespace定义';
+  UNIQUE KEY (`AppId`,`Name`,`DeletedAt`),
+  KEY (`Name`,`AppId`),
+  KEY (`DataChange_LastTime`)
+)   ;
 
 
 
-# Dump of table consumer
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Consumer`;
+
+
+
 
 CREATE TABLE `P_0_Consumer` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
-  `Name` varchar(500) NOT NULL DEFAULT 'default' COMMENT '应用名',
-  `OrgId` varchar(32) NOT NULL DEFAULT 'default' COMMENT '部门Id',
-  `OrgName` varchar(64) NOT NULL DEFAULT 'default' COMMENT '部门名字',
-  `OwnerName` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'ownerName',
-  `OwnerEmail` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'ownerEmail',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
+  `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
+  `Name` varchar(500) NOT NULL DEFAULT 'default' ,
+  `OrgId` varchar(32) NOT NULL DEFAULT 'default' ,
+  `OrgName` varchar(64) NOT NULL DEFAULT 'default' ,
+  `OwnerName` varchar(500) NOT NULL DEFAULT 'default' ,
+  `OwnerEmail` varchar(500) NOT NULL DEFAULT 'default' ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_AppId_DeletedAt` (`AppId`,`DeletedAt`),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='开放API消费者';
+  UNIQUE KEY (`AppId`,`DeletedAt`),
+  KEY (`DataChange_LastTime`)
+)   ;
 
 
 
-# Dump of table consumeraudit
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_ConsumerAudit`;
+
+
+
 
 CREATE TABLE `P_0_ConsumerAudit` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `ConsumerId` int(11) unsigned DEFAULT NULL COMMENT 'Consumer Id',
-  `Uri` varchar(1024) NOT NULL DEFAULT '' COMMENT '访问的Uri',
-  `Method` varchar(16) NOT NULL DEFAULT '' COMMENT '访问的Method',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
+  `ConsumerId` int(11) unsigned DEFAULT NULL ,
+  `Uri` varchar(1024) NOT NULL DEFAULT '' ,
+  `Method` varchar(16) NOT NULL DEFAULT '' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`),
-  KEY `IX_ConsumerId` (`ConsumerId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='consumer审计表';
+  KEY (`DataChange_LastTime`),
+  KEY (`ConsumerId`)
+)   ;
 
 
 
-# Dump of table consumerrole
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_ConsumerRole`;
+
+
+
 
 CREATE TABLE `P_0_ConsumerRole` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `ConsumerId` int(11) unsigned DEFAULT NULL COMMENT 'Consumer Id',
-  `RoleId` int(10) unsigned DEFAULT NULL COMMENT 'Role Id',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
+  `ConsumerId` int(11) unsigned DEFAULT NULL ,
+  `RoleId` int(10) unsigned DEFAULT NULL ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_ConsumerId_RoleId_DeletedAt` (`ConsumerId`,`RoleId`,`DeletedAt`),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`),
-  KEY `IX_RoleId` (`RoleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='consumer和role的绑定表';
+  UNIQUE KEY (`ConsumerId`,`RoleId`,`DeletedAt`),
+  KEY (`DataChange_LastTime`),
+  KEY (`RoleId`)
+)   ;
 
 
 
-# Dump of table consumertoken
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_ConsumerToken`;
+
+
+
 
 CREATE TABLE `P_0_ConsumerToken` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `ConsumerId` int(11) unsigned DEFAULT NULL COMMENT 'ConsumerId',
-  `Token` varchar(128) NOT NULL DEFAULT '' COMMENT 'token',
-  `Expires` datetime NOT NULL DEFAULT '2099-01-01 00:00:00' COMMENT 'token失效时间',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
+  `ConsumerId` int(11) unsigned DEFAULT NULL ,
+  `Token` varchar(128) NOT NULL DEFAULT '' ,
+  `Expires` datetime NOT NULL DEFAULT '2099-01-01 00:00:00' ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_Token_DeletedAt` (`Token`,`DeletedAt`),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='consumer token表';
+  UNIQUE KEY (`Token`,`DeletedAt`),
+  KEY (`DataChange_LastTime`)
+)   ;
 
-# Dump of table favorite
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Favorite`;
+
+
+
 
 CREATE TABLE `P_0_Favorite` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `UserId` varchar(32) NOT NULL DEFAULT 'default' COMMENT '收藏的用户',
-  `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
-  `Position` int(32) NOT NULL DEFAULT '10000' COMMENT '收藏顺序',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
+  `UserId` varchar(32) NOT NULL DEFAULT 'default' ,
+  `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
+  `Position` int(32) NOT NULL DEFAULT '10000' ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_UserId_AppId_DeletedAt` (`UserId`,`AppId`,`DeletedAt`),
-  KEY `AppId` (`AppId`),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COMMENT='应用收藏表';
+  UNIQUE KEY (`UserId`,`AppId`,`DeletedAt`),
+  KEY (`AppId`),
+  KEY (`DataChange_LastTime`)
+)  AUTO_INCREMENT=23  ;
 
-# Dump of table permission
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Permission`;
+
+
+
 
 CREATE TABLE `P_0_Permission` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `PermissionType` varchar(32) NOT NULL DEFAULT '' COMMENT '权限类型',
-  `TargetId` varchar(256) NOT NULL DEFAULT '' COMMENT '权限对象类型',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
+  `PermissionType` varchar(32) NOT NULL DEFAULT '' ,
+  `TargetId` varchar(256) NOT NULL DEFAULT '' ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_TargetId_PermissionType_DeletedAt` (`TargetId`,`PermissionType`,`DeletedAt`),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='permission表';
+  UNIQUE KEY (`TargetId`,`PermissionType`,`DeletedAt`),
+  KEY (`DataChange_LastTime`)
+)   ;
 
 
 
-# Dump of table role
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Role`;
+
+
+
 
 CREATE TABLE `P_0_Role` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `RoleName` varchar(256) NOT NULL DEFAULT '' COMMENT 'Role name',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
+  `RoleName` varchar(256) NOT NULL DEFAULT '' ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_RoleName_DeletedAt` (`RoleName`,`DeletedAt`),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色表';
+  UNIQUE KEY (`RoleName`,`DeletedAt`),
+  KEY (`DataChange_LastTime`)
+)   ;
 
 
 
-# Dump of table rolepermission
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_RolePermission`;
+
+
+
 
 CREATE TABLE `P_0_RolePermission` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `RoleId` int(10) unsigned DEFAULT NULL COMMENT 'Role Id',
-  `PermissionId` int(10) unsigned DEFAULT NULL COMMENT 'Permission Id',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
+  `RoleId` int(10) unsigned DEFAULT NULL ,
+  `PermissionId` int(10) unsigned DEFAULT NULL ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_RoleId_PermissionId_DeletedAt` (`RoleId`,`PermissionId`,`DeletedAt`),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`),
-  KEY `IX_PermissionId` (`PermissionId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色和权限的绑定表';
+  UNIQUE KEY (`RoleId`,`PermissionId`,`DeletedAt`),
+  KEY (`DataChange_LastTime`),
+  KEY (`PermissionId`)
+)   ;
 
 
 
-# Dump of table serverconfig
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_ServerConfig`;
+
+
+
 
 CREATE TABLE `P_0_ServerConfig` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `Key` varchar(64) NOT NULL DEFAULT 'default' COMMENT '配置项Key',
-  `Value` varchar(2048) NOT NULL DEFAULT 'default' COMMENT '配置项值',
-  `Comment` varchar(1024) DEFAULT '' COMMENT '注释',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
+  `Key` varchar(64) NOT NULL DEFAULT 'default' ,
+  `Value` varchar(2048) NOT NULL DEFAULT 'default' ,
+  `Comment` varchar(1024) DEFAULT '' ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_Key_DeletedAt` (`Key`,`DeletedAt`),
-  KEY `DataChange_LastTime` (`DataChange_LastTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='配置服务自身配置';
+  UNIQUE KEY (`Key`,`DeletedAt`),
+  KEY (`DataChange_LastTime`)
+)   ;
 
 
 
-# Dump of table userrole
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_UserRole`;
+
+
+
 
 CREATE TABLE `P_0_UserRole` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `UserId` varchar(128) DEFAULT '' COMMENT '用户身份标识',
-  `RoleId` int(10) unsigned DEFAULT NULL COMMENT 'Role Id',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
+  `UserId` varchar(128) DEFAULT '' ,
+  `RoleId` int(10) unsigned DEFAULT NULL ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_UserId_RoleId_DeletedAt` (`UserId`,`RoleId`,`DeletedAt`),
-  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`),
-  KEY `IX_RoleId` (`RoleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户和role的绑定表';
+  UNIQUE KEY (`UserId`,`RoleId`,`DeletedAt`),
+  KEY (`DataChange_LastTime`),
+  KEY (`RoleId`)
+)   ;
 
-# Dump of table Users
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Users`;
+
+
+
 
 CREATE TABLE `P_0_Users` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
-  `Username` varchar(64) NOT NULL DEFAULT 'default' COMMENT '用户登录账户',
-  `Password` varchar(512) NOT NULL DEFAULT 'default' COMMENT '密码',
-  `UserDisplayName` varchar(512) NOT NULL DEFAULT 'default' COMMENT '用户名称',
-  `Email` varchar(64) NOT NULL DEFAULT 'default' COMMENT '邮箱地址',
-  `Enabled` tinyint(4) DEFAULT NULL COMMENT '是否有效',
+  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
+  `Username` varchar(64) NOT NULL DEFAULT 'default' ,
+  `Password` varchar(512) NOT NULL DEFAULT 'default' ,
+  `UserDisplayName` varchar(512) NOT NULL DEFAULT 'default' ,
+  `Email` varchar(64) NOT NULL DEFAULT 'default' ,
+  `Enabled` tinyint(4) DEFAULT NULL ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `UK_Username` (`Username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+  UNIQUE KEY (`Username`)
+)   ;
 
 
-# Dump of table Authorities
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Authorities`;
+
+
+
 
 CREATE TABLE `P_0_Authorities` (
-  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
+  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `Username` varchar(64) NOT NULL,
   `Authority` varchar(50) NOT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+)  ;
 
 
-# Config
-# ------------------------------------------------------------
+
+
 INSERT INTO `P_0_ServerConfig` (`Key`, `Value`, `Comment`)
 VALUES
     ('apollo.portal.envs', 'dev', '可支持的环境列表'),
@@ -355,69 +361,69 @@ CREATE TABLE `P_0_SPRING_SESSION` (
 	EXPIRY_TIME BIGINT NOT NULL,
 	PRINCIPAL_NAME VARCHAR(100),
 	CONSTRAINT SPRING_SESSION_PK PRIMARY KEY (PRIMARY_ID)
-) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
+) ;
 
 CREATE UNIQUE INDEX SPRING_SESSION_IX1 ON `P_0_SPRING_SESSION` (SESSION_ID);
 CREATE INDEX SPRING_SESSION_IX2 ON `P_0_SPRING_SESSION` (EXPIRY_TIME);
 CREATE INDEX SPRING_SESSION_IX3 ON `P_0_SPRING_SESSION` (PRINCIPAL_NAME);
 
-DROP TABLE IF EXISTS `P_0_SPRING_SESSION_ATTRIBUTES`;
+
 CREATE TABLE `P_0_SPRING_SESSION_ATTRIBUTES` (
 	SESSION_PRIMARY_ID CHAR(36) NOT NULL,
 	ATTRIBUTE_NAME VARCHAR(200) NOT NULL,
 	ATTRIBUTE_BYTES BLOB NOT NULL,
 	CONSTRAINT SPRING_SESSION_ATTRIBUTES_PK PRIMARY KEY (SESSION_PRIMARY_ID, ATTRIBUTE_NAME),
 	CONSTRAINT SPRING_SESSION_ATTRIBUTES_FK FOREIGN KEY (SESSION_PRIMARY_ID) REFERENCES `P_0_SPRING_SESSION`(PRIMARY_ID) ON DELETE CASCADE
-) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
+) ;
 
 
-DROP TABLE IF EXISTS `P_0_AuditLog`;
+
 
 CREATE TABLE `P_0_AuditLog` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `TraceId` varchar(32) NOT NULL DEFAULT '' COMMENT '链路全局唯一ID',
-  `SpanId` varchar(32) NOT NULL DEFAULT '' COMMENT '跨度ID',
-  `ParentSpanId` varchar(32) DEFAULT NULL COMMENT '父跨度ID',
-  `FollowsFromSpanId` varchar(32) DEFAULT NULL COMMENT '上一个兄弟跨度ID',
-  `Operator` varchar(64) NOT NULL DEFAULT 'anonymous' COMMENT '操作人',
-  `OpType` varchar(50) NOT NULL DEFAULT 'default' COMMENT '操作类型',
-  `OpName` varchar(150) NOT NULL DEFAULT 'default' COMMENT '操作名称',
-  `Description` varchar(200) DEFAULT NULL COMMENT '备注',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) DEFAULT NULL COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
+  `TraceId` varchar(32) NOT NULL DEFAULT '' ,
+  `SpanId` varchar(32) NOT NULL DEFAULT '' ,
+  `ParentSpanId` varchar(32) DEFAULT NULL ,
+  `FollowsFromSpanId` varchar(32) DEFAULT NULL ,
+  `Operator` varchar(64) NOT NULL DEFAULT 'anonymous' ,
+  `OpType` varchar(50) NOT NULL DEFAULT 'default' ,
+  `OpName` varchar(150) NOT NULL DEFAULT 'default' ,
+  `Description` varchar(200) DEFAULT NULL ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) DEFAULT NULL ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY `IX_TraceId` (`TraceId`),
-  KEY `IX_OpName` (`OpName`),
-  KEY `IX_DataChange_CreatedTime` (`DataChange_CreatedTime`),
-  KEY `IX_Operator` (`Operator`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='审计日志表';
+  KEY (`TraceId`),
+  KEY (`OpName`),
+  KEY (`DataChange_CreatedTime`),
+  KEY (`Operator`)
+)   ;
 
 
-DROP TABLE IF EXISTS `P_0_AuditLogDataInfluence`;
+
 
 CREATE TABLE `P_0_AuditLogDataInfluence` (
-  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `SpanId` char(32) NOT NULL DEFAULT '' COMMENT '跨度ID',
-  `InfluenceEntityId` varchar(50) NOT NULL DEFAULT '0' COMMENT '记录ID',
-  `InfluenceEntityName` varchar(50) NOT NULL DEFAULT 'default' COMMENT '表名',
-  `FieldName` varchar(50) DEFAULT NULL COMMENT '字段名称',
-  `FieldOldValue` varchar(500) DEFAULT NULL COMMENT '字段旧值',
-  `FieldNewValue` varchar(500) DEFAULT NULL COMMENT '字段新值',
-  `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
-  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' COMMENT 'Delete timestamp based on milliseconds',
-  `DataChange_CreatedBy` varchar(64) DEFAULT NULL COMMENT '创建人邮箱前缀',
-  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' COMMENT '最后修改人邮箱前缀',
-  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
+  `SpanId` char(32) NOT NULL DEFAULT '' ,
+  `InfluenceEntityId` varchar(50) NOT NULL DEFAULT '0' ,
+  `InfluenceEntityName` varchar(50) NOT NULL DEFAULT 'default' ,
+  `FieldName` varchar(50) DEFAULT NULL ,
+  `FieldOldValue` varchar(500) DEFAULT NULL ,
+  `FieldNewValue` varchar(500) DEFAULT NULL ,
+  `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
+  `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
+  `DataChange_CreatedBy` varchar(64) DEFAULT NULL ,
+  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
+  `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY `IX_SpanId` (`SpanId`),
-  KEY `IX_DataChange_CreatedTime` (`DataChange_CreatedTime`),
-  KEY `IX_EntityId` (`InfluenceEntityId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='审计日志数据变动表';
+  KEY (`SpanId`),
+  KEY (`DataChange_CreatedTime`),
+  KEY (`InfluenceEntityId`)
+)   ;
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
