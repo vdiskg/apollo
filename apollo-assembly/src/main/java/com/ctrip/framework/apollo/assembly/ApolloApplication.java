@@ -17,6 +17,7 @@
 package com.ctrip.framework.apollo.assembly;
 
 import com.ctrip.framework.apollo.adminservice.AdminServiceApplication;
+import com.ctrip.framework.apollo.assembly.datasource.ApolloAssemblySqlInitializationConfig;
 import com.ctrip.framework.apollo.audit.configuration.ApolloAuditAutoConfiguration;
 import com.ctrip.framework.apollo.configservice.ConfigServiceApplication;
 import com.ctrip.framework.apollo.portal.PortalApplication;
@@ -29,7 +30,11 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.context.scope.refresh.RefreshScope;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Import;
 
+@Import({
+    ApolloAssemblySqlInitializationConfig.class,
+})
 @SpringBootApplication(exclude = {
     HibernateJpaAutoConfiguration.class,
     ApolloAuditAutoConfiguration.class,
