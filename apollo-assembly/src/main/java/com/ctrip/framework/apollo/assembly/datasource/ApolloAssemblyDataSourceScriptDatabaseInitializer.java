@@ -25,6 +25,7 @@ import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperti
 import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver;
 import org.springframework.boot.sql.init.DatabaseInitializationSettings;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
@@ -63,9 +64,13 @@ public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
       PlatformPlaceholderDatabaseDriverResolver platformResolver, DataSource dataSource,
       SqlInitializationProperties properties) {
 
-    if (StringUtils.hasText(properties.getPlatform())) {
-      return platformResolver.resolveAll(properties.getPlatform(),
-          locations.toArray(new String[0]));
+    if (CollectionUtils.isEmpty(locations)) {
+      return null;
+    }
+
+    String platform = properties.getPlatform();
+    if (StringUtils.hasText(platform) && !"all".equals(platform)) {
+      return platformResolver.resolveAll(platform, locations.toArray(new String[0]));
     }
     return platformResolver.resolveAll(dataSource, locations.toArray(new String[0]));
   }
