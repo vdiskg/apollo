@@ -29,7 +29,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.74-b02, mixed mode)
 Windows用户请确保JAVA_HOME环境变量已经设置。
 
 ## 1.2 MySQL
-
+* 如果使用 H2 内存数据库/H2 文件数据库，则无需 MySQL，可以跳过此步骤
 * 版本要求：5.6.5+
 
 Apollo的表结构对`timestamp`使用了多个default声明，所以需要5.6.5以上版本。
@@ -66,100 +66,100 @@ Quick Start只针对本地测试使用，所以一般用户不需要自己下载
 2. 在根目录下执行`mvn clean package -pl apollo-assembly -am -DskipTests=true`
 3. 复制apollo-assembly/target下的jar包，rename为apollo-all-in-one.jar
 
-# 二、安装步骤
-## 2.1 创建数据库
-Apollo服务端共需要两个数据库：`ApolloPortalDB`和`ApolloConfigDB`，我们把数据库、表的创建和样例数据都分别准备了sql文件，只需要导入数据库即可。
+# 二、数据库初始化及启动
+#### 注意事项
+1. apollo 服务端进程需要分别使用8070, 8080, 8090端口，请确保这3个端口当前没有被使用。
+2. 脚本中的 SPRING_PROFILES_ACTIVE 环境变量中的 `github` 是必须的 profile，`auth` 是 portal 提供简单认证的 profile，不需要认证或者使用其它认证方式时可以去掉
 
-> 注意：如果你本地已经创建过Apollo数据库，请注意备份数据。我们准备的sql文件会清空Apollo相关的表。
+## 2.1 使用 H2 内存数据库，自动初始化
+无需任何配置，直接使用如下命令启动即可
+> 注：使用内存数据库时，任何操作都会在 apollo 进程重启后丢失
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+unset SPRING_SQL_INIT_MODE
+java -jar apollo-all-in-one.jar
 
-### 2.1.1 创建ApolloPortalDB
-通过各种MySQL客户端导入[sql/apolloportaldb.sql](https://github.com/apolloconfig/apollo-quick-start/blob/master/sql/apolloportaldb.sql)即可。
-
-下面以MySQL原生客户端为例：
-```sql
-source /your_local_path/sql/apolloportaldb.sql
 ```
 
-导入成功后，可以通过执行以下sql语句来验证：
-```sql
-select `Id`, `AppId`, `Name` from ApolloPortalDB.App;
+## 2.2 使用 H2 文件数据库，自动初始化
+#### 注意事项
+1. 脚本中的 SPRING_DATASOURCE_URL 环境变量中的路径 `~/apollo/apolloassemblydb` 可以替换为其它自定义路径，需要保证该路径有读写权限
+
+### 2.2.1 首次启动
+首次启动使用 SPRING_SQL_INIT_MODE="always" 环境变量来进行初始化
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+export SPRING_SQL_INIT_MODE="always"
+export SPRING_DATASOURCE_URL="jdbc:h2:file:~/apollo/apolloassemblydb;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+java -jar apollo-all-in-one.jar
+
 ```
 
-| Id | AppId     | Name       |
-|----|-----------|------------|
-| 1  | SampleApp | Sample App |
+### 2.2.2 后续启动
+后续启动去掉 SPRING_SQL_INIT_MODE 环境变量来避免重复初始化
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+unset SPRING_SQL_INIT_MODE
+export SPRING_DATASOURCE_URL="jdbc:h2:file:~/apollo/apolloassemblydb;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+java -jar apollo-all-in-one.jar
 
-### 2.1.2 创建ApolloConfigDB
-通过各种MySQL客户端导入[sql/apolloconfigdb.sql](https://github.com/apolloconfig/apollo-quick-start/blob/master/sql/apolloconfigdb.sql)即可。
-
-下面以MySQL原生客户端为例：
-```sql
-source /your_local_path/sql/apolloconfigdb.sql
 ```
 
-导入成功后，可以通过执行以下sql语句来验证：
-```sql
-select `NamespaceId`, `Key`, `Value`, `Comment` from ApolloConfigDB.Item;
-```
-| NamespaceId | Key     | Value | Comment            |
-|-------------|---------|-------|--------------------|
-| 1           | timeout | 100   | sample timeout配置 |
+## 2.3 使用 mysql 数据库，自动初始化
+#### 注意事项
+1. 脚本中的 SPRING_DATASOURCE_URL 环境变量中的 your-mysql-server:3306 需要替换为实际的 mysql 服务器地址和端口，ApolloAssemblyDB 需要替换为实际的数据库名称
+2. 脚本中的 SPRING_DATASOURCE_USERNAME 和 SPRING_DATASOURCE_PASSWORD 环境变量需要填写实际的用户名和密码
 
-## 2.2 配置数据库连接信息
-Apollo服务端需要知道如何连接到你前面创建的数据库，所以需要编辑[demo.sh](https://github.com/apolloconfig/apollo-quick-start/blob/master/demo.sh)，修改ApolloPortalDB和ApolloConfigDB相关的数据库连接串信息。
+### 2.3.1 首次启动
+首次启动使用 SPRING_SQL_INIT_MODE="always" 环境变量来进行初始化
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+export SPRING_SQL_INIT_MODE="always"
+export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_DATASOURCE_USERNAME="apollo-username"
+export SPRING_DATASOURCE_PASSWORD="apollo-password"
+java -jar apollo-all-in-one.jar
 
-> 注意：填入的用户需要具备对ApolloPortalDB和ApolloConfigDB数据的读写权限。
-
-```sh
-#apollo config db info
-apollo_config_db_url="jdbc:mysql://localhost:3306/ApolloConfigDB?characterEncoding=utf8&serverTimezone=Asia/Shanghai"
-apollo_config_db_username=用户名
-apollo_config_db_password=密码（如果没有密码，留空即可）
-
-# apollo portal db info
-apollo_portal_db_url="jdbc:mysql://localhost:3306/ApolloPortalDB?characterEncoding=utf8&serverTimezone=Asia/Shanghai"
-apollo_portal_db_username=用户名
-apollo_portal_db_password=密码（如果没有密码，留空即可）
 ```
 
-> 注意：不要修改demo.sh的其它部分
+### 2.3.2 后续启动
+后续启动去掉 SPRING_SQL_INIT_MODE 环境变量来避免重复初始化
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+unset SPRING_SQL_INIT_MODE
+export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_DATASOURCE_USERNAME="apollo-username"
+export SPRING_DATASOURCE_PASSWORD="apollo-password"
+java -jar apollo-all-in-one.jar
 
-# 三、启动Apollo配置中心
-## 3.1 确保端口未被占用
-Quick Start脚本会在本地启动3个服务，分别使用8070, 8080, 8090端口，请确保这3个端口当前没有被使用。
-
-例如，在Linux/Mac下，可以通过如下命令检查：
-```sh
-lsof -i:8080
 ```
 
-## 3.2 执行启动脚本
-```sh
-./demo.sh start
+## 2.4 使用 mysql 数据库，手动初始化
+
+### 2.4.1 手动初始化 ApolloAssemblyDB
+通过各种MySQL客户端导入 [sql/assembly](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/assembly)
+
+### 2.4.2 运行
+#### 注意事项
+1. 脚本中的 SPRING_DATASOURCE_URL 环境变量中的 your-mysql-server:3306 需要替换为实际的 mysql 服务器地址和端口，ApolloAssemblyDB 需要替换为实际的数据库名称
+2. 脚本中的 SPRING_DATASOURCE_USERNAME 和 SPRING_DATASOURCE_PASSWORD 环境变量需要填写实际的用户名和密码
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+unset SPRING_SQL_INIT_MODE
+export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_DATASOURCE_USERNAME="apollo-username"
+export SPRING_DATASOURCE_PASSWORD="apollo-password"
+java -jar apollo-all-in-one.jar
+
 ```
 
-当看到如下输出后，就说明启动成功了！
-```sh
-==== starting service ====
-Service logging file is ./service/apollo-service.log
-Started [10768]
-Waiting for config service startup.......
-Config service started. You may visit http://localhost:8080 for service status now!
-Waiting for admin service startup....
-Admin service started
-==== starting portal ====
-Portal logging file is ./portal/apollo-portal.log
-Started [10846]
-Waiting for portal startup......
-Portal started. You can visit http://localhost:8070 now!
-```
-
-## 3.3 异常排查
+# 三、启动额外说明
+## 3.1 异常排查
 如果启动遇到了异常，可以分别查看service和portal目录下的log文件排查问题。
 
-> 注：在启动apollo-configservice的过程中会在日志中输出eureka注册失败的信息，如`com.sun.jersey.api.client.ClientHandlerException: java.net.ConnectException: Connection refused`。需要注意的是，这个是预期的情况，因为apollo-configservice需要向Meta Server（它自己）注册服务，但是因为在启动过程中，自己还没起来，所以会报这个错。后面会进行重试的动作，所以等自己服务起来后就会注册正常了。
+> 注：在启动的过程中会在日志中输出eureka注册失败的信息，如`com.sun.jersey.api.client.ClientHandlerException: java.net.ConnectException: Connection refused`。需要注意的是，这个是预期的情况，因为apollo-configservice需要向Meta Server（它自己）注册服务，但是因为在启动过程中，自己还没起来，所以会报这个错。后面会进行重试的动作，所以等自己服务起来后就会注册正常了。
 
-## 3.4 注意
+## 3.2 注意
 Quick Start只是用来帮助大家快速体验Apollo项目，具体实际使用时请参考：[分布式部署指南](zh/deployment/distributed-deployment-guide)。
 
 另外需要注意的是Quick Start不支持增加环境，只有通过分布式部署才可以新增环境，同样请参考：[分布式部署指南](zh/deployment/distributed-deployment-guide)

@@ -19,12 +19,14 @@ package com.ctrip.framework.apollo.assembly.datasource;
 import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.util.StringUtils;
 
+@EnableConfigurationProperties(SqlInitializationProperties.class)
 @ConditionalOnProperty(prefix = "spring.sql.init", name = "enabled", matchIfMissing = true)
 @Configuration
 public class ApolloAssemblySqlInitializationConfig {

@@ -29,7 +29,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 25.74-b02, mixed mode)
 Windows users please make sure that JAVA_HOME environment variable is set.
 
 ## 1.2 MySQL
-
+* If you plan to use H2 in-memory database/H2 file database, there is no need for MySQL, and you can skip this step.
 * Version requirement: 5.6.5+
 
 Apollo's table structure uses multiple default declarations for `timestamp`, so version 5.6.5+ is required.
@@ -66,103 +66,99 @@ Quick Start is only for local testing, so generally users do not need to downloa
 2. Execute `mvn clean package -pl apollo-assembly -am -DskipTests=true` in the root directory.
 3. Copy the jar package under apollo-assembly/target and rename it to apollo-all-in-one.jar
 
-# II. Installation steps
-## 2.1 Create the database
-Apollo server side needs a total of two databases: `ApolloPortalDB` and `ApolloConfigDB`, we have prepared the database, table creation and sample data as sql files respectively, just import the database.
+# II. Initialization and Startup
+#### Precautions
+1. The Apollo server process needs to use ports 8070, 8080, 8090 respectively, please ensure these three ports are not currently in use.
+2. The `github` in the SPRING_PROFILES_ACTIVE environment variable in the script is a required profile, `auth` is a profile that provides simple authentication for the portal, it can be removed if authentication is not required or other authentication methods are used.
+## 2.1 Use H2 in-memory database, automatic initialization
+No configuration is required, just use the following command to start
+> Note: When using the in-memory database, any operation will be lost after the Apollo process restarts
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+unset SPRING_SQL_INIT_MODE
+java -jar apollo-all-in-one.jar
 
-> Note: If you have already created Apollo database locally, please take care to backup the data. The sql file we prepared will clear the Apollo related tables.
-
-### 2.1.1 Creating ApolloPortalDB
-Just import [sql/apolloportaldb.sql](https://github.com/apolloconfig/apollo-quick-start/blob/master/sql/apolloportaldb.sql) through various MySQL clients.
-
-The following is an example of a native MySQL client.
-```sql
-source /your_local_path/sql/apolloportaldb.sql
 ```
 
-After the successful import, you can verify it by executing the following sql statement.
-```sql
-select `Id`, `AppId`, `Name` from ApolloPortalDB.App;
+## 2.2 Use H2 file database, automatic initialization
+#### Precautions
+1. The path `~/apollo/apolloassemblydb` in the SPRING_DATASOURCE_URL environment variable in the script can be replaced with other custom paths, you need to ensure that this path has read and write permissions
+
+### 2.2.1 First startup
+Use the SPRING_SQL_INIT_MODE="always" environment variable for initialization at the first startup
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+export SPRING_SQL_INIT_MODE="always"
+export SPRING_DATASOURCE_URL="jdbc:h2:file:~/apollo/apolloassemblydb;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+java -jar apollo-all-in-one.jar
+
 ```
 
-| Id   | AppId     | Name       |
-| ---- | --------- | ---------- |
-| 1    | SampleApp | Sample App |
+### 2.2.2 Subsequent startup
+Remove the SPRING_SQL_INIT_MODE environment variable to avoid repeated initialization at subsequent startup
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+unset SPRING_SQL_INIT_MODE
+export SPRING_DATASOURCE_URL="jdbc:h2:file:~/apollo/apolloassemblydb;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+java -jar apollo-all-in-one.jar
 
-### 2.1.2 Creating ApolloConfigDB
-You can import [sql/apolloconfigdb.sql](https://github.com/apolloconfig/apollo-quick-start/blob/master/sql/apolloconfigdb.sql) through various MySQL clients.
-
-The following is an example of a native MySQL client.
-```sql
-source /your_local_path/sql/apolloconfigdb.sql
 ```
 
-After the successful import, you can verify it by executing the following sql statement.
-```sql
-select `NamespaceId`, `Key`, `Value`, `Comment` from ApolloConfigDB.Item;
-```
-| NamespaceId | Key     | Value | Comment                      |
-| ----------- | ------- | ----- | ---------------------------- |
-| 1           | timeout | 100   | sample timeout configuration |
+## 2.3 Use mysql database, automatic initialization
+#### Precautions
+1. The your-mysql-server:3306 in the SPRING_DATASOURCE_URL environment variable in the script needs to be replaced with the actual mysql server address and port, ApolloAssemblyDB needs to be replaced with the actual database name
+2. The SPRING_DATASOURCE_USERNAME and SPRING_DATASOURCE_PASSWORD environment variables in the script need to fill in the actual username and password
 
-## 2.2 Configuring Database Connection Information
-The Apollo server needs to know how to connect to the database you created earlier, so you need to edit [demo.sh](https://github.com/apolloconfig/apollo-quick-start/blob/master/demo.sh) and modify ApolloPortalDB and ApolloConfigDB related database connection string information.
+### 2.3.1 First startup
+Use the SPRING_SQL_INIT_MODE="always" environment variable for initialization at the first startup
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+export SPRING_SQL_INIT_MODE="always"
+export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_DATASOURCE_USERNAME="apollo-username"
+export SPRING_DATASOURCE_PASSWORD="apollo-password"
+java -jar apollo-all-in-one.jar
 
-> Note: The filled in user needs to have read and write access to ApolloPortalDB and ApolloConfigDB data.
-
-```sh
-#apollo config db info
-apollo_config_db_url="jdbc:mysql://localhost:3306/ApolloConfigDB?characterEncoding=utf8&serverTimezone=Asia/Shanghai"
-apollo_config_db_username=username
-apollo_config_db_password=password (if you don't have a password, just leave it blank)
-
-# apollo portal db info
-apollo_portal_db_url="jdbc:mysql://localhost:3306/ApolloPortalDB?characterEncoding=utf8&serverTimezone=Asia/Shanghai"
-apollo_portal_db_username=username
-apollo_portal_db_password=password (if you don't have a password, just leave it blank)
 ```
 
-> Note: Do not modify other parts of demo.sh
+### 2.3.2 Subsequent startup
+Remove the SPRING_SQL_INIT_MODE environment variable to avoid repeated initialization at subsequent startup
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+unset SPRING_SQL_INIT_MODE
+export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_DATASOURCE_USERNAME="apollo-username"
+export SPRING_DATASOURCE_PASSWORD="apollo-password"
+java -jar apollo-all-in-one.jar
 
-# III. Start Apollo Configuration Center
-## 3.1 Make sure the port is not occupied
-The Quick Start script will start 3 services locally, using ports 8070, 8080, 8090 respectively, please make sure these 3 ports are not currently used.
-
-For example, under Linux/Mac, you can check with the following command.
-```sh
-lsof -i:8080
 ```
 
-## 3.2 Execute the startup script
-```sh
-./demo.sh start
+## 2.4 Use mysql database, manual initialization
+
+### 2.4.1 Manually initialize ApolloAssemblyDB
+Import [sql/assembly](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/assembly) through various MySQL clients
+
+### 2.4.2 Run
+#### Precautions
+1. The your-mysql-server:3306 in the SPRING_DATASOURCE_URL environment variable in the script needs to be replaced with the actual mysql server address and port, ApolloAssemblyDB needs to be replaced with the actual database name
+2. The SPRING_DATASOURCE_USERNAME and SPRING_DATASOURCE_PASSWORD environment variables in the script need to fill in the actual username and password
+```bash
+export SPRING_PROFILES_ACTIVE="github,auth"
+unset SPRING_SQL_INIT_MODE
+export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_DATASOURCE_USERNAME="apollo-username"
+export SPRING_DATASOURCE_PASSWORD="apollo-password"
+java -jar apollo-all-in-one.jar
+
 ```
 
-When you see the following output, you've started successfully!
-```sh
-==== starting service ====
-Service logging file is . /service/apollo-service.log
-Started [10768]
-Waiting for config service startup .......
-Config service started. You may visit http://localhost:8080 for service status now!
-Waiting for admin service startup....
-Admin service started
-==== starting portal ====
-Portal logging file is . /portal/apollo-portal.log
-Started [10846]
-Waiting for portal startup ......
-Portal started. You can visit http://localhost:8070 now!
-You can visit  now!
-```
-
-
-
-## 3.3 Troubleshooting
+# III. Additional Startup Instructions
+## 3.1 Troubleshooting
 If you encounter an exception in the startup, you can check the log files in the service and portal directories respectively to troubleshoot the problem.
 
-> Note: During start-up of apollo-configservice, eureka registration failure message will be output in the log, e.g. `com.sun.jersey.api.client.ClientHandlerException: java.net.ConnectException: Connection refused`. Note that this is expected because apollo-configservice needs to register the service with Meta Server (itself), but since it is not up yet during the startup process itself, this error is reported. A retry action will be performed later, so it will register properly when the service is up by itself.
+> Note: During start-up, eureka registration failure message will be output in the log, e.g. `com.sun.jersey.api.client.ClientHandlerException: java.net.ConnectException: Connection refused`. Note that this is expected because apollo-configservice needs to register the service with Meta Server (itself), but since it is not up yet during the startup process itself, this error is reported. A retry action will be performed later, so it will register properly when the service is up by itself.
 
-## 3.4 Note
+## 3.2 Note
 
 Quick Start is only used to help you quickly experience Apollo project, please refer to: [distributed-deployment-guide](en/deployment/distributed-deployment-guide) for details.
 
