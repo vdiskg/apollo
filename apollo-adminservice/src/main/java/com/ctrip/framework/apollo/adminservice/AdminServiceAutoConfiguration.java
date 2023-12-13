@@ -54,7 +54,7 @@ public class AdminServiceAutoConfiguration {
    * for apollo-assembly
    */
   @Order(99)
-  @Profile("auth")
+  @Profile("assembly")
   @Configuration
   static class AdminServiceSecurityConfigurer extends WebSecurityConfigurerAdapter {
 

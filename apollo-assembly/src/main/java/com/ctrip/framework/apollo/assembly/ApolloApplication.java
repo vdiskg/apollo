@@ -56,6 +56,7 @@ public class ApolloApplication {
      */
     ConfigurableApplicationContext configContext =
         new SpringApplicationBuilder(ConfigServiceApplication.class).parent(commonContext)
+            .profiles("assembly")
             .sources(RefreshScope.class).run(args);
     logger.info("configContext [{}] isActive: {}", configContext.getId(), configContext.isActive());
 
@@ -64,6 +65,7 @@ public class ApolloApplication {
      */
     ConfigurableApplicationContext adminContext =
         new SpringApplicationBuilder(AdminServiceApplication.class).parent(commonContext)
+            .profiles("assembly")
             .sources(RefreshScope.class).run(args);
     logger.info("adminContext [{}] isActive: {}" , adminContext.getId(), adminContext.isActive());
 
@@ -72,6 +74,7 @@ public class ApolloApplication {
      */
     ConfigurableApplicationContext portalContext =
         new SpringApplicationBuilder(PortalApplication.class).parent(commonContext)
+            .profiles("assembly")
             .sources(RefreshScope.class).run(args);
     logger.info("portalContext [{}] isActive: {}", portalContext.getId(), portalContext.isActive());
   }
