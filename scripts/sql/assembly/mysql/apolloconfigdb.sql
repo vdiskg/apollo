@@ -21,14 +21,14 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-# Create Database
-# ------------------------------------------------------------
+-- Create Database
+-- ------------------------------------------------------------
 CREATE DATABASE IF NOT EXISTS ApolloAssemblyDB DEFAULT CHARACTER SET = utf8mb4;
 
 Use ApolloAssemblyDB;
 
-# Dump of table app
-# ------------------------------------------------------------
+-- Dump of table app
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_App`;
 
@@ -54,8 +54,8 @@ CREATE TABLE `C_0_App` (
 
 
 
-# Dump of table appnamespace
-# ------------------------------------------------------------
+-- Dump of table appnamespace
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_AppNamespace`;
 
@@ -80,8 +80,8 @@ CREATE TABLE `C_0_AppNamespace` (
 
 
 
-# Dump of table audit
-# ------------------------------------------------------------
+-- Dump of table audit
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_Audit`;
 
@@ -103,8 +103,8 @@ CREATE TABLE `C_0_Audit` (
 
 
 
-# Dump of table cluster
-# ------------------------------------------------------------
+-- Dump of table cluster
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_Cluster`;
 
@@ -127,8 +127,8 @@ CREATE TABLE `C_0_Cluster` (
 
 
 
-# Dump of table commit
-# ------------------------------------------------------------
+-- Dump of table commit
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_Commit`;
 
@@ -152,8 +152,8 @@ CREATE TABLE `C_0_Commit` (
   KEY `NamespaceName` (`NamespaceName`(191))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='commit 历史表';
 
-# Dump of table grayreleaserule
-# ------------------------------------------------------------
+-- Dump of table grayreleaserule
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_GrayReleaseRule`;
 
@@ -178,8 +178,8 @@ CREATE TABLE `C_0_GrayReleaseRule` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='灰度规则表';
 
 
-# Dump of table instance
-# ------------------------------------------------------------
+-- Dump of table instance
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_Instance`;
 
@@ -199,8 +199,8 @@ CREATE TABLE `C_0_Instance` (
 
 
 
-# Dump of table instanceconfig
-# ------------------------------------------------------------
+-- Dump of table instanceconfig
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_InstanceConfig`;
 
@@ -223,8 +223,8 @@ CREATE TABLE `C_0_InstanceConfig` (
 
 
 
-# Dump of table item
-# ------------------------------------------------------------
+-- Dump of table item
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_Item`;
 
@@ -249,8 +249,8 @@ CREATE TABLE `C_0_Item` (
 
 
 
-# Dump of table namespace
-# ------------------------------------------------------------
+-- Dump of table namespace
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_Namespace`;
 
@@ -273,8 +273,8 @@ CREATE TABLE `C_0_Namespace` (
 
 
 
-# Dump of table namespacelock
-# ------------------------------------------------------------
+-- Dump of table namespacelock
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_NamespaceLock`;
 
@@ -294,8 +294,8 @@ CREATE TABLE `C_0_NamespaceLock` (
 
 
 
-# Dump of table release
-# ------------------------------------------------------------
+-- Dump of table release
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_Release`;
 
@@ -322,8 +322,8 @@ CREATE TABLE `C_0_Release` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发布';
 
 
-# Dump of table releasehistory
-# ------------------------------------------------------------
+-- Dump of table releasehistory
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_ReleaseHistory`;
 
@@ -351,8 +351,8 @@ CREATE TABLE `C_0_ReleaseHistory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发布历史';
 
 
-# Dump of table releasemessage
-# ------------------------------------------------------------
+-- Dump of table releasemessage
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_ReleaseMessage`;
 
@@ -367,8 +367,8 @@ CREATE TABLE `C_0_ReleaseMessage` (
 
 
 
-# Dump of table serverconfig
-# ------------------------------------------------------------
+-- Dump of table serverconfig
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_ServerConfig`;
 
@@ -389,8 +389,8 @@ CREATE TABLE `C_0_ServerConfig` (
   KEY `DataChange_LastTime` (`DataChange_LastTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='配置服务自身配置';
 
-# Dump of table accesskey
-# ------------------------------------------------------------
+-- Dump of table accesskey
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_AccessKey`;
 
@@ -411,8 +411,8 @@ CREATE TABLE `C_0_AccessKey` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='访问密钥';
 
 
-# Dump of table serviceregistry
-# ------------------------------------------------------------
+-- Dump of table serviceregistry
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_ServiceRegistry`;
 
@@ -429,8 +429,8 @@ CREATE TABLE `C_0_ServiceRegistry` (
   INDEX `IX_DataChange_LastTime` (`DataChange_LastTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='注册中心';
 
-# Dump of table AuditLog
-# ------------------------------------------------------------
+-- Dump of table AuditLog
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_AuditLog`;
 
@@ -457,8 +457,8 @@ CREATE TABLE `C_0_AuditLog` (
   KEY `IX_Operator` (`Operator`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='审计日志表';
 
-# Dump of table AuditLogDataInfluence
-# ------------------------------------------------------------
+-- Dump of table AuditLogDataInfluence
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `C_0_AuditLogDataInfluence`;
 
@@ -482,8 +482,8 @@ CREATE TABLE `C_0_AuditLogDataInfluence` (
   KEY `IX_EntityId` (`InfluenceEntityId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='审计日志数据变动表';
 
-# Config
-# ------------------------------------------------------------
+-- Config
+-- ------------------------------------------------------------
 INSERT INTO `ServerConfig` (`Key`, `Cluster`, `Value`, `Comment`)
 VALUES
     ('eureka.service.url', 'default', 'http://localhost:8080/eureka/', 'Eureka服务Url，多个service以英文逗号分隔'),

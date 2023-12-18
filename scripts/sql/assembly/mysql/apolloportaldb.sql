@@ -21,14 +21,14 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-# Create Database
-# ------------------------------------------------------------
+-- Create Database
+-- ------------------------------------------------------------
 CREATE DATABASE IF NOT EXISTS ApolloAssemblyDB DEFAULT CHARACTER SET = utf8mb4;
 
 Use ApolloAssemblyDB;
 
-# Dump of table app
-# ------------------------------------------------------------
+-- Dump of table app
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_App`;
 
@@ -54,8 +54,8 @@ CREATE TABLE `P_0_App` (
 
 
 
-# Dump of table appnamespace
-# ------------------------------------------------------------
+-- Dump of table appnamespace
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_AppNamespace`;
 
@@ -80,8 +80,8 @@ CREATE TABLE `P_0_AppNamespace` (
 
 
 
-# Dump of table consumer
-# ------------------------------------------------------------
+-- Dump of table consumer
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_Consumer`;
 
@@ -106,8 +106,8 @@ CREATE TABLE `P_0_Consumer` (
 
 
 
-# Dump of table consumeraudit
-# ------------------------------------------------------------
+-- Dump of table consumeraudit
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_ConsumerAudit`;
 
@@ -125,8 +125,8 @@ CREATE TABLE `P_0_ConsumerAudit` (
 
 
 
-# Dump of table consumerrole
-# ------------------------------------------------------------
+-- Dump of table consumerrole
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_ConsumerRole`;
 
@@ -148,8 +148,8 @@ CREATE TABLE `P_0_ConsumerRole` (
 
 
 
-# Dump of table consumertoken
-# ------------------------------------------------------------
+-- Dump of table consumertoken
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_ConsumerToken`;
 
@@ -169,8 +169,8 @@ CREATE TABLE `P_0_ConsumerToken` (
   KEY `DataChange_LastTime` (`DataChange_LastTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='consumer token表';
 
-# Dump of table favorite
-# ------------------------------------------------------------
+-- Dump of table favorite
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_Favorite`;
 
@@ -191,8 +191,8 @@ CREATE TABLE `P_0_Favorite` (
   KEY `DataChange_LastTime` (`DataChange_LastTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COMMENT='应用收藏表';
 
-# Dump of table permission
-# ------------------------------------------------------------
+-- Dump of table permission
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_Permission`;
 
@@ -213,8 +213,8 @@ CREATE TABLE `P_0_Permission` (
 
 
 
-# Dump of table role
-# ------------------------------------------------------------
+-- Dump of table role
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_Role`;
 
@@ -234,8 +234,8 @@ CREATE TABLE `P_0_Role` (
 
 
 
-# Dump of table rolepermission
-# ------------------------------------------------------------
+-- Dump of table rolepermission
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_RolePermission`;
 
@@ -257,8 +257,8 @@ CREATE TABLE `P_0_RolePermission` (
 
 
 
-# Dump of table serverconfig
-# ------------------------------------------------------------
+-- Dump of table serverconfig
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_ServerConfig`;
 
@@ -280,8 +280,8 @@ CREATE TABLE `P_0_ServerConfig` (
 
 
 
-# Dump of table userrole
-# ------------------------------------------------------------
+-- Dump of table userrole
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_UserRole`;
 
@@ -301,8 +301,8 @@ CREATE TABLE `P_0_UserRole` (
   KEY `IX_RoleId` (`RoleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户和role的绑定表';
 
-# Dump of table Users
-# ------------------------------------------------------------
+-- Dump of table Users
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_Users`;
 
@@ -318,8 +318,8 @@ CREATE TABLE `P_0_Users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 
-# Dump of table Authorities
-# ------------------------------------------------------------
+-- Dump of table Authorities
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_Authorities`;
 
@@ -331,8 +331,8 @@ CREATE TABLE `P_0_Authorities` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- spring session (https://github.com/spring-projects/spring-session/blob/faee8f1bdb8822a5653a81eba838dddf224d92d6/spring-session-jdbc/src/main/resources/org/springframework/session/jdbc/schema-mysql.sql)
-# Dump of table SPRING_SESSION
-# ------------------------------------------------------------
+-- Dump of table SPRING_SESSION
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_SPRING_SESSION`;
 
@@ -350,8 +350,8 @@ CREATE TABLE `P_0_SPRING_SESSION` (
   KEY `SPRING_SESSION_IX3` (`PRINCIPAL_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
-# Dump of table SPRING_SESSION_ATTRIBUTES
-# ------------------------------------------------------------
+-- Dump of table SPRING_SESSION_ATTRIBUTES
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_SPRING_SESSION_ATTRIBUTES`;
 
@@ -363,8 +363,8 @@ CREATE TABLE `P_0_SPRING_SESSION_ATTRIBUTES` (
   CONSTRAINT `SPRING_SESSION_ATTRIBUTES_FK` FOREIGN KEY (`SESSION_PRIMARY_ID`) REFERENCES `P_0_SPRING_SESSION` (`PRIMARY_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
-# Dump of table AuditLog
-# ------------------------------------------------------------
+-- Dump of table AuditLog
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_AuditLog`;
 
@@ -391,8 +391,8 @@ CREATE TABLE `P_0_AuditLog` (
   KEY `IX_Operator` (`Operator`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='审计日志表';
 
-# Dump of table AuditLogDataInfluence
-# ------------------------------------------------------------
+-- Dump of table AuditLogDataInfluence
+-- ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_AuditLogDataInfluence`;
 
@@ -416,8 +416,8 @@ CREATE TABLE `P_0_AuditLogDataInfluence` (
   KEY `IX_EntityId` (`InfluenceEntityId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='审计日志数据变动表';
 
-# Config
-# ------------------------------------------------------------
+-- Config
+-- ------------------------------------------------------------
 INSERT INTO `ServerConfig` (`Key`, `Value`, `Comment`)
 VALUES
     ('apollo.portal.envs', 'dev', '可支持的环境列表'),
