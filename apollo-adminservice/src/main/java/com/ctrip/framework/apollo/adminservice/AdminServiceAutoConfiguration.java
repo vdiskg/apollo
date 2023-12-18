@@ -21,10 +21,6 @@ import com.ctrip.framework.apollo.biz.config.BizConfig;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
 public class AdminServiceAutoConfiguration {
@@ -48,20 +44,5 @@ public class AdminServiceAutoConfiguration {
     filterRegistrationBean.addUrlPatterns("/releases/*");
 
     return filterRegistrationBean;
-  }
-
-  /**
-   * for apollo-assembly
-   */
-  @Order(99)
-  @Profile("assembly")
-  @Configuration
-  static class AdminServiceSecurityConfigurer extends WebSecurityConfigurerAdapter {
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.csrf().disable();
-      http.httpBasic();
-    }
   }
 }
