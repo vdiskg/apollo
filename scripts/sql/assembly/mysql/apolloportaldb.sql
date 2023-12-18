@@ -330,52 +330,41 @@ CREATE TABLE `P_0_Authorities` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
-# Config
-# ------------------------------------------------------------
-INSERT INTO `P_0_ServerConfig` (`Key`, `Value`, `Comment`)
-VALUES
-    ('apollo.portal.envs', 'dev', '可支持的环境列表'),
-    ('organizations', '[{\"orgId\":\"TEST1\",\"orgName\":\"样例部门1\"},{\"orgId\":\"TEST2\",\"orgName\":\"样例部门2\"}]', '部门列表'),
-    ('superAdmin', 'apollo', 'Portal超级管理员'),
-    ('api.readTimeout', '10000', 'http接口read timeout'),
-    ('consumer.token.salt', 'someSalt', 'consumer token salt'),
-    ('admin.createPrivateNamespace.switch', 'true', '是否允许项目管理员创建私有namespace'),
-    ('configView.memberOnly.envs', 'pro', '只对项目成员显示配置信息的环境列表，多个env以英文逗号分隔'),
-    ('apollo.portal.meta.servers', '{}', '各环境Meta Service列表');
-
-
-INSERT INTO `P_0_Users` (`Username`, `Password`, `UserDisplayName`, `Email`, `Enabled`)
-VALUES
-	('apollo', '$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo', 'apollo@acme.com', 1);
-
-INSERT INTO `P_0_Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
-
 -- spring session (https://github.com/spring-projects/spring-session/blob/faee8f1bdb8822a5653a81eba838dddf224d92d6/spring-session-jdbc/src/main/resources/org/springframework/session/jdbc/schema-mysql.sql)
-CREATE TABLE `P_0_SPRING_SESSION` (
-	PRIMARY_ID CHAR(36) NOT NULL,
-	SESSION_ID CHAR(36) NOT NULL,
-	CREATION_TIME BIGINT NOT NULL,
-	LAST_ACCESS_TIME BIGINT NOT NULL,
-	MAX_INACTIVE_INTERVAL INT NOT NULL,
-	EXPIRY_TIME BIGINT NOT NULL,
-	PRINCIPAL_NAME VARCHAR(100),
-	CONSTRAINT SPRING_SESSION_PK PRIMARY KEY (PRIMARY_ID)
-) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
+# Dump of table SPRING_SESSION
+# ------------------------------------------------------------
 
-CREATE UNIQUE INDEX SPRING_SESSION_IX1 ON `P_0_SPRING_SESSION` (SESSION_ID);
-CREATE INDEX SPRING_SESSION_IX2 ON `P_0_SPRING_SESSION` (EXPIRY_TIME);
-CREATE INDEX SPRING_SESSION_IX3 ON `P_0_SPRING_SESSION` (PRINCIPAL_NAME);
+DROP TABLE IF EXISTS `P_0_SPRING_SESSION`;
+
+CREATE TABLE `P_0_SPRING_SESSION` (
+  `PRIMARY_ID` char(36) NOT NULL,
+  `SESSION_ID` char(36) NOT NULL,
+  `CREATION_TIME` bigint NOT NULL,
+  `LAST_ACCESS_TIME` bigint NOT NULL,
+  `MAX_INACTIVE_INTERVAL` int NOT NULL,
+  `EXPIRY_TIME` bigint NOT NULL,
+  `PRINCIPAL_NAME` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`PRIMARY_ID`),
+  UNIQUE KEY `SPRING_SESSION_IX1` (`SESSION_ID`),
+  KEY `SPRING_SESSION_IX2` (`EXPIRY_TIME`),
+  KEY `SPRING_SESSION_IX3` (`PRINCIPAL_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+
+# Dump of table SPRING_SESSION_ATTRIBUTES
+# ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_SPRING_SESSION_ATTRIBUTES`;
-CREATE TABLE `P_0_SPRING_SESSION_ATTRIBUTES` (
-	SESSION_PRIMARY_ID CHAR(36) NOT NULL,
-	ATTRIBUTE_NAME VARCHAR(200) NOT NULL,
-	ATTRIBUTE_BYTES BLOB NOT NULL,
-	CONSTRAINT SPRING_SESSION_ATTRIBUTES_PK PRIMARY KEY (SESSION_PRIMARY_ID, ATTRIBUTE_NAME),
-	CONSTRAINT SPRING_SESSION_ATTRIBUTES_FK FOREIGN KEY (SESSION_PRIMARY_ID) REFERENCES `P_0_SPRING_SESSION`(PRIMARY_ID) ON DELETE CASCADE
-) ENGINE=InnoDB ROW_FORMAT=DYNAMIC;
 
+CREATE TABLE `P_0_SPRING_SESSION_ATTRIBUTES` (
+  `SESSION_PRIMARY_ID` char(36) NOT NULL,
+  `ATTRIBUTE_NAME` varchar(200) NOT NULL,
+  `ATTRIBUTE_BYTES` blob NOT NULL,
+  PRIMARY KEY (`SESSION_PRIMARY_ID`,`ATTRIBUTE_NAME`),
+  CONSTRAINT `SPRING_SESSION_ATTRIBUTES_FK` FOREIGN KEY (`SESSION_PRIMARY_ID`) REFERENCES `P_0_SPRING_SESSION` (`PRIMARY_ID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+
+# Dump of table AuditLog
+# ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_AuditLog`;
 
@@ -402,6 +391,8 @@ CREATE TABLE `P_0_AuditLog` (
   KEY `IX_Operator` (`Operator`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='审计日志表';
 
+# Dump of table AuditLogDataInfluence
+# ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `P_0_AuditLogDataInfluence`;
 
@@ -425,6 +416,25 @@ CREATE TABLE `P_0_AuditLogDataInfluence` (
   KEY `IX_EntityId` (`InfluenceEntityId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='审计日志数据变动表';
 
+# Config
+# ------------------------------------------------------------
+INSERT INTO `ServerConfig` (`Key`, `Value`, `Comment`)
+VALUES
+    ('apollo.portal.envs', 'dev', '可支持的环境列表'),
+    ('organizations', '[{\"orgId\":\"TEST1\",\"orgName\":\"样例部门1\"},{\"orgId\":\"TEST2\",\"orgName\":\"样例部门2\"}]', '部门列表'),
+    ('superAdmin', 'apollo', 'Portal超级管理员'),
+    ('api.readTimeout', '10000', 'http接口read timeout'),
+    ('consumer.token.salt', 'someSalt', 'consumer token salt'),
+    ('admin.createPrivateNamespace.switch', 'true', '是否允许项目管理员创建私有namespace'),
+    ('configView.memberOnly.envs', 'pro', '只对项目成员显示配置信息的环境列表，多个env以英文逗号分隔'),
+    ('apollo.portal.meta.servers', '{}', '各环境Meta Service列表');
+
+
+INSERT INTO `Users` (`Username`, `Password`, `UserDisplayName`, `Email`, `Enabled`)
+VALUES
+	('apollo', '$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo', 'apollo@acme.com', 1);
+
+INSERT INTO `Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
