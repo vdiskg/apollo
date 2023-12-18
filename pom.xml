@@ -95,6 +95,7 @@
 	</properties>
 
 	<modules>
+		<module>apollo-build-maven-extensions</module>
 		<module>apollo-buildtools</module>
 		<module>apollo-common</module>
 		<module>apollo-biz</module>

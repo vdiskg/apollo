@@ -21,14 +21,14 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+-- Create Database
+-- ------------------------------------------------------------
 CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common.jpa.H2Function.unixTimestamp";
 
 
 
-
-
-
-
+-- Dump of table app
+-- ------------------------------------------------------------
 
 
 
@@ -54,13 +54,13 @@ CREATE TABLE `C_0_App` (
 
 
 
-
-
+-- Dump of table appnamespace
+-- ------------------------------------------------------------
 
 
 
 CREATE TABLE `C_0_AppNamespace` (
-  `Id` int(10) NOT NULL AUTO_INCREMENT ,
+  `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `Name` varchar(32) NOT NULL DEFAULT '' ,
   `AppId` varchar(64) NOT NULL DEFAULT '' ,
   `Format` varchar(32) NOT NULL DEFAULT 'properties' ,
@@ -80,8 +80,8 @@ CREATE TABLE `C_0_AppNamespace` (
 
 
 
-
-
+-- Dump of table audit
+-- ------------------------------------------------------------
 
 
 
@@ -103,8 +103,8 @@ CREATE TABLE `C_0_Audit` (
 
 
 
-
-
+-- Dump of table cluster
+-- ------------------------------------------------------------
 
 
 
@@ -127,8 +127,8 @@ CREATE TABLE `C_0_Cluster` (
 
 
 
-
-
+-- Dump of table commit
+-- ------------------------------------------------------------
 
 
 
@@ -152,8 +152,8 @@ CREATE TABLE `C_0_Commit` (
   KEY (`NamespaceName`)
 ) ;
 
-
-
+-- Dump of table grayreleaserule
+-- ------------------------------------------------------------
 
 
 
@@ -178,8 +178,8 @@ CREATE TABLE `C_0_GrayReleaseRule` (
 ) ;
 
 
-
-
+-- Dump of table instance
+-- ------------------------------------------------------------
 
 
 
@@ -199,8 +199,8 @@ CREATE TABLE `C_0_Instance` (
 
 
 
-
-
+-- Dump of table instanceconfig
+-- ------------------------------------------------------------
 
 
 
@@ -223,8 +223,8 @@ CREATE TABLE `C_0_InstanceConfig` (
 
 
 
-
-
+-- Dump of table item
+-- ------------------------------------------------------------
 
 
 
@@ -249,8 +249,8 @@ CREATE TABLE `C_0_Item` (
 
 
 
-
-
+-- Dump of table namespace
+-- ------------------------------------------------------------
 
 
 
@@ -273,8 +273,8 @@ CREATE TABLE `C_0_Namespace` (
 
 
 
-
-
+-- Dump of table namespacelock
+-- ------------------------------------------------------------
 
 
 
@@ -294,8 +294,8 @@ CREATE TABLE `C_0_NamespaceLock` (
 
 
 
-
-
+-- Dump of table release
+-- ------------------------------------------------------------
 
 
 
@@ -322,8 +322,8 @@ CREATE TABLE `C_0_Release` (
 ) ;
 
 
-
-
+-- Dump of table releasehistory
+-- ------------------------------------------------------------
 
 
 
@@ -351,8 +351,8 @@ CREATE TABLE `C_0_ReleaseHistory` (
 ) ;
 
 
-
-
+-- Dump of table releasemessage
+-- ------------------------------------------------------------
 
 
 
@@ -367,8 +367,8 @@ CREATE TABLE `C_0_ReleaseMessage` (
 
 
 
-
-
+-- Dump of table serverconfig
+-- ------------------------------------------------------------
 
 
 
@@ -389,8 +389,8 @@ CREATE TABLE `C_0_ServerConfig` (
   KEY (`DataChange_LastTime`)
 ) ;
 
-
-
+-- Dump of table accesskey
+-- ------------------------------------------------------------
 
 
 
@@ -411,8 +411,8 @@ CREATE TABLE `C_0_AccessKey` (
 ) ;
 
 
-
-
+-- Dump of table serviceregistry
+-- ------------------------------------------------------------
 
 
 
@@ -429,17 +429,8 @@ CREATE TABLE `C_0_ServiceRegistry` (
   INDEX `IX_DataChange_LastTime` (`DataChange_LastTime`)
 ) ;
 
-
-
-
-INSERT INTO `C_0_ServerConfig` (`Key`, `Cluster`, `Value`, `Comment`)
-VALUES
-    ('eureka.service.url', 'default', 'http://localhost:8080/eureka/', 'Eureka服务Url，多个service以英文逗号分隔'),
-    ('namespace.lock.switch', 'default', 'false', '一次发布只能有一个人修改开关'),
-    ('item.key.length.limit', 'default', '128', 'item key 最大长度限制'),
-    ('item.value.length.limit', 'default', '20000', 'item value最大长度限制'),
-    ('config-service.cache.enabled', 'default', 'false', 'ConfigService是否开启缓存，开启后能提高性能，但是会增大内存消耗！');
-
+-- Dump of table AuditLog
+-- ------------------------------------------------------------
 
 
 
@@ -466,6 +457,8 @@ CREATE TABLE `C_0_AuditLog` (
   KEY (`Operator`)
 ) ;
 
+-- Dump of table AuditLogDataInfluence
+-- ------------------------------------------------------------
 
 
 
@@ -489,6 +482,15 @@ CREATE TABLE `C_0_AuditLogDataInfluence` (
   KEY (`InfluenceEntityId`)
 ) ;
 
+-- Config
+-- ------------------------------------------------------------
+INSERT INTO `ServerConfig` (`Key`, `Cluster`, `Value`, `Comment`)
+VALUES
+    ('eureka.service.url', 'default', 'http://localhost:8080/eureka/', 'Eureka服务Url，多个service以英文逗号分隔'),
+    ('namespace.lock.switch', 'default', 'false', '一次发布只能有一个人修改开关'),
+    ('item.key.length.limit', 'default', '128', 'item key 最大长度限制'),
+    ('item.value.length.limit', 'default', '20000', 'item value最大长度限制'),
+    ('config-service.cache.enabled', 'default', 'false', 'ConfigService是否开启缓存，开启后能提高性能，但是会增大内存消耗！');
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
