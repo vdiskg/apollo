@@ -47,6 +47,34 @@
 	<build>
 		<plugins>
 			<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-resources-plugin</artifactId>
+			<version>3.2.0</version>
+			<executions>
+				<execution>
+					<id>copy-resources</id>
+					<phase>validate</phase>
+					<goals>
+						<goal>copy-resources</goal>
+					</goals>
+					<configuration>
+						<outputDirectory>${project.build.directory}/classes/META-INF/sql/assembly</outputDirectory>
+						<resources>
+							<resource>
+								<directory>${project.parent.basedir}/scripts/sql/assembly</directory>
+								<includes>
+									<include>h2/apolloconfigdb.sql</include>
+									<include>h2/apolloportaldb.sql</include>
+									<include>mysql/apolloconfigdb.sql</include>
+									<include>mysql/apolloportaldb.sql</include>
+								</includes>
+							</resource>
+						</resources>
+					</configuration>
+				</execution>
+			</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>

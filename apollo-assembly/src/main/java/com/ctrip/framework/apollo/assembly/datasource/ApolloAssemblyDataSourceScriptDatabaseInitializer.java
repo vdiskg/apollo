@@ -16,6 +16,11 @@
  */
 package com.ctrip.framework.apollo.assembly.datasource;
 
+import com.ctrip.framework.apollo.assembly.ApolloApplication;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -68,11 +73,60 @@ public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
       return null;
     }
 
+    Collection<String> convertedLocations = convertRepositoryLocations(locations);
+    if (CollectionUtils.isEmpty(convertedLocations)) {
+      return null;
+    }
+
     String platform = properties.getPlatform();
     if (StringUtils.hasText(platform) && !"all".equals(platform)) {
-      return platformResolver.resolveAll(platform, locations.toArray(new String[0]));
+      return platformResolver.resolveAll(platform, convertedLocations.toArray(new String[0]));
     }
-    return platformResolver.resolveAll(dataSource, locations.toArray(new String[0]));
+    return platformResolver.resolveAll(dataSource, convertedLocations.toArray(new String[0]));
+  }
+
+  private static Collection<String> convertRepositoryLocations(Collection<String> locations) {
+    if (CollectionUtils.isEmpty(locations)) {
+      return null;
+    }
+    String repositoryDir = findRepositoryDirectory();
+    List<String> convertedLocations = new ArrayList<>(locations.size());
+    for (String location : locations) {
+      String convertedLocation = convertRepositoryLocation(location, repositoryDir);
+      if (StringUtils.hasText(convertedLocation)) {
+        convertedLocations.add(convertedLocation);
+      }
+    }
+    return convertedLocations;
+  }
+
+  private static String findRepositoryDirectory() {
+    CodeSource codeSource = ApolloApplication.class.getProtectionDomain().getCodeSource();
+    URL location = codeSource != null ? codeSource.getLocation() : null;
+    if (location == null) {
+      return null;
+    }
+    if ("jar".equals(location.getProtocol())) {
+      // running with jar
+      return "classpath:META-INF/sql";
+    }
+    if ("file".equals(location.getProtocol())) {
+      // running with ide
+      String locationText = location.toString();
+      return locationText.replace("/apollo-assembly/target/classes/", "/scripts/sql");
+    }
+    return null;
+  }
+
+  private static String convertRepositoryLocation(String location, String repositoryDir) {
+    if (!StringUtils.hasText(location) || !location.contains("@@repository@@")) {
+      return location;
+    }
+    if (!StringUtils.hasText(repositoryDir)) {
+      // repository dir not found
+      return null;
+    }
+    return location.replace("@@repository@@", repositoryDir);
   }
 
   private static List<String> scriptLocations(List<String> locations, String fallback,
