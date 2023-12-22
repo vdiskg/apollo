@@ -58,6 +58,9 @@ public class ApolloAssemblySqlConverter {
       String assemblyMysqlDir, String repositoryDir) {
     String targetDir = repositoryDir + "/scripts/sql";
     for (String filePath : assemblyMysqlSqlList) {
+      if (!filePath.contains(assemblyMysqlDir)) {
+        throw new IllegalArgumentException("illegal file path: " + filePath);
+      }
       String targetFilePath = filePath.replace(assemblyMysqlDir, targetDir);
       String databaseName;
       if (filePath.contains("apolloconfigdb")) {
@@ -67,6 +70,9 @@ public class ApolloAssemblySqlConverter {
       } else {
         throw new IllegalArgumentException("unknown database name: " + filePath);
       }
+
+      ensureDirectories(targetFilePath);
+
       try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(filePath),
           StandardCharsets.UTF_8);
           BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(targetFilePath),
@@ -85,11 +91,27 @@ public class ApolloAssemblySqlConverter {
     }
   }
 
+  private static void ensureDirectories(String targetFilePath) {
+    Path path = Paths.get(targetFilePath);
+    Path dirPath = path.getParent();
+    try {
+      Files.createDirectories(dirPath);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
   private static void convertAssemblyH2List(List<String> assemblyMysqlSqlList,
       String assemblyMysqlDir, String repositoryDir) {
     String targetDir = repositoryDir + "/scripts/sql/assembly/h2";
     for (String filePath : assemblyMysqlSqlList) {
+      if (!filePath.contains(assemblyMysqlDir)) {
+        throw new IllegalArgumentException("illegal file path: " + filePath);
+      }
       String targetFilePath = filePath.replace(assemblyMysqlDir, targetDir);
+
+      ensureDirectories(targetFilePath);
+
       try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(filePath),
           StandardCharsets.UTF_8);
           BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(targetFilePath),
@@ -102,7 +124,7 @@ public class ApolloAssemblySqlConverter {
           bufferedWriter.write('\n');
         }
       } catch (IOException e) {
-        throw new RuntimeException(e);
+        throw new UncheckedIOException(e);
       }
     }
   }
@@ -184,18 +206,32 @@ public class ApolloAssemblySqlConverter {
     if (!Files.exists(dir)) {
       return Collections.emptyList();
     }
-    List<String> assemblyMysqlDeltaSqlList = new ArrayList<>();
+    List<Path> deltaDirList = new ArrayList<>();
     try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir)) {
       for (Path path : ds) {
-        String fileName = path.toString();
-        if (fileName.endsWith(".sql")) {
-          assemblyMysqlDeltaSqlList.add(fileName);
+        if (Files.isDirectory(path)) {
+          deltaDirList.add(path);
         }
       }
     } catch (IOException e) {
       throw new UncheckedIOException("failed to open assemblyMysqlDir" + e.getLocalizedMessage(),
           e);
     }
+    List<String> assemblyMysqlDeltaSqlList = new ArrayList<>();
+    for (Path deltaDir : deltaDirList) {
+      try (DirectoryStream<Path> ds = Files.newDirectoryStream(deltaDir)) {
+        for (Path path : ds) {
+          String fileName = path.toString();
+          if (fileName.endsWith(".sql")) {
+            assemblyMysqlDeltaSqlList.add(fileName.replace("\\", "/"));
+          }
+        }
+      } catch (IOException e) {
+        throw new UncheckedIOException("failed to open assemblyMysqlDir" + e.getLocalizedMessage(),
+            e);
+      }
+    }
+
     return assemblyMysqlDeltaSqlList;
   }
 }

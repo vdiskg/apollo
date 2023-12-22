@@ -15,24 +15,24 @@
 --
 -- delta schema to upgrade apollo portal db from v2.1.0 to v2.2.0
 
-Use ApolloPortalDB;
+Use ApolloAssemblyDB;
 
-ALTER TABLE `App`
+ALTER TABLE `P_0_App`
     MODIFY COLUMN `AppId` VARCHAR(64) NOT NULL DEFAULT 'default' COMMENT 'AppID';
 
-ALTER TABLE `Consumer`
+ALTER TABLE `P_0_Consumer`
     MODIFY COLUMN `AppId` VARCHAR(64) NOT NULL DEFAULT 'default' COMMENT 'AppID';
 
-ALTER TABLE `Favorite`
+ALTER TABLE `P_0_Favorite`
     MODIFY COLUMN `AppId` VARCHAR(64) NOT NULL DEFAULT 'default' COMMENT 'AppID';
 
-ALTER TABLE `Favorite`
+ALTER TABLE `P_0_Favorite`
     DROP INDEX `AppId`,
     ADD INDEX `AppId` (`AppId`);
 
-DROP TABLE IF EXISTS `AuditLog`;
+DROP TABLE IF EXISTS `P_0_AuditLog`;
 
-CREATE TABLE `AuditLog` (
+CREATE TABLE `P_0_AuditLog` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `TraceId` varchar(32) NOT NULL DEFAULT '' COMMENT '链路全局唯一ID',
   `SpanId` varchar(32) NOT NULL DEFAULT '' COMMENT '跨度ID',
@@ -56,9 +56,9 @@ CREATE TABLE `AuditLog` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='审计日志表';
 
 
-DROP TABLE IF EXISTS `AuditLogDataInfluence`;
+DROP TABLE IF EXISTS `P_0_AuditLogDataInfluence`;
 
-CREATE TABLE `AuditLogDataInfluence` (
+CREATE TABLE `P_0_AuditLogDataInfluence` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `SpanId` char(32) NOT NULL DEFAULT '' COMMENT '跨度ID',
   `InfluenceEntityId` varchar(50) NOT NULL DEFAULT '0' COMMENT '记录ID',
