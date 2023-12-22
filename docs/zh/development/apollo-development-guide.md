@@ -6,7 +6,7 @@
 Apollo本地开发需要以下组件：
 
 1. Java: 1.8+
-2. MySQL: 5.6.5+
+2. MySQL: 5.6.5+ (如果使用 H2 内存数据库/H2 文件数据库，则无需 MySQL)
 3. IDE: 没有特殊要求
 
 其中MySQL需要创建Apollo数据库并导入基础数据。
@@ -19,12 +19,12 @@ Apollo本地开发需要以下组件：
 具体请参考[Apollo配置中心设计](zh/design/apollo-design)
 
 # 二、本地启动
-## 2.1 Apollo Config Service和Apollo Admin Service
-我们在本地开发时，一般会在IDE中同时启动`apollo-configservice`和`apollo-adminservice`。
+## 2.1 Apollo Assembly
+我们在本地开发时，一般会在IDE中启动`apollo-assembly`。
 
-下面以Intellij Community 2016.2版本为例来说明如何在本地启动`apollo-configservice`和`apollo-adminservice`。
+下面以Intellij Community 2016.2版本为例来说明如何在本地启动`apollo-assembly`。
 
-![ConfigAdminApplication-Overview](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ConfigAdminApplication-Overview.png)
+![ApolloApplication-Overview](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ApolloApplication-Overview.png)
 
 ### 2.1.1 新建运行配置
 ![NewConfiguration-Application](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/NewConfiguration-Application.png)
@@ -32,21 +32,33 @@ Apollo本地开发需要以下组件：
 ### 2.1.2 Main class配置
 `com.ctrip.framework.apollo.assembly.ApolloApplication`
 
-> 注：如果希望独立启动`apollo-configservice`和`apollo-adminservice`，可以把Main Class分别换成
-> `com.ctrip.framework.apollo.configservice.ConfigServiceApplication`和
+> 注：如果希望独立启动`apollo-portal`、`apollo-configservice`和`apollo-adminservice`，可以把Main Class分别换成
+> `com.ctrip.framework.apollo.portal.PortalApplication`
+> `com.ctrip.framework.apollo.configservice.ConfigServiceApplication`
 > `com.ctrip.framework.apollo.adminservice.AdminServiceApplication`
 
 ### 2.1.3 VM options配置
-![ConfigAdminApplication-VM-Options](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ConfigAdminApplication-VM-Options.png)
+![ApolloApplication-VM-Options](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ApolloApplication-VM-Options.png)
+```
+-Dapollo_profile=github,auth
 
-	-Dapollo_profile=github
-	-Dspring.datasource.url=jdbc:mysql://localhost:3306/ApolloConfigDB?characterEncoding=utf8
-	-Dspring.datasource.username=root
-	-Dspring.datasource.password=
-
->注1：spring.datasource相关配置替换成你自己的数据库连接信息，注意数据库是`ApolloConfigDB`
+```
+>注1：这里指定了apollo_profile是`github`和`auth`，其中`github`是Apollo必须的一个profile，用于数据库的配置，`auth`是从0.9.0新增的，用来支持使用apollo提供的Spring Security简单认证，更多信息可以参考[Portal-实现用户登录功能](zh/development/portal-how-to-implement-user-login-function)
 >
->注2：程序默认日志输出为/opt/logs/100003171/apollo-assembly.log，如果需要修改日志文件路径，可以增加`logging.file.name`参数，如下：
+>注2：如果需要使用 mysql 数据库，添加spring.datasource相关配置，数据库连接信息替换成你自己的，注意数据库是`ApolloAssemblyDB`
+![ApolloApplication-Mysql-VM-Options](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ApolloApplication-Mysql-VM-Options.png)
+
+```
+-Dspring.datasource.url=jdbc:mysql://localhost:3306/ApolloAssemblyDB?characterEncoding=utf8
+-Dspring.datasource.username=root
+-Dspring.datasource.password=
+
+```
+mysql 数据库初始化脚本见 本项目 scripts/sql/assembly/mysql 目录下的文件
+[apolloconfigdb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/assembly/mysql/apolloconfigdb.sql)
+[apolloportaldb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/assembly/mysql/apolloportaldb.sql)
+
+>注3：程序默认日志输出为/opt/logs/100003171/apollo-assembly.log，如果需要修改日志文件路径，可以增加`logging.file.name`参数，如下：
 >
 >-Dlogging.file.name=/your-path/apollo-assembly.log
 
