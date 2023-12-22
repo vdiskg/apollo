@@ -484,7 +484,7 @@ CREATE TABLE `C_0_AuditLogDataInfluence` (
 
 -- Config
 -- ------------------------------------------------------------
-INSERT INTO `ServerConfig` (`Key`, `Cluster`, `Value`, `Comment`)
+INSERT INTO `C_0_ServerConfig` (`Key`, `Cluster`, `Value`, `Comment`)
 VALUES
     ('eureka.service.url', 'default', 'http://localhost:8080/eureka/', 'Eureka服务Url，多个service以英文逗号分隔'),
     ('namespace.lock.switch', 'default', 'false', '一次发布只能有一个人修改开关'),

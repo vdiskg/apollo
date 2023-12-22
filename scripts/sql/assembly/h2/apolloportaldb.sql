@@ -418,7 +418,7 @@ CREATE TABLE `P_0_AuditLogDataInfluence` (
 
 -- Config
 -- ------------------------------------------------------------
-INSERT INTO `ServerConfig` (`Key`, `Value`, `Comment`)
+INSERT INTO `P_0_ServerConfig` (`Key`, `Value`, `Comment`)
 VALUES
     ('apollo.portal.envs', 'dev', '可支持的环境列表'),
     ('organizations', '[{\"orgId\":\"TEST1\",\"orgName\":\"样例部门1\"},{\"orgId\":\"TEST2\",\"orgName\":\"样例部门2\"}]', '部门列表'),
@@ -430,11 +430,11 @@ VALUES
     ('apollo.portal.meta.servers', '{}', '各环境Meta Service列表');
 
 
-INSERT INTO `Users` (`Username`, `Password`, `UserDisplayName`, `Email`, `Enabled`)
+INSERT INTO `P_0_Users` (`Username`, `Password`, `UserDisplayName`, `Email`, `Enabled`)
 VALUES
 	('apollo', '$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo', 'apollo@acme.com', 1);
 
-INSERT INTO `Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
+INSERT INTO `P_0_Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
