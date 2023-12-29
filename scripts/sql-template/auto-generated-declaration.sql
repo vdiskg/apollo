@@ -13,24 +13,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--- delta schema to upgrade apollo config db from v2.2.0 to v2.3.0
-
+-- @@template-start@@
 -- ===============================================================================
 -- ==                                                                           ==
 -- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
 -- ==                           DO NOT EDIT !!!                                 ==
 -- ==                                                                           ==
 -- ===============================================================================
-
--- H2 Function
--- ------------------------------------------------------------
-CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common.jpa.H2Function.unixTimestamp";
-
-
-
--- ===============================================================================
--- ==                                                                           ==
--- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
--- ==                           DO NOT EDIT !!!                                 ==
--- ==                                                                           ==
--- ===============================================================================
+-- @@template-end@@

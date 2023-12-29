@@ -21,6 +21,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.CodeSource;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,6 +32,11 @@ import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperti
 import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver;
 import org.springframework.boot.sql.init.DatabaseInitializationSettings;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.MetaDataAccessException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -138,5 +145,19 @@ public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
     fallbackLocations.add("optional:classpath*:" + fallback + "-" + platform + ".sql");
     fallbackLocations.add("optional:classpath*:" + fallback + ".sql");
     return fallbackLocations;
+  }
+
+  @Override
+  protected void customize(ResourceDatabasePopulator populator) {
+    DataSource dataSource = this.getDataSource();
+    DatabaseDriver databaseDriver = DatabaseDriver.fromDataSource(dataSource);
+    if (DatabaseDriver.MYSQL.equals(databaseDriver)) {
+      JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+      String database = jdbcTemplate.queryForObject("SELECT DATABASE()", String.class);
+      if (database != null) {
+        populator.setScripts();
+      }
+      System.out.println(database);
+    }
   }
 }

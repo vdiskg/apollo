@@ -21,10 +21,16 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Create Database
+-- ===============================================================================
+-- ==                                                                           ==
+-- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
+-- ==                           DO NOT EDIT !!!                                 ==
+-- ==                                                                           ==
+-- ===============================================================================
+
+-- H2 Function
 -- ------------------------------------------------------------
 CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common.jpa.H2Function.unixTimestamp";
-
 
 
 -- Dump of table app
@@ -435,6 +441,13 @@ VALUES
 	('apollo', '$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo', 'apollo@acme.com', 1);
 
 INSERT INTO `P_0_Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
+
+-- ===============================================================================
+-- ==                                                                           ==
+-- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
+-- ==                           DO NOT EDIT !!!                                 ==
+-- ==                                                                           ==
+-- ===============================================================================
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

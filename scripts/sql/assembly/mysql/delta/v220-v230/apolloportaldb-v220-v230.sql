@@ -15,4 +15,20 @@
 --
 -- delta schema to upgrade apollo portal db from v2.2.0 to v2.3.0
 
+-- ===============================================================================
+-- ==                                                                           ==
+-- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
+-- ==                           DO NOT EDIT !!!                                 ==
+-- ==                                                                           ==
+-- ===============================================================================
+
+-- Use Database
 Use ApolloAssemblyDB;
+
+
+-- ===============================================================================
+-- ==                                                                           ==
+-- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
+-- ==                           DO NOT EDIT !!!                                 ==
+-- ==                                                                           ==
+-- ===============================================================================

@@ -54,7 +54,7 @@
 							</execution>
 						</executions>
 						<configuration>
-							<mainClass>com.ctrip.framework.apollo.maven.extensions.ApolloAssemblySqlConverter</mainClass>
+							<mainClass>com.ctrip.framework.apollo.maven.extensions.sql.ApolloSqlConverter</mainClass>
 							<arguments>
 								<argument>${project.basedir}</argument>
 							</arguments>
