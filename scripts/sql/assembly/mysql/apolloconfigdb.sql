@@ -30,6 +30,11 @@
 -- ===============================================================================
 -- 
 -- 
+-- Create Database
+-- ------------------------------------------------------------
+CREATE DATABASE IF NOT EXISTS ApolloAssemblyDB DEFAULT CHARACTER SET = utf8mb4;
+
+Use ApolloAssemblyDB;
 
 -- Dump of table app
 -- ------------------------------------------------------------

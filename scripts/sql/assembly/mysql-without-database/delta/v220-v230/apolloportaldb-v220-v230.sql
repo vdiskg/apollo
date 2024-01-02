@@ -13,7 +13,7 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--- delta schema to upgrade apollo config db from v2.2.0 to v2.3.0
+-- delta schema to upgrade apollo portal db from v2.2.0 to v2.3.0
 
 -- 
 -- ===============================================================================
@@ -24,8 +24,6 @@
 -- ===============================================================================
 -- 
 -- 
--- Use Database
-Use ApolloAssemblyDB;
 
 
 -- 

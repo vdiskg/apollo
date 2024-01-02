@@ -65,6 +65,9 @@ class ApolloSqlConverterTest {
     // '/scripts/sql/assembly/mysql'
     this.checkAssemblyMysqlList(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
 
+    // '/scripts/sql/assembly/mysql-without-database'
+    this.checkAssemblyMysqlWithoutDatabaseList(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
+
     // '/scripts/sql/assembly/h2'
     this.checkAssemblyH2List(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
   }
@@ -185,6 +188,20 @@ class ApolloSqlConverterTest {
       String checkerParentDir, String repositoryParentDir) {
     String checkerTargetDir = checkerParentDir + "/sql/assembly/mysql";
     String repositoryTargetDir = repositoryParentDir + "/sql/assembly/mysql";
+    for (String srcSql : srcSqlList) {
+      String checkerTargetSql = ApolloSqlConverterUtil.replacePath(srcSql, srcDir,
+          checkerTargetDir);
+      String repositoryTargetSql = ApolloSqlConverterUtil.replacePath(srcSql, srcDir,
+          repositoryTargetDir);
+
+      this.doCheck(checkerTargetSql, repositoryTargetSql);
+    }
+  }
+
+  private void checkAssemblyMysqlWithoutDatabaseList(List<String> srcSqlList, String srcDir,
+      String checkerParentDir, String repositoryParentDir) {
+    String checkerTargetDir = checkerParentDir + "/sql/assembly/mysql-without-database";
+    String repositoryTargetDir = repositoryParentDir + "/sql/assembly/mysql-without-database";
     for (String srcSql : srcSqlList) {
       String checkerTargetSql = ApolloSqlConverterUtil.replacePath(srcSql, srcDir,
           checkerTargetDir);
