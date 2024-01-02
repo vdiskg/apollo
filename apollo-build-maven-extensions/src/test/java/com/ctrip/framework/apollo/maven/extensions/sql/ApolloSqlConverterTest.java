@@ -16,20 +16,12 @@
  */
 package com.ctrip.framework.apollo.maven.extensions.sql;
 
-import freemarker.template.TemplateException;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.UncheckedIOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -65,8 +57,9 @@ class ApolloSqlConverterTest {
     // '/scripts/sql/assembly/mysql'
     this.checkAssemblyMysqlList(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
 
-    // '/scripts/sql/assembly/mysql-without-database'
-    this.checkAssemblyMysqlWithoutDatabaseList(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
+    // '/scripts/sql/assembly/mysql-database-not-specified'
+    this.checkAssemblyMysqlDatabaseNotSpecifiedList(srcSqlList, srcDir, checkerParentDir,
+        repositoryParentDir);
 
     // '/scripts/sql/assembly/h2'
     this.checkAssemblyH2List(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
@@ -198,10 +191,10 @@ class ApolloSqlConverterTest {
     }
   }
 
-  private void checkAssemblyMysqlWithoutDatabaseList(List<String> srcSqlList, String srcDir,
+  private void checkAssemblyMysqlDatabaseNotSpecifiedList(List<String> srcSqlList, String srcDir,
       String checkerParentDir, String repositoryParentDir) {
-    String checkerTargetDir = checkerParentDir + "/sql/assembly/mysql-without-database";
-    String repositoryTargetDir = repositoryParentDir + "/sql/assembly/mysql-without-database";
+    String checkerTargetDir = checkerParentDir + "/sql/assembly/mysql-database-not-specified";
+    String repositoryTargetDir = repositoryParentDir + "/sql/assembly/mysql-database-not-specified";
     for (String srcSql : srcSqlList) {
       String checkerTargetSql = ApolloSqlConverterUtil.replacePath(srcSql, srcDir,
           checkerTargetDir);

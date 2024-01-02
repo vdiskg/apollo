@@ -29,7 +29,6 @@ import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver;
 import org.springframework.boot.sql.init.DatabaseInitializationSettings;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -108,7 +107,7 @@ public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
       JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
       String database = jdbcTemplate.queryForObject("SELECT DATABASE()", String.class);
       if (database != null) {
-        return "-without-database";
+        return "-database-not-specified";
       }
     }
     return "";
@@ -153,19 +152,5 @@ public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
     fallbackLocations.add("optional:classpath*:" + fallback + "-" + platform + ".sql");
     fallbackLocations.add("optional:classpath*:" + fallback + ".sql");
     return fallbackLocations;
-  }
-
-  @Override
-  protected void customize(ResourceDatabasePopulator populator) {
-    DataSource dataSource = this.getDataSource();
-    DatabaseDriver databaseDriver = DatabaseDriver.fromDataSource(dataSource);
-    if (DatabaseDriver.MYSQL.equals(databaseDriver)) {
-      JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-      String database = jdbcTemplate.queryForObject("SELECT DATABASE()", String.class);
-      if (database != null) {
-        populator.setScripts();
-      }
-      System.out.println(database);
-    }
   }
 }
