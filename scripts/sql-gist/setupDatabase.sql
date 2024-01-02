@@ -13,10 +13,10 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--- @@template-start@@
-
--- H2 Function
+-- @@gist-start@@
+-- Create Database
 -- ------------------------------------------------------------
-CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common.jpa.H2Function.unixTimestamp";
+CREATE DATABASE IF NOT EXISTS ApolloAssemblyDB DEFAULT CHARACTER SET = utf8mb4;
 
--- @@template-end@@
+Use ApolloAssemblyDB;
+-- @@gist-end@@

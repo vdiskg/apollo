@@ -13,7 +13,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--- @@template-start@@
--- Use Database
-Use ApolloAssemblyDB;
--- @@template-end@@
+-- @@gist-start@@
+-- ===============================================================================
+-- ==                                                                           ==
+-- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
+-- ==                           DO NOT EDIT !!!                                 ==
+-- ==                                                                           ==
+-- ===============================================================================
+-- @@gist-end@@

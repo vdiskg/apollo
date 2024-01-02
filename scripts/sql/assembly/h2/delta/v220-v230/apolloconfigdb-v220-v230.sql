@@ -15,19 +15,23 @@
 --
 -- delta schema to upgrade apollo config db from v2.2.0 to v2.3.0
 
+-- 
 -- ===============================================================================
 -- ==                                                                           ==
 -- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
 -- ==                           DO NOT EDIT !!!                                 ==
 -- ==                                                                           ==
 -- ===============================================================================
+-- 
 
 -- H2 Function
 -- ------------------------------------------------------------
 CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common.jpa.H2Function.unixTimestamp";
 
+-- 
 
 
+-- 
 -- ===============================================================================
 -- ==                                                                           ==
 -- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==

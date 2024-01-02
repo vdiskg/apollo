@@ -13,11 +13,10 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--- @@template-start@@
--- ===============================================================================
--- ==                                                                           ==
--- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
--- ==                           DO NOT EDIT !!!                                 ==
--- ==                                                                           ==
--- ===============================================================================
--- @@template-end@@
+-- @@gist-start@@
+
+-- H2 Function
+-- ------------------------------------------------------------
+CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common.jpa.H2Function.unixTimestamp";
+
+-- @@gist-end@@

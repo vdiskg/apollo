@@ -16,35 +16,24 @@
  */
 package com.ctrip.framework.apollo.maven.extensions.sql;
 
+import freemarker.template.Template;
+
 public class SqlTemplate {
 
-  private static final SqlTemplate EMPTY = new SqlTemplate("empty", "@@${empty}@@", "");
+  private final String srcPath;
 
-  private final String name;
+  private final Template template;
 
-  private final String key;
-
-  private final String value;
-
-  public SqlTemplate(String name, String key, String value) {
-    this.name = name;
-    this.key = key;
-    this.value = value;
+  public SqlTemplate(String srcPath, Template template) {
+    this.srcPath = srcPath;
+    this.template = template;
   }
 
-  public static SqlTemplate empty() {
-    return EMPTY;
+  public String getSrcPath() {
+    return this.srcPath;
   }
 
-  public String getName() {
-    return this.name;
-  }
-
-  public String getKey() {
-    return this.key;
-  }
-
-  public String getValue() {
-    return this.value;
+  public Template getTemplate() {
+    return this.template;
   }
 }

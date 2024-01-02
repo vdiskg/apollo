@@ -16,8 +16,10 @@
  */
 package com.ctrip.framework.apollo.maven.extensions.sql;
 
+import freemarker.template.TemplateException;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -40,35 +42,18 @@ import org.junit.jupiter.api.Test;
 class ApolloSqlConverterTest {
 
   @Test
-  void checkSql() throws URISyntaxException {
-    String repositoryDir = this.getRepositoryDir();
-
-    Map<String, SqlTemplate> templates = ApolloSqlConverterUtil.getTemplates(repositoryDir);
+  void checkSql() {
+    String repositoryDir = ApolloSqlConverterUtil.getRepositoryDir();
 
     String srcDir = repositoryDir + "/scripts/sql-src";
     String checkerParentDir = repositoryDir + "/apollo-build-maven-extensions/target/scripts";
     String repositoryParentDir = repositoryDir + "/scripts";
 
     // generate checker sql files
-    List<String> srcSqlList = ApolloSqlConverter.convert(srcDir, checkerParentDir, templates);
+    List<String> srcSqlList = ApolloSqlConverter.convert(checkerParentDir);
 
     // compare checker sql files with repository sql files
     this.checkSqlList(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
-  }
-
-  private String getRepositoryDir() throws URISyntaxException {
-    ProtectionDomain protectionDomain = ApolloSqlConverterTest.class.getProtectionDomain();
-    CodeSource codeSource = protectionDomain.getCodeSource();
-    URL location = codeSource.getLocation();
-    URI uri = location.toURI();
-    Path path = Paths.get(uri);
-    String unixClassPath = path.toString().replace("\\", "/");
-
-    Assertions.assertTrue(
-        unixClassPath.endsWith("/apollo-build-maven-extensions/target/test-classes"));
-
-    return ApolloSqlConverterUtil.replacePath(unixClassPath,
-        "/apollo-build-maven-extensions/target/test-classes", "");
   }
 
   private void checkSqlList(List<String> srcSqlList, String srcDir, String checkerParentDir,

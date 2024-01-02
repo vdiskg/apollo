@@ -19,6 +19,7 @@ package com.ctrip.framework.apollo.maven.extensions.sql;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -28,38 +29,30 @@ import java.util.Map;
 
 public class ApolloAssemblyMysqlConverterUtil {
 
- public static void convertAssemblyMysql(String srcSql, String targetSql,
-     Map<String, SqlTemplate> templates) {
+  public static void convertAssemblyMysql(SqlTemplate sqlTemplate, String targetSql,
+      SqlTemplateContext context) {
 
-  ApolloSqlConverterUtil.ensureDirectories(targetSql);
+    ApolloSqlConverterUtil.ensureDirectories(targetSql);
 
-  try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(srcSql),
-      StandardCharsets.UTF_8);
-      BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(targetSql),
-          StandardCharsets.UTF_8, StandardOpenOption.CREATE,
-          StandardOpenOption.TRUNCATE_EXISTING)) {
-   for (String line = bufferedReader.readLine(); line != null;
-       line = bufferedReader.readLine()) {
-    String convertedLine = convertAssemblyMysqlLine(line, templates);
-    bufferedWriter.write(convertedLine);
-    bufferedWriter.write('\n');
-   }
-  } catch (IOException e) {
-   throw new UncheckedIOException(e);
+    String rawText = ApolloSqlConverterUtil.process(sqlTemplate, context);
+
+    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(rawText));
+        BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(targetSql),
+            StandardCharsets.UTF_8, StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING)) {
+      for (String line = bufferedReader.readLine(); line != null;
+          line = bufferedReader.readLine()) {
+        String convertedLine = convertAssemblyMysqlLine(line);
+        bufferedWriter.write(convertedLine);
+        bufferedWriter.write('\n');
+      }
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
- }
 
- private static String convertAssemblyMysqlLine(String line, Map<String, SqlTemplate> templates) {
-  String convertedLine = line;
-  ConvertResult result = ApolloSqlConverterUtil.convertTemplate(convertedLine,
-      "auto-generated-declaration", templates);
-  convertedLine = result.convertedLine();
-  if (result.matches()) {
-   return convertedLine;
+  private static String convertAssemblyMysqlLine(String line) {
+    String convertedLine = line;
+    return convertedLine;
   }
-  convertedLine = ApolloSqlConverterUtil.convertTemplate(convertedLine, "h2-function", SqlTemplate.empty()).convertedLine();
-  convertedLine = ApolloSqlConverterUtil.convertTemplate(convertedLine, "setup-database", templates).convertedLine();
-  convertedLine = ApolloSqlConverterUtil.convertTemplate(convertedLine, "use-database", templates).convertedLine();
-  return convertedLine;
- }
 }

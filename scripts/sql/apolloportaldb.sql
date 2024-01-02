@@ -21,13 +21,15 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+-- 
 -- ===============================================================================
 -- ==                                                                           ==
 -- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
 -- ==                           DO NOT EDIT !!!                                 ==
 -- ==                                                                           ==
 -- ===============================================================================
-
+-- 
+-- 
 -- Create Database
 -- ------------------------------------------------------------
 CREATE DATABASE IF NOT EXISTS ApolloPortalDB DEFAULT CHARACTER SET = utf8mb4;
@@ -443,6 +445,7 @@ VALUES
 
 INSERT INTO `Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
 
+-- 
 -- ===============================================================================
 -- ==                                                                           ==
 -- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==

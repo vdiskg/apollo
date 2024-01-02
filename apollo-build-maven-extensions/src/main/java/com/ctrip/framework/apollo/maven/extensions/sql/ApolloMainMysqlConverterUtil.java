@@ -19,18 +19,18 @@ package com.ctrip.framework.apollo.maven.extensions.sql;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Map;
-import java.util.Objects;
 
 public class ApolloMainMysqlConverterUtil {
 
-  public static void convertMainMysql(String srcSql, String targetSql,
-      Map<String, SqlTemplate> templates) {
+  public static void convertMainMysql(SqlTemplate sqlTemplate, String targetSql,
+      SqlTemplateContext context) {
     String databaseName;
+    String srcSql = sqlTemplate.getSrcPath();
     if (srcSql.contains("apolloconfigdb")) {
       databaseName = "ApolloConfigDB";
     } else if (srcSql.contains("apolloportaldb")) {
@@ -41,14 +41,15 @@ public class ApolloMainMysqlConverterUtil {
 
     ApolloSqlConverterUtil.ensureDirectories(targetSql);
 
-    try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(srcSql),
-        StandardCharsets.UTF_8);
+    String rawText = ApolloSqlConverterUtil.process(sqlTemplate, context);
+
+    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(rawText));
         BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(targetSql),
             StandardCharsets.UTF_8, StandardOpenOption.CREATE,
             StandardOpenOption.TRUNCATE_EXISTING)) {
       for (String line = bufferedReader.readLine(); line != null;
           line = bufferedReader.readLine()) {
-        String convertedLine = convertMainMysqlLine(line, databaseName, templates);
+        String convertedLine = convertMainMysqlLine(line, databaseName);
         bufferedWriter.write(convertedLine);
         bufferedWriter.write('\n');
       }
@@ -57,24 +58,16 @@ public class ApolloMainMysqlConverterUtil {
     }
   }
 
-  private static String convertMainMysqlLine(String line, String databaseName,
-      Map<String, SqlTemplate> templates) {
+  private static String convertMainMysqlLine(String line, String databaseName) {
     String convertedLine = line;
-    ConvertResult result = ApolloSqlConverterUtil.convertTemplate(convertedLine,
-        "auto-generated-declaration", templates);
-    convertedLine = result.convertedLine();
-    if (result.matches()) {
-      return convertedLine;
-    }
-    convertedLine = ApolloSqlConverterUtil.convertTemplate(convertedLine, "h2-function",
-        SqlTemplate.empty()).convertedLine();
-    convertedLine = ApolloSqlConverterUtil.convertTemplate(convertedLine, "setup-database",
-        templates).convertedLine();
-    convertedLine = ApolloSqlConverterUtil.convertTemplate(convertedLine, "use-database", templates)
-        .convertedLine();
 
-    convertedLine = convertedLine.replace("P_0_", "").replace("C_0_", "")
+    convertedLine = convertedLine.replace("P_0_", "");
+
+    convertedLine = convertedLine.replace("C_0_", "")
         .replace("ApolloAssemblyDB", databaseName);
+
+    convertedLine = convertedLine.replace("ApolloAssemblyDB", databaseName);
+
     return convertedLine;
   }
 }

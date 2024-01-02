@@ -19,31 +19,31 @@ package com.ctrip.framework.apollo.maven.extensions.sql;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ApolloAssemblyH2ConverterUtil {
 
-  public static void convertAssemblyH2(String srcSql, String targetSql,
-      Map<String, SqlTemplate> templates) {
+  public static void convertAssemblyH2(SqlTemplate sqlTemplate, String targetSql,
+      SqlTemplateContext context) {
 
     ApolloSqlConverterUtil.ensureDirectories(targetSql);
 
-    try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(srcSql),
-        StandardCharsets.UTF_8);
+    String rawText = ApolloSqlConverterUtil.process(sqlTemplate, context);
+
+    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(rawText));
         BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(targetSql),
             StandardCharsets.UTF_8, StandardOpenOption.CREATE,
             StandardOpenOption.TRUNCATE_EXISTING)) {
       for (String line = bufferedReader.readLine(); line != null;
           line = bufferedReader.readLine()) {
-        String convertedLine = convertAssemblyH2Line(line, templates);
+        String convertedLine = convertAssemblyH2Line(line);
         bufferedWriter.write(convertedLine);
         bufferedWriter.write('\n');
       }
@@ -52,18 +52,8 @@ public class ApolloAssemblyH2ConverterUtil {
     }
   }
 
-  private static String convertAssemblyH2Line(String line, Map<String, SqlTemplate> templates) {
+  private static String convertAssemblyH2Line(String line) {
     String convertedLine = line;
-    ConvertResult result = ApolloSqlConverterUtil.convertTemplate(convertedLine,
-        "auto-generated-declaration", templates);
-    convertedLine = result.convertedLine();
-    if (result.matches()) {
-      return convertedLine;
-    }
-    convertedLine = ApolloSqlConverterUtil.convertTemplate(convertedLine, "h2-function", templates).convertedLine();
-    convertedLine = ApolloSqlConverterUtil.convertTemplate(convertedLine, "setup-database", SqlTemplate.empty()).convertedLine();
-    convertedLine = ApolloSqlConverterUtil.convertTemplate(convertedLine, "use-database", SqlTemplate.empty()).convertedLine();
-
     // database config
     if (convertedLine.contains("DROP TABLE")) {
       return "";
@@ -112,22 +102,6 @@ public class ApolloAssemblyH2ConverterUtil {
     if (columnCommentMatcher.find()) {
       convertedLine = columnCommentMatcher.replaceAll("");
     }
-
-    // white space
-    Pattern whiteSpacePrefixPattern = Pattern.compile("^(\\s+)");
-    Matcher whiteSpacePrefixMatcher = whiteSpacePrefixPattern.matcher(convertedLine);
-    String whiteSpacePrefix;
-    if (whiteSpacePrefixMatcher.find()) {
-      whiteSpacePrefix = whiteSpacePrefixMatcher.group(1);
-    } else {
-      whiteSpacePrefix = "";
-    }
-
-    Pattern whiteSpacePattern = Pattern.compile("\\s{2,}");
-    Matcher whiteSpaceMatcher = whiteSpacePattern.matcher(convertedLine);
-    if (whiteSpaceMatcher.find()) {
-      convertedLine = whiteSpaceMatcher.replaceAll(" ");
-    }
-    return whiteSpacePrefix + convertedLine.trim();
+    return convertedLine;
   }
 }

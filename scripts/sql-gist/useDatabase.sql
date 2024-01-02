@@ -13,10 +13,7 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
--- @@template-start@@
--- Create Database
--- ------------------------------------------------------------
-CREATE DATABASE IF NOT EXISTS ApolloAssemblyDB DEFAULT CHARACTER SET = utf8mb4;
-
+-- @@gist-start@@
+-- Use Database
 Use ApolloAssemblyDB;
--- @@template-end@@
+-- @@gist-end@@

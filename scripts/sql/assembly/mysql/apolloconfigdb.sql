@@ -21,18 +21,15 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+-- 
 -- ===============================================================================
 -- ==                                                                           ==
 -- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
 -- ==                           DO NOT EDIT !!!                                 ==
 -- ==                                                                           ==
 -- ===============================================================================
-
--- Create Database
--- ------------------------------------------------------------
-CREATE DATABASE IF NOT EXISTS ApolloAssemblyDB DEFAULT CHARACTER SET = utf8mb4;
-
-Use ApolloAssemblyDB;
+-- 
+-- 
 
 -- Dump of table app
 -- ------------------------------------------------------------
@@ -499,6 +496,7 @@ VALUES
     ('item.value.length.limit', 'default', '20000', 'item value最大长度限制'),
     ('config-service.cache.enabled', 'default', 'false', 'ConfigService是否开启缓存，开启后能提高性能，但是会增大内存消耗！');
 
+-- 
 -- ===============================================================================
 -- ==                                                                           ==
 -- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==

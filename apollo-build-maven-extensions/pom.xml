@@ -27,6 +27,12 @@
 	<artifactId>apollo-build-maven-extensions</artifactId>
 	<name>Apollo Build Maven Extensions</name>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+		</dependency>
+	</dependencies>
 
 	<profiles>
 		<profile>

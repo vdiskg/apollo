@@ -21,17 +21,20 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+-- 
 -- ===============================================================================
 -- ==                                                                           ==
 -- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
 -- ==                           DO NOT EDIT !!!                                 ==
 -- ==                                                                           ==
 -- ===============================================================================
+-- 
 
 -- H2 Function
 -- ------------------------------------------------------------
 CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common.jpa.H2Function.unixTimestamp";
 
+-- 
 
 -- Dump of table app
 -- ------------------------------------------------------------
@@ -56,7 +59,7 @@ CREATE TABLE `C_0_App` (
   UNIQUE KEY (`AppId`,`DeletedAt`),
   KEY (`DataChange_LastTime`),
   KEY (`Name`)
-) ;
+)   ;
 
 
 
@@ -82,7 +85,7 @@ CREATE TABLE `C_0_AppNamespace` (
   UNIQUE KEY (`AppId`,`Name`,`DeletedAt`),
   KEY (`Name`,`AppId`),
   KEY (`DataChange_LastTime`)
-) ;
+)   ;
 
 
 
@@ -105,7 +108,7 @@ CREATE TABLE `C_0_Audit` (
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
   KEY (`DataChange_LastTime`)
-) ;
+)   ;
 
 
 
@@ -129,7 +132,7 @@ CREATE TABLE `C_0_Cluster` (
   UNIQUE KEY (`AppId`,`Name`,`DeletedAt`),
   KEY (`ParentClusterId`),
   KEY (`DataChange_LastTime`)
-) ;
+)   ;
 
 
 
@@ -156,7 +159,7 @@ CREATE TABLE `C_0_Commit` (
   KEY (`AppId`),
   KEY (`ClusterName`),
   KEY (`NamespaceName`)
-) ;
+)   ;
 
 -- Dump of table grayreleaserule
 -- ------------------------------------------------------------
@@ -181,7 +184,7 @@ CREATE TABLE `C_0_GrayReleaseRule` (
   PRIMARY KEY (`Id`),
   KEY (`DataChange_LastTime`),
   KEY (`AppId`,`ClusterName`,`NamespaceName`)
-) ;
+)   ;
 
 
 -- Dump of table instance
@@ -201,7 +204,7 @@ CREATE TABLE `C_0_Instance` (
   UNIQUE KEY (`AppId`,`ClusterName`,`Ip`,`DataCenter`),
   KEY (`Ip`),
   KEY (`DataChange_LastTime`)
-) ;
+)   ;
 
 
 
@@ -225,7 +228,7 @@ CREATE TABLE `C_0_InstanceConfig` (
   KEY (`ReleaseKey`),
   KEY (`DataChange_LastTime`),
   KEY (`ConfigAppId`,`ConfigClusterName`,`ConfigNamespaceName`,`DataChange_LastTime`)
-) ;
+)   ;
 
 
 
@@ -251,7 +254,7 @@ CREATE TABLE `C_0_Item` (
   PRIMARY KEY (`Id`),
   KEY (`NamespaceId`),
   KEY (`DataChange_LastTime`)
-) ;
+)   ;
 
 
 
@@ -275,7 +278,7 @@ CREATE TABLE `C_0_Namespace` (
   UNIQUE KEY (`AppId`,`ClusterName`,`NamespaceName`,`DeletedAt`),
   KEY (`DataChange_LastTime`),
   KEY (`NamespaceName`)
-) ;
+)   ;
 
 
 
@@ -296,7 +299,7 @@ CREATE TABLE `C_0_NamespaceLock` (
   PRIMARY KEY (`Id`),
   UNIQUE KEY (`NamespaceId`,`DeletedAt`),
   KEY (`DataChange_LastTime`)
-) ;
+)   ;
 
 
 
@@ -325,7 +328,7 @@ CREATE TABLE `C_0_Release` (
   UNIQUE KEY (`ReleaseKey`,`DeletedAt`),
   KEY (`AppId`,`ClusterName`,`NamespaceName`),
   KEY (`DataChange_LastTime`)
-) ;
+)   ;
 
 
 -- Dump of table releasehistory
@@ -354,7 +357,7 @@ CREATE TABLE `C_0_ReleaseHistory` (
   KEY (`ReleaseId`),
   KEY (`DataChange_LastTime`),
   KEY (`PreviousReleaseId`)
-) ;
+)   ;
 
 
 -- Dump of table releasemessage
@@ -369,7 +372,7 @@ CREATE TABLE `C_0_ReleaseMessage` (
   PRIMARY KEY (`Id`),
   KEY (`DataChange_LastTime`),
   KEY (`Message`)
-) ;
+)   ;
 
 
 
@@ -393,7 +396,7 @@ CREATE TABLE `C_0_ServerConfig` (
   PRIMARY KEY (`Id`),
   UNIQUE KEY (`Key`,`Cluster`,`DeletedAt`),
   KEY (`DataChange_LastTime`)
-) ;
+)   ;
 
 -- Dump of table accesskey
 -- ------------------------------------------------------------
@@ -414,7 +417,7 @@ CREATE TABLE `C_0_AccessKey` (
   PRIMARY KEY (`Id`),
   UNIQUE KEY (`AppId`,`Secret`,`DeletedAt`),
   KEY (`DataChange_LastTime`)
-) ;
+)   ;
 
 
 -- Dump of table serviceregistry
@@ -433,7 +436,7 @@ CREATE TABLE `C_0_ServiceRegistry` (
   PRIMARY KEY (`Id`),
   UNIQUE INDEX `IX_UNIQUE_KEY` (`ServiceName`, `Uri`),
   INDEX `IX_DataChange_LastTime` (`DataChange_LastTime`)
-) ;
+)   ;
 
 -- Dump of table AuditLog
 -- ------------------------------------------------------------
@@ -461,7 +464,7 @@ CREATE TABLE `C_0_AuditLog` (
   KEY (`OpName`),
   KEY (`DataChange_CreatedTime`),
   KEY (`Operator`)
-) ;
+)   ;
 
 -- Dump of table AuditLogDataInfluence
 -- ------------------------------------------------------------
@@ -486,7 +489,7 @@ CREATE TABLE `C_0_AuditLogDataInfluence` (
   KEY (`SpanId`),
   KEY (`DataChange_CreatedTime`),
   KEY (`InfluenceEntityId`)
-) ;
+)   ;
 
 -- Config
 -- ------------------------------------------------------------
@@ -498,6 +501,7 @@ VALUES
     ('item.value.length.limit', 'default', '20000', 'item value最大长度限制'),
     ('config-service.cache.enabled', 'default', 'false', 'ConfigService是否开启缓存，开启后能提高性能，但是会增大内存消耗！');
 
+-- 
 -- ===============================================================================
 -- ==                                                                           ==
 -- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
