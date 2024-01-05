@@ -18,8 +18,9 @@
 -- 
 -- ===============================================================================
 -- ==                                                                           ==
--- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
--- ==                           DO NOT EDIT !!!                                 ==
+-- ==                     Generated from 'scripts/sql-src/'                     ==
+-- == by running 'mvn compile -pl apollo-build-maven-extensions -Psql-convert'. ==
+-- ==                              DO NOT EDIT !!!                              ==
 -- ==                                                                           ==
 -- ===============================================================================
 -- 
@@ -29,7 +30,8 @@
 -- 
 -- ===============================================================================
 -- ==                                                                           ==
--- == Generated from 'scripts/sql-src/' by running 'mvn compile -Psql-convert'. ==
--- ==                           DO NOT EDIT !!!                                 ==
+-- ==                     Generated from 'scripts/sql-src/'                     ==
+-- == by running 'mvn compile -pl apollo-build-maven-extensions -Psql-convert'. ==
+-- ==                              DO NOT EDIT !!!                              ==
 -- ==                                                                           ==
 -- ===============================================================================

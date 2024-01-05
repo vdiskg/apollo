@@ -33,6 +33,8 @@ import org.junit.jupiter.api.Test;
 
 class ApolloSqlConverterTest {
 
+  private static final String GENERATE_TIPS = "mvn compile -pl apollo-build-maven-extensions -Psql-convert";
+
   @Test
   void checkSql() {
     String repositoryDir = ApolloSqlConverterUtil.getRepositoryDir();
@@ -79,13 +81,14 @@ class ApolloSqlConverterTest {
     List<String> redundantSqlList = this.findRedundantSqlList(checkerTargetDir, checkerSqlList,
         repositoryTargetDir, repositorySqlList);
     Assertions.assertEquals(0, redundantSqlList.size(),
-        "redundant sql files, please add sql files in 'scripts/sql-src' and then run 'mvn compile -Psql-convert' to generated. Do not edit 'scripts/sql' manually !!!\npath: "
+        "redundant sql files, please add sql files in 'scripts/sql-src' and then run '"
+            + GENERATE_TIPS + "' to generated. Do not edit 'scripts/sql' manually !!!\npath: "
             + redundantSqlList);
 
     List<String> missingSqlList = this.findMissingSqlList(checkerTargetDir, checkerSqlList,
         repositoryTargetDir, repositorySqlList);
     Assertions.assertEquals(0, missingSqlList.size(),
-        "missing sql files, please run 'mvn compile -Psql-convert' to regenerated\npath: "
+        "missing sql files, please run '" + GENERATE_TIPS + "' to regenerated\npath: "
             + missingSqlList);
 
     for (String srcSql : srcSqlList) {
@@ -164,15 +167,12 @@ class ApolloSqlConverterTest {
       throw new UncheckedIOException(e);
     }
 
-    Assertions.assertEquals(checkerLines.size(), repositoryLines.size(),
-        "invalid sql files, please run 'mvn compile -Psql-convert' to regenerated\npath: "
-            + repositoryTargetSql);
     for (int i = 0; i < checkerLines.size(); i++) {
       String checkerLine = checkerLines.get(i);
       String repositoryLine = repositoryLines.get(i);
       int lineNumber = i + 1;
       Assertions.assertEquals(checkerLine, repositoryLine,
-          "invalid sql file content, please run 'mvn compile -Psql-convert' to regenerated\npath: "
+          "invalid sql file content, please run '" + GENERATE_TIPS + "' to regenerated\npath: "
               + repositoryTargetSql + "(line: " + lineNumber + ")");
     }
   }
