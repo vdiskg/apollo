@@ -14,10 +14,8 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.maven.extensions.sql;
+package com.ctrip.framework.apollo.build.sql.converter;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.StringJoiner;
 
 public class SqlTemplateGist {

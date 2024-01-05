@@ -17,7 +17,7 @@
 -- ===============================================================================
 -- ==                                                                           ==
 -- ==                     Generated from 'scripts/sql-src/'                     ==
--- == by running 'mvn compile -pl apollo-build-maven-extensions -Psql-convert'. ==
+-- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
 -- ==                              DO NOT EDIT !!!                              ==
 -- ==                                                                           ==
 -- ===============================================================================

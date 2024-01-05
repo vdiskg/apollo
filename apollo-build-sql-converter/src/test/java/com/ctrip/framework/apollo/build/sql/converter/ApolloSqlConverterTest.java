@@ -14,8 +14,10 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.maven.extensions.sql;
+package com.ctrip.framework.apollo.build.sql.converter;
 
+import com.ctrip.framework.apollo.build.sql.converter.ApolloSqlConverter;
+import com.ctrip.framework.apollo.build.sql.converter.ApolloSqlConverterUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -33,14 +35,14 @@ import org.junit.jupiter.api.Test;
 
 class ApolloSqlConverterTest {
 
-  private static final String GENERATE_TIPS = "mvn compile -pl apollo-build-maven-extensions -Psql-convert";
+  private static final String GENERATE_TIPS = "mvn compile -pl apollo-build-sql-converter -Psql-converter";
 
   @Test
   void checkSql() {
     String repositoryDir = ApolloSqlConverterUtil.getRepositoryDir();
 
     String srcDir = repositoryDir + "/scripts/sql-src";
-    String checkerParentDir = repositoryDir + "/apollo-build-maven-extensions/target/scripts";
+    String checkerParentDir = repositoryDir + "/apollo-build-sql-converter/target/scripts";
     String repositoryParentDir = repositoryDir + "/scripts";
 
     // generate checker sql files

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.maven.extensions.sql;
+package com.ctrip.framework.apollo.build.sql.converter;
 
 import freemarker.template.Template;
 

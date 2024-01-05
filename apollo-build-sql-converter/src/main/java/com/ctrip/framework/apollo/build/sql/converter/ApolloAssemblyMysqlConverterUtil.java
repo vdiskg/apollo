@@ -14,30 +14,22 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.maven.extensions.sql;
+package com.ctrip.framework.apollo.build.sql.converter;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
-public class ApolloMainMysqlConverterUtil {
+public class ApolloAssemblyMysqlConverterUtil {
 
-  public static void convertMainMysql(SqlTemplate sqlTemplate, String targetSql,
+  public static void convertAssemblyMysql(SqlTemplate sqlTemplate, String targetSql,
       SqlTemplateContext context) {
-    String databaseName;
-    String srcSql = sqlTemplate.getSrcPath();
-    if (srcSql.contains("apolloconfigdb")) {
-      databaseName = "ApolloConfigDB";
-    } else if (srcSql.contains("apolloportaldb")) {
-      databaseName = "ApolloPortalDB";
-    } else {
-      throw new IllegalArgumentException("unknown database name: " + srcSql);
-    }
 
     ApolloSqlConverterUtil.ensureDirectories(targetSql);
 
@@ -49,25 +41,17 @@ public class ApolloMainMysqlConverterUtil {
             StandardOpenOption.TRUNCATE_EXISTING)) {
       for (String line = bufferedReader.readLine(); line != null;
           line = bufferedReader.readLine()) {
-        String convertedLine = convertMainMysqlLine(line, databaseName);
+        String convertedLine = convertAssemblyMysqlLine(line);
         bufferedWriter.write(convertedLine);
         bufferedWriter.write('\n');
       }
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UncheckedIOException(e);
     }
   }
 
-  private static String convertMainMysqlLine(String line, String databaseName) {
+  private static String convertAssemblyMysqlLine(String line) {
     String convertedLine = line;
-
-    convertedLine = convertedLine.replace("P_0_", "");
-
-    convertedLine = convertedLine.replace("C_0_", "")
-        .replace("ApolloAssemblyDB", databaseName);
-
-    convertedLine = convertedLine.replace("ApolloAssemblyDB", databaseName);
-
     return convertedLine;
   }
 }

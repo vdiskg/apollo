@@ -24,8 +24,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>apollo-build-maven-extensions</artifactId>
-	<name>Apollo Build Maven Extensions</name>
+	<artifactId>apollo-build-sql-converter</artifactId>
+	<name>Apollo Build Sql Converter</name>
 
 	<dependencies>
 		<dependency>
@@ -36,7 +36,7 @@
 
 	<profiles>
 		<profile>
-			<id>sql-convert</id>
+			<id>sql-converter</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
@@ -52,7 +52,7 @@
 						<version>3.0.0</version>
 						<executions>
 							<execution>
-								<id>sql-convert</id>
+								<id>sql-converter</id>
 								<phase>compile</phase>
 								<goals>
 									<goal>java</goal>
@@ -60,10 +60,7 @@
 							</execution>
 						</executions>
 						<configuration>
-							<mainClass>com.ctrip.framework.apollo.maven.extensions.sql.ApolloSqlConverter</mainClass>
-							<arguments>
-								<argument>${project.basedir}</argument>
-							</arguments>
+							<mainClass>com.ctrip.framework.apollo.build.sql.converter.ApolloSqlConverter</mainClass>
 						</configuration>
 					</plugin>
 				</plugins>

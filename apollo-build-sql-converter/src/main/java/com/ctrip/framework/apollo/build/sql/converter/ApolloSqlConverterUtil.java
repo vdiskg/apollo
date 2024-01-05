@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.maven.extensions.sql;
+package com.ctrip.framework.apollo.build.sql.converter;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -34,9 +34,7 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 
@@ -56,12 +54,12 @@ public class ApolloSqlConverterUtil {
     Path path = Paths.get(uri);
     String unixClassPath = path.toString().replace("\\", "/");
 
-    if (!unixClassPath.endsWith("/apollo-build-maven-extensions/target/classes")) {
+    if (!unixClassPath.endsWith("/apollo-build-sql-converter/target/classes")) {
       throw new IllegalStateException("illegal class path: " + unixClassPath);
     }
 
     return ApolloSqlConverterUtil.replacePath(unixClassPath,
-        "/apollo-build-maven-extensions/target/classes", "");
+        "/apollo-build-sql-converter/target/classes", "");
   }
 
   public static void ensureDirectories(String targetFilePath) {
