@@ -15,4 +15,25 @@
 --
 -- delta schema to upgrade apollo config db from v2.2.0 to v2.3.0
 
+-- 
+-- ===============================================================================
+-- ==                                                                           ==
+-- ==                     Generated from 'scripts/sql-src/'                     ==
+-- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
+-- ==                              DO NOT EDIT !!!                              ==
+-- ==                                                                           ==
+-- ===============================================================================
+-- 
+-- 
+-- Use Database
 Use ApolloConfigDB;
+
+
+-- 
+-- ===============================================================================
+-- ==                                                                           ==
+-- ==                     Generated from 'scripts/sql-src/'                     ==
+-- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
+-- ==                              DO NOT EDIT !!!                              ==
+-- ==                                                                           ==
+-- ===============================================================================

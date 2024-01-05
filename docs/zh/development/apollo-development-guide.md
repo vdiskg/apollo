@@ -6,7 +6,7 @@
 Apollo本地开发需要以下组件：
 
 1. Java: 1.8+
-2. MySQL: 5.6.5+
+2. MySQL: 5.6.5+ (如果使用 H2 内存数据库/H2 文件数据库，则无需 MySQL)
 3. IDE: 没有特殊要求
 
 其中MySQL需要创建Apollo数据库并导入基础数据。
@@ -19,12 +19,12 @@ Apollo本地开发需要以下组件：
 具体请参考[Apollo配置中心设计](zh/design/apollo-design)
 
 # 二、本地启动
-## 2.1 Apollo Config Service和Apollo Admin Service
-我们在本地开发时，一般会在IDE中同时启动`apollo-configservice`和`apollo-adminservice`。
+## 2.1 Apollo Assembly
+我们在本地开发时，一般会在IDE中启动`apollo-assembly`。
 
-下面以Intellij Community 2016.2版本为例来说明如何在本地启动`apollo-configservice`和`apollo-adminservice`。
+下面以Intellij Community 2016.2版本为例来说明如何在本地启动`apollo-assembly`。
 
-![ConfigAdminApplication-Overview](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ConfigAdminApplication-Overview.png)
+![ApolloApplication-Overview](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ApolloApplication-Overview.png)
 
 ### 2.1.1 新建运行配置
 ![NewConfiguration-Application](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/NewConfiguration-Application.png)
@@ -32,31 +32,40 @@ Apollo本地开发需要以下组件：
 ### 2.1.2 Main class配置
 `com.ctrip.framework.apollo.assembly.ApolloApplication`
 
-> 注：如果希望独立启动`apollo-configservice`和`apollo-adminservice`，可以把Main Class分别换成
-> `com.ctrip.framework.apollo.configservice.ConfigServiceApplication`和
+> 注：如果希望独立启动`apollo-portal`、`apollo-configservice`和`apollo-adminservice`，可以把Main Class分别换成
+> `com.ctrip.framework.apollo.portal.PortalApplication`
+> `com.ctrip.framework.apollo.configservice.ConfigServiceApplication`
 > `com.ctrip.framework.apollo.adminservice.AdminServiceApplication`
 
 ### 2.1.3 VM options配置
-![ConfigAdminApplication-VM-Options](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ConfigAdminApplication-VM-Options.png)
+![ApolloApplication-VM-Options](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ApolloApplication-VM-Options.png)
+```
+-Dapollo_profile=github,auth
 
-	-Dapollo_profile=github
-	-Dspring.datasource.url=jdbc:mysql://localhost:3306/ApolloConfigDB?characterEncoding=utf8
-	-Dspring.datasource.username=root
-	-Dspring.datasource.password=
-
->注1：spring.datasource相关配置替换成你自己的数据库连接信息，注意数据库是`ApolloConfigDB`
+```
+>注1：这里指定了apollo_profile是`github`和`auth`，其中`github`是Apollo必须的一个profile，用于数据库的配置，`auth`是从0.9.0新增的，用来支持使用apollo提供的Spring Security简单认证，更多信息可以参考[Portal-实现用户登录功能](zh/development/portal-how-to-implement-user-login-function)
 >
->注2：程序默认日志输出为/opt/logs/100003171/apollo-assembly.log，如果需要修改日志文件路径，可以增加`logging.file.name`参数，如下：
+>注2：如果需要使用 mysql 数据库，添加`spring.datasource.*`相关配置，数据库连接信息替换成你自己的，注意数据库是`ApolloAssemblyDB`
+![ApolloApplication-Mysql-VM-Options](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ApolloApplication-Mysql-VM-Options.png)
+
+```
+-Dspring.datasource.url=jdbc:mysql://localhost:3306/ApolloAssemblyDB?characterEncoding=utf8
+-Dspring.datasource.username=root
+-Dspring.datasource.password=
+
+```
+mysql 数据库初始化脚本见 本项目 scripts/sql/assembly/mysql 目录下的文件
+[apolloconfigdb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/assembly/mysql/apolloconfigdb.sql)
+[apolloportaldb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/assembly/mysql/apolloportaldb.sql)
+
+>注3：程序默认日志输出为/opt/logs/100003171/apollo-assembly.log，如果需要修改日志文件路径，可以增加`logging.file.name`参数，如下：
 >
 >-Dlogging.file.name=/your-path/apollo-assembly.log
 
-### 2.1.4 Program arguments配置
-`--configservice --adminservice`
-
-### 2.1.5 运行
+### 2.1.4 运行
 对新建的运行配置点击Run或Debug皆可。
 
-![ConfigAdminApplication-Run](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ConfigAdminApplication-Run.png)
+![ApolloApplication-Run](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ApolloApplication-Run.png)
 
 启动完后，打开[http://localhost:8080](http://localhost:8080)可以看到`apollo-configservice`和`apollo-adminservice`都已经启动完成并注册到Eureka。
 
@@ -77,62 +86,23 @@ Apollo本地开发需要以下组件：
 >       ...
 >     }
 
-## 2.2 Apollo-Portal
-
-下面以Intellij Community 2016.2版本为例来说明如何在本地启动`apollo-portal`。
-
-![PortalApplication-Overview](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/PortalApplication-Overview.png)
-
-### 2.2.1 新建运行配置
-![NewConfiguration-Application](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/NewConfiguration-Application.png)
-
-### 2.2.2 Main class配置
-`com.ctrip.framework.apollo.portal.PortalApplication`
-
-### 2.2.3 VM options配置
-![PortalApplication-VM-Options](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/PortalApplication-VM-Options.png)
-
-	-Dapollo_profile=github,auth
-	-Ddev_meta=http://localhost:8080/
-	-Dserver.port=8070
-	-Dspring.datasource.url=jdbc:mysql://localhost:3306/ApolloPortalDB?characterEncoding=utf8
-	-Dspring.datasource.username=root
-	-Dspring.datasource.password=
-
->注1：这里指定了apollo_profile是`github`和`auth`，其中`github`是Apollo必须的一个profile，用于数据库的配置，`auth`是从0.9.0新增的，用来支持使用apollo提供的Spring Security简单认证，更多信息可以参考[Portal-实现用户登录功能](zh/development/portal-how-to-implement-user-login-function)
->
->注2：spring.datasource相关配置替换成你自己的数据库连接信息，注意数据库是`ApolloPortalDB `。
->
->注3：默认ApolloPortalDB中导入的配置只会展示DEV环境的配置，所以这里配置了dev\_meta属性，如果你希望在本地展示其它环境的配置，需要在这里增加其它环境的meta服务器地址，如fat\_meta。
->
->注4：这里指定了server.port=8070是因为`apollo-configservice`启动在8080端口，所以这里配置`apollo-portal`启动在8070端口。
->
->注5：程序默认日志输出为/opt/logs/100003173/apollo-portal.log，如果需要修改日志文件路径，可以增加`logging.file.name`参数，如下：
->
->-Dlogging.file.name=/your-path/apollo-portal.log
-
-### 2.2.4 运行
-对新建的运行配置点击Run或Debug皆可。
-
-![PortalApplication-Run](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/PortalApplication-Run.png)
-
 启动完后，打开[http://localhost:8070](http://localhost:8070)就可以看到Apollo配置中心界面了。
 
 ![PortalApplication-Home](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/PortalApplication-Home.png)
 
 >注：如果启用了`auth` profile的话，默认的用户名是apollo，密码是admin
 
-### 2.2.5 Demo应用接入
+### 2.1.5 Demo应用接入
 
 为了更好的开发和调试，一般我们都会自己创建一个demo项目给自己使用。
 
 可以参考[一、普通应用接入指南](zh/usage/apollo-user-guide#一、普通应用接入指南)创建自己的demo项目。
 
-## 2.3 Java样例客户端启动
+## 2.2 Java样例客户端启动
 
 仓库中有一个样例客户端的项目：[apollo-demo-java](https://github.com/apolloconfig/apollo-demo-java)，下面以Intellij为例来说明如何在本地启动。
 
-### 2.3.1 配置项目AppId
+### 2.2.1 配置项目AppId
 在`2.2.5 Demo应用接入`中创建Demo项目时，系统会要求填入一个全局唯一的AppId，我们需要把这个AppId配置到`apollo-demo`项目的app.properties文件中：`apollo-demo-java/api-demo/src/main/resources/META-INF/app.properties`。
 
 ![apollo-demo-app-properties](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/apollo-demo-app-properties.jpg)
@@ -147,13 +117,13 @@ Apollo本地开发需要以下组件：
 
 > 更多配置AppId的方式可以参考[1.2.1 AppId](zh/usage/java-sdk-user-guide#_121-appid)
 
-### 2.3.2 新建运行配置
+### 2.2.2 新建运行配置
 ![NewConfiguration-Application](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/NewConfiguration-Application.png)
 
-### 2.3.3 Main class配置
+### 2.2.3 Main class配置
 `com.apolloconfig.apollo.demo.api.SimpleApolloConfigDemo`
 
-### 2.3.4 VM options配置
+### 2.2.4 VM options配置
 ![apollo-demo-vm-options](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/apollo-demo-vm-options.jpg)
 
     -Dapollo.meta=http://localhost:8080
@@ -162,11 +132,11 @@ Apollo本地开发需要以下组件：
 
 > 更多配置Apollo Meta Server的方式可以参考[1.2.2 Apollo Meta Server](zh/usage/java-sdk-user-guide#_122-apollo-meta-server)
 
-### 2.3.5 概览
+### 2.2.5 概览
 
 ![apollo-demo-overview](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/apollo-demo-overview.jpg)
 
-### 2.3.6 运行
+### 2.2.6 运行
 对新建的运行配置点击Run或Debug皆可。
 
 ![apollo-demo-run](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/apollo-demo-run.png)
@@ -188,11 +158,11 @@ Apollo本地开发需要以下组件：
 > </logger>
 > ```
 
-## 2.4 .Net样例客户端启动
+## 2.3 .Net样例客户端启动
 
 [apollo.net](https://github.com/ctripcorp/apollo.net)项目中有一个样例客户端的项目：`ApolloDemo`，下面就以VS 2010为例来说明如何在本地启动。
 
-### 2.4.1 配置项目AppId
+### 2.3.1 配置项目AppId
 在`2.2.5 Demo应用接入`中创建Demo项目时，系统会要求填入一个全局唯一的AppId，我们需要把这个AppId配置到`ApolloDemo`项目的APP.config文件中：`apollo.net\ApolloDemo\App.config`。
 
 ![apollo-demo-app-config](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/apollo-net-app-config.png)
@@ -206,12 +176,12 @@ Apollo本地开发需要以下组件：
 
 > 对于公共Namespace的配置，没有AppId也可以获取到配置，但是就失去了应用覆盖公共Namespace配置的能力。
 
-### 2.4.2 配置服务地址
+### 2.3.2 配置服务地址
 Apollo客户端针对不同的环境会从不同的服务器获取配置，所以我们需要在app.config或web.config配置服务器地址(Apollo.{ENV}.Meta)。假设DEV环境的配置服务(apollo-configservice)地址是11.22.33.44，那么我们就做如下配置：
 
 ![apollo-net-server-url-config](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/apollo-net-server-url-config.png)
 
-### 2.4.3 运行
+### 2.3.3 运行
 运行`ApolloConfigDemo.cs`即可。
 
 启动完后，忽略前面的调试信息，可以看到如下提示：

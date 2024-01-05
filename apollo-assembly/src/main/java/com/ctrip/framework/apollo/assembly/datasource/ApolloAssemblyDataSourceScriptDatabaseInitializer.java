@@ -18,8 +18,6 @@ package com.ctrip.framework.apollo.assembly.datasource;
 
 import com.ctrip.framework.apollo.assembly.ApolloApplication;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +28,7 @@ import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperti
 import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver;
 import org.springframework.boot.sql.init.DatabaseInitializationSettings;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -73,7 +72,7 @@ public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
       return null;
     }
 
-    Collection<String> convertedLocations = convertRepositoryLocations(locations);
+    Collection<String> convertedLocations = convertRepositoryLocations(locations, dataSource);
     if (CollectionUtils.isEmpty(convertedLocations)) {
       return null;
     }
@@ -85,19 +84,33 @@ public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
     return platformResolver.resolveAll(dataSource, convertedLocations.toArray(new String[0]));
   }
 
-  private static Collection<String> convertRepositoryLocations(Collection<String> locations) {
+  private static Collection<String> convertRepositoryLocations(Collection<String> locations,
+      DataSource dataSource) {
     if (CollectionUtils.isEmpty(locations)) {
       return null;
     }
     String repositoryDir = findRepositoryDirectory();
+    String suffix = findSuffix(dataSource);
     List<String> convertedLocations = new ArrayList<>(locations.size());
     for (String location : locations) {
-      String convertedLocation = convertRepositoryLocation(location, repositoryDir);
+      String convertedLocation = convertRepositoryLocation(location, repositoryDir, suffix);
       if (StringUtils.hasText(convertedLocation)) {
         convertedLocations.add(convertedLocation);
       }
     }
     return convertedLocations;
+  }
+
+  private static String findSuffix(DataSource dataSource) {
+    DatabaseDriver databaseDriver = DatabaseDriver.fromDataSource(dataSource);
+    if (DatabaseDriver.MYSQL.equals(databaseDriver)) {
+      JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+      String database = jdbcTemplate.queryForObject("SELECT DATABASE()", String.class);
+      if (database != null) {
+        return "-database-not-specified";
+      }
+    }
+    return "";
   }
 
   private static String findRepositoryDirectory() {
@@ -118,15 +131,16 @@ public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
     return null;
   }
 
-  private static String convertRepositoryLocation(String location, String repositoryDir) {
-    if (!StringUtils.hasText(location) || !location.contains("@@repository@@")) {
+  private static String convertRepositoryLocation(String location, String repositoryDir,
+      String suffix) {
+    if (!StringUtils.hasText(location)) {
       return location;
     }
     if (!StringUtils.hasText(repositoryDir)) {
       // repository dir not found
       return null;
     }
-    return location.replace("@@repository@@", repositoryDir);
+    return location.replace("@@repository@@", repositoryDir).replace("@@suffix@@", suffix);
   }
 
   private static List<String> scriptLocations(List<String> locations, String fallback,

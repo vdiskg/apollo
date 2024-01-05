@@ -15,4 +15,28 @@
 --
 -- delta schema to upgrade apollo portal db from v2.2.0 to v2.3.0
 
+-- 
+-- ===============================================================================
+-- ==                                                                           ==
+-- ==                     Generated from 'scripts/sql-src/'                     ==
+-- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
+-- ==                              DO NOT EDIT !!!                              ==
+-- ==                                                                           ==
+-- ===============================================================================
+-- 
 
+-- H2 Function
+-- ------------------------------------------------------------
+CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common.jpa.H2Function.unixTimestamp";
+
+-- 
+
+
+-- 
+-- ===============================================================================
+-- ==                                                                           ==
+-- ==                     Generated from 'scripts/sql-src/'                     ==
+-- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
+-- ==                              DO NOT EDIT !!!                              ==
+-- ==                                                                           ==
+-- ===============================================================================
