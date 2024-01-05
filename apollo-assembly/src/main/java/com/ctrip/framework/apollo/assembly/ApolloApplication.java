@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.context.scope.refresh.RefreshScope;
@@ -36,6 +37,7 @@ import org.springframework.context.annotation.Import;
     ApolloAssemblySqlInitializationConfig.class,
 })
 @SpringBootApplication(exclude = {
+    DataSourceTransactionManagerAutoConfiguration.class,
     HibernateJpaAutoConfiguration.class,
     ApolloAuditAutoConfiguration.class,
 })
