@@ -30,6 +30,12 @@ import java.util.regex.Pattern;
 
 public class ApolloAssemblyH2ConverterUtil {
 
+  private static final Pattern TABLE_COMMENT_PATTERN = Pattern.compile("COMMENT='[^']*'");
+  private static final Pattern INDEX_NAME_PATTERN = Pattern.compile("KEY *`[a-zA-Z0-9\\-_]+` *");
+  private static final Pattern PREFIX_INDEX_PATTERN = Pattern.compile(
+      "(`[a-zA-Z0-9\\-_]+`)\\([0-9]+\\)");
+  private static final Pattern COLUMN_COMMENT_PATTERN = Pattern.compile("COMMENT *'[^']*'");
+
   public static void convertAssemblyH2(SqlTemplate sqlTemplate, String targetSql,
       SqlTemplateContext context) {
 
@@ -54,12 +60,24 @@ public class ApolloAssemblyH2ConverterUtil {
 
   private static String convertAssemblyH2Line(String line) {
     String convertedLine = line;
-    // database config
+
+    // remove drop table
     if (convertedLine.contains("DROP TABLE")) {
       return "";
     }
 
     // table config
+    convertedLine = convertTableConfig(convertedLine);
+
+    // index
+    convertedLine = convertIndex(convertedLine);
+
+    // column
+    convertedLine = convertColumn(convertedLine);
+    return convertedLine;
+  }
+
+  private static String convertTableConfig(String convertedLine) {
     if (convertedLine.contains("ENGINE=InnoDB")) {
       convertedLine = convertedLine.replace("ENGINE=InnoDB", "");
     }
@@ -69,39 +87,58 @@ public class ApolloAssemblyH2ConverterUtil {
     if (convertedLine.contains("ROW_FORMAT=DYNAMIC")) {
       convertedLine = convertedLine.replace("ROW_FORMAT=DYNAMIC", "");
     }
-    Pattern tableCommentPattern = Pattern.compile("COMMENT='[^']*'");
-    Matcher tableCommentMatcher = tableCommentPattern.matcher(convertedLine);
+
+    // remove table comment
+    Matcher tableCommentMatcher = TABLE_COMMENT_PATTERN.matcher(convertedLine);
     if (tableCommentMatcher.find()) {
       convertedLine = tableCommentMatcher.replaceAll("");
     }
 
-    // index
+    return convertedLine;
+  }
+
+  private static String convertIndex(String convertedLine) {
     if (convertedLine.contains("KEY")) {
-      Pattern indexNamePattern = Pattern.compile("KEY *`[a-zA-Z0-9\\-_]+` *");
-      Matcher indexNameMatcher = indexNamePattern.matcher(convertedLine);
+      // remove index name
+      // KEY `AppId_ClusterName_GroupName` (`AppId`,`ClusterName`(191),`NamespaceName`(191))
+      // ->
+      // KEY (`AppId`,`ClusterName`(191),`NamespaceName`(191))
+      Matcher indexNameMatcher = INDEX_NAME_PATTERN.matcher(convertedLine);
       if (indexNameMatcher.find()) {
         convertedLine = indexNameMatcher.replaceAll("KEY ");
       }
-      Pattern indexPrefixPattern = Pattern.compile("(`[a-zA-Z0-9\\-_]+`)\\([0-9]+\\)");
-      for (Matcher indexPrefixMatcher = indexPrefixPattern.matcher(convertedLine);
-          indexPrefixMatcher.find();
-          indexPrefixMatcher = indexPrefixPattern.matcher(convertedLine)) {
-        convertedLine = indexPrefixMatcher.replaceAll("$1");
+
+      // convert prefix index
+      // KEY (`AppId`,`ClusterName`(191),`NamespaceName`(191))
+      // ->
+      // KEY (`AppId`,`ClusterName`,`NamespaceName`)
+      for (Matcher prefixIndexMatcher = PREFIX_INDEX_PATTERN.matcher(convertedLine);
+          prefixIndexMatcher.find();
+          prefixIndexMatcher = PREFIX_INDEX_PATTERN.matcher(convertedLine)) {
+        convertedLine = prefixIndexMatcher.replaceAll("$1");
       }
     }
+    return convertedLine;
+  }
 
-    // column config
+  private static String convertColumn(String convertedLine) {
+    // convert bit(1) to boolean
+    // `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal'
+    // ->
+    // `IsDeleted` boolean NOT NULL DEFAULT FALSE
     if (convertedLine.contains("bit(1)")) {
       convertedLine = convertedLine.replace("bit(1)", "boolean");
     }
     if (convertedLine.contains("b'0'")) {
       convertedLine = convertedLine.replace("b'0'", "FALSE");
     }
-    Pattern columnCommentPattern = Pattern.compile("COMMENT *'[^']*'");
-    Matcher columnCommentMatcher = columnCommentPattern.matcher(convertedLine);
+
+    // remove column comment
+    Matcher columnCommentMatcher = COLUMN_COMMENT_PATTERN.matcher(convertedLine);
     if (columnCommentMatcher.find()) {
       convertedLine = columnCommentMatcher.replaceAll("");
     }
+
     return convertedLine;
   }
 }
