@@ -54,9 +54,9 @@ Apollo本地开发需要以下组件：
 -Dspring.datasource.password=
 
 ```
-mysql 数据库初始化脚本见 本项目 scripts/sql/assembly/mysql 目录下的文件
-[apolloconfigdb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/assembly/mysql/apolloconfigdb.sql)
-[apolloportaldb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/assembly/mysql/apolloportaldb.sql)
+mysql 数据库初始化脚本见 本项目 scripts/sql/profiles/mysql-default 目录下的文件
+[apolloconfigdb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/profiles/mysql-default/apolloconfigdb.sql)
+[apolloportaldb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/profiles/mysql-default/apolloportaldb.sql)
 
 >注3：程序默认日志输出为/opt/logs/100003171/apollo-assembly.log，如果需要修改日志文件路径，可以增加`logging.file.name`参数，如下：
 >

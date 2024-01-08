@@ -58,17 +58,17 @@
 						<goal>copy-resources</goal>
 					</goals>
 					<configuration>
-						<outputDirectory>${project.build.directory}/classes/META-INF/sql/assembly</outputDirectory>
+						<outputDirectory>${project.build.directory}/classes/META-INF/sql/profiles</outputDirectory>
 						<resources>
 							<resource>
-								<directory>${project.parent.basedir}/scripts/sql/assembly</directory>
+								<directory>${project.parent.basedir}/scripts/sql/profiles</directory>
 								<includes>
 									<include>h2/apolloconfigdb.sql</include>
 									<include>h2/apolloportaldb.sql</include>
-									<include>mysql/apolloconfigdb.sql</include>
-									<include>mysql/apolloportaldb.sql</include>
 									<include>mysql-database-not-specified/apolloconfigdb.sql</include>
 									<include>mysql-database-not-specified/apolloportaldb.sql</include>
+									<include>mysql-default/apolloconfigdb.sql</include>
+									<include>mysql-default/apolloportaldb.sql</include>
 								</includes>
 							</resource>
 						</resources>

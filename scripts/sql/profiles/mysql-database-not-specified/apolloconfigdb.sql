@@ -24,7 +24,7 @@
 -- 
 -- ===============================================================================
 -- ==                                                                           ==
--- ==                     Generated from 'scripts/sql-src/'                     ==
+-- ==                     Generated from 'scripts/sql/src/'                     ==
 -- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
 -- ==                              DO NOT EDIT !!!                              ==
 -- ==                                                                           ==
@@ -500,7 +500,7 @@ VALUES
 -- 
 -- ===============================================================================
 -- ==                                                                           ==
--- ==                     Generated from 'scripts/sql-src/'                     ==
+-- ==                     Generated from 'scripts/sql/src/'                     ==
 -- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
 -- ==                              DO NOT EDIT !!!                              ==
 -- ==                                                                           ==

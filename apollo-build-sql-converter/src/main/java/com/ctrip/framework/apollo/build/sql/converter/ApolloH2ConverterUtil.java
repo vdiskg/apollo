@@ -28,7 +28,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ApolloAssemblyH2ConverterUtil {
+public class ApolloH2ConverterUtil {
 
   private static final Pattern TABLE_COMMENT_PATTERN = Pattern.compile("COMMENT='[^']*'");
   private static final Pattern INDEX_NAME_PATTERN = Pattern.compile("KEY *`[a-zA-Z0-9\\-_]+` *");
@@ -36,7 +36,7 @@ public class ApolloAssemblyH2ConverterUtil {
       "(`[a-zA-Z0-9\\-_]+`)\\([0-9]+\\)");
   private static final Pattern COLUMN_COMMENT_PATTERN = Pattern.compile("COMMENT *'[^']*'");
 
-  public static void convertAssemblyH2(SqlTemplate sqlTemplate, String targetSql,
+  public static void convert(SqlTemplate sqlTemplate, String targetSql,
       SqlTemplateContext context) {
 
     ApolloSqlConverterUtil.ensureDirectories(targetSql);

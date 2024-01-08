@@ -18,7 +18,7 @@
 -- 
 -- ===============================================================================
 -- ==                                                                           ==
--- ==                     Generated from 'scripts/sql-src/'                     ==
+-- ==                     Generated from 'scripts/sql/src/'                     ==
 -- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
 -- ==                              DO NOT EDIT !!!                              ==
 -- ==                                                                           ==
@@ -35,7 +35,7 @@ CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common
 -- 
 -- ===============================================================================
 -- ==                                                                           ==
--- ==                     Generated from 'scripts/sql-src/'                     ==
+-- ==                     Generated from 'scripts/sql/src/'                     ==
 -- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
 -- ==                              DO NOT EDIT !!!                              ==
 -- ==                                                                           ==

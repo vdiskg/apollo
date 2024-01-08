@@ -25,9 +25,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
-public class ApolloMainMysqlConverterUtil {
+public class ApolloMysqlDefaultConverterUtil {
 
-  public static void convertMainMysql(SqlTemplate sqlTemplate, String targetSql,
+  public static void convert(SqlTemplate sqlTemplate, String targetSql,
       SqlTemplateContext context) {
     String databaseName;
     String srcSql = sqlTemplate.getSrcPath();

@@ -41,7 +41,7 @@ class ApolloSqlConverterTest {
   void checkSql() {
     String repositoryDir = ApolloSqlConverterUtil.getRepositoryDir();
 
-    String srcDir = repositoryDir + "/scripts/sql-src";
+    String srcDir = repositoryDir + "/scripts/sql/src";
     String checkerParentDir = repositoryDir + "/apollo-build-sql-converter/target/scripts";
     String repositoryParentDir = repositoryDir + "/scripts";
 
@@ -55,24 +55,21 @@ class ApolloSqlConverterTest {
   private void checkSqlList(List<String> srcSqlList, String srcDir, String checkerParentDir,
       String repositoryParentDir) {
 
-    // '/scripts/sql'
+    // 'scripts/sql/profiles/mysql-default'
     this.checkMainMysqlList(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
 
-    // '/scripts/sql/assembly/mysql'
-    this.checkAssemblyMysqlList(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
-
-    // '/scripts/sql/assembly/mysql-database-not-specified'
+    // 'scripts/sql/profiles/mysql-database-not-specified'
     this.checkAssemblyMysqlDatabaseNotSpecifiedList(srcSqlList, srcDir, checkerParentDir,
         repositoryParentDir);
 
-    // '/scripts/sql/assembly/h2'
+    // '/scripts/scripts/sql/profiles/h2'
     this.checkAssemblyH2List(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
   }
 
   private void checkMainMysqlList(List<String> srcSqlList, String srcDir,
       String checkerParentDir, String repositoryParentDir) {
-    String checkerTargetDir = checkerParentDir + "/sql";
-    String repositoryTargetDir = repositoryParentDir + "/sql";
+    String checkerTargetDir = checkerParentDir + "/sql/profiles/mysql-default";
+    String repositoryTargetDir = repositoryParentDir + "/sql/profiles/mysql-default";
 
     List<String> checkerSqlList = ApolloSqlConverterUtil.getSqlList(checkerTargetDir);
 
@@ -83,7 +80,7 @@ class ApolloSqlConverterTest {
     List<String> redundantSqlList = this.findRedundantSqlList(checkerTargetDir, checkerSqlList,
         repositoryTargetDir, repositorySqlList);
     Assertions.assertEquals(0, redundantSqlList.size(),
-        "redundant sql files, please add sql files in 'scripts/sql-src' and then run '"
+        "redundant sql files, please add sql files in 'scripts/sql/src' and then run '"
             + GENERATE_TIPS + "' to generated. Do not edit 'scripts/sql' manually !!!\npath: "
             + redundantSqlList);
 
@@ -179,24 +176,10 @@ class ApolloSqlConverterTest {
     }
   }
 
-  private void checkAssemblyMysqlList(List<String> srcSqlList, String srcDir,
-      String checkerParentDir, String repositoryParentDir) {
-    String checkerTargetDir = checkerParentDir + "/sql/assembly/mysql";
-    String repositoryTargetDir = repositoryParentDir + "/sql/assembly/mysql";
-    for (String srcSql : srcSqlList) {
-      String checkerTargetSql = ApolloSqlConverterUtil.replacePath(srcSql, srcDir,
-          checkerTargetDir);
-      String repositoryTargetSql = ApolloSqlConverterUtil.replacePath(srcSql, srcDir,
-          repositoryTargetDir);
-
-      this.doCheck(checkerTargetSql, repositoryTargetSql);
-    }
-  }
-
   private void checkAssemblyMysqlDatabaseNotSpecifiedList(List<String> srcSqlList, String srcDir,
       String checkerParentDir, String repositoryParentDir) {
-    String checkerTargetDir = checkerParentDir + "/sql/assembly/mysql-database-not-specified";
-    String repositoryTargetDir = repositoryParentDir + "/sql/assembly/mysql-database-not-specified";
+    String checkerTargetDir = checkerParentDir + "/sql/profiles/mysql-database-not-specified";
+    String repositoryTargetDir = repositoryParentDir + "/sql/profiles/mysql-database-not-specified";
     for (String srcSql : srcSqlList) {
       String checkerTargetSql = ApolloSqlConverterUtil.replacePath(srcSql, srcDir,
           checkerTargetDir);
@@ -209,8 +192,8 @@ class ApolloSqlConverterTest {
 
   private void checkAssemblyH2List(List<String> srcSqlList, String srcDir,
       String checkerParentDir, String repositoryParentDir) {
-    String checkerTargetDir = checkerParentDir + "/sql/assembly/h2";
-    String repositoryTargetDir = repositoryParentDir + "/sql/assembly/h2";
+    String checkerTargetDir = checkerParentDir + "/scripts/sql/profiles/h2";
+    String repositoryTargetDir = repositoryParentDir + "/scripts/sql/profiles/h2";
     for (String srcSql : srcSqlList) {
       String checkerTargetSql = ApolloSqlConverterUtil.replacePath(srcSql, srcDir,
           checkerTargetDir);

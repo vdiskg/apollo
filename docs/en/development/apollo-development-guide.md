@@ -64,9 +64,9 @@ The following is an example of how to start `apollo-assembly` locally with Intel
 -Dspring.datasource.password=
 
 ```
-The initialization script for the MySQL database can be found in the scripts/sql/assembly/mysql directory of this project.
-[apolloconfigdb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/assembly/mysql/apolloconfigdb.sql)
-[apolloportaldb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/assembly/mysql/apolloportaldb.sql)
+The initialization script for the MySQL database can be found in the scripts/sql/profiles/mysql-default directory of this project.
+[apolloconfigdb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/profiles/mysql-default/apolloconfigdb.sql)
+[apolloportaldb.sql](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/scripts/sql/profiles/mysql-default/apolloportaldb.sql)
 
 >Note 3: The default log output of the program is /opt/logs/100003171/apollo-assembly.log, if you need to modify the log file path, you can add the `logging.file.name` parameter, as follows.
 >
