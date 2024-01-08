@@ -16,8 +16,6 @@
  */
 package com.ctrip.framework.apollo.build.sql.converter;
 
-import com.ctrip.framework.apollo.build.sql.converter.ApolloSqlConverter;
-import com.ctrip.framework.apollo.build.sql.converter.ApolloSqlConverterUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -56,17 +54,17 @@ class ApolloSqlConverterTest {
       String repositoryParentDir) {
 
     // 'scripts/sql/profiles/mysql-default'
-    this.checkMainMysqlList(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
+    this.checkMysqlDefaultList(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
 
     // 'scripts/sql/profiles/mysql-database-not-specified'
-    this.checkAssemblyMysqlDatabaseNotSpecifiedList(srcSqlList, srcDir, checkerParentDir,
+    this.checkMysqlDatabaseNotSpecifiedList(srcSqlList, srcDir, checkerParentDir,
         repositoryParentDir);
 
-    // '/scripts/scripts/sql/profiles/h2'
-    this.checkAssemblyH2List(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
+    // '/scripts/sql/profiles/h2'
+    this.checkH2List(srcSqlList, srcDir, checkerParentDir, repositoryParentDir);
   }
 
-  private void checkMainMysqlList(List<String> srcSqlList, String srcDir,
+  private void checkMysqlDefaultList(List<String> srcSqlList, String srcDir,
       String checkerParentDir, String repositoryParentDir) {
     String checkerTargetDir = checkerParentDir + "/sql/profiles/mysql-default";
     String repositoryTargetDir = repositoryParentDir + "/sql/profiles/mysql-default";
@@ -176,7 +174,7 @@ class ApolloSqlConverterTest {
     }
   }
 
-  private void checkAssemblyMysqlDatabaseNotSpecifiedList(List<String> srcSqlList, String srcDir,
+  private void checkMysqlDatabaseNotSpecifiedList(List<String> srcSqlList, String srcDir,
       String checkerParentDir, String repositoryParentDir) {
     String checkerTargetDir = checkerParentDir + "/sql/profiles/mysql-database-not-specified";
     String repositoryTargetDir = repositoryParentDir + "/sql/profiles/mysql-database-not-specified";
@@ -190,10 +188,10 @@ class ApolloSqlConverterTest {
     }
   }
 
-  private void checkAssemblyH2List(List<String> srcSqlList, String srcDir,
+  private void checkH2List(List<String> srcSqlList, String srcDir,
       String checkerParentDir, String repositoryParentDir) {
-    String checkerTargetDir = checkerParentDir + "/scripts/sql/profiles/h2";
-    String repositoryTargetDir = repositoryParentDir + "/scripts/sql/profiles/h2";
+    String checkerTargetDir = checkerParentDir + "/sql/profiles/h2";
+    String repositoryTargetDir = repositoryParentDir + "/sql/profiles/h2";
     for (String srcSql : srcSqlList) {
       String checkerTargetSql = ApolloSqlConverterUtil.replacePath(srcSql, srcDir,
           checkerTargetDir);

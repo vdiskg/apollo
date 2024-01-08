@@ -35,9 +35,9 @@
 -- Dump of table app
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_App`;
+DROP TABLE IF EXISTS `App`;
 
-CREATE TABLE `C_0_App` (
+CREATE TABLE `App` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
   `Name` varchar(500) NOT NULL DEFAULT 'default' COMMENT '应用名',
@@ -62,9 +62,9 @@ CREATE TABLE `C_0_App` (
 -- Dump of table appnamespace
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_AppNamespace`;
+DROP TABLE IF EXISTS `AppNamespace`;
 
-CREATE TABLE `C_0_AppNamespace` (
+CREATE TABLE `AppNamespace` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `Name` varchar(32) NOT NULL DEFAULT '' COMMENT 'namespace名字，注意，需要全局唯一',
   `AppId` varchar(64) NOT NULL DEFAULT '' COMMENT 'app id',
@@ -88,9 +88,9 @@ CREATE TABLE `C_0_AppNamespace` (
 -- Dump of table audit
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_Audit`;
+DROP TABLE IF EXISTS `Audit`;
 
-CREATE TABLE `C_0_Audit` (
+CREATE TABLE `Audit` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `EntityName` varchar(50) NOT NULL DEFAULT 'default' COMMENT '表名',
   `EntityId` int(10) unsigned DEFAULT NULL COMMENT '记录ID',
@@ -111,9 +111,9 @@ CREATE TABLE `C_0_Audit` (
 -- Dump of table cluster
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_Cluster`;
+DROP TABLE IF EXISTS `Cluster`;
 
-CREATE TABLE `C_0_Cluster` (
+CREATE TABLE `Cluster` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `Name` varchar(32) NOT NULL DEFAULT '' COMMENT '集群名字',
   `AppId` varchar(64) NOT NULL DEFAULT '' COMMENT 'App id',
@@ -135,9 +135,9 @@ CREATE TABLE `C_0_Cluster` (
 -- Dump of table commit
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_Commit`;
+DROP TABLE IF EXISTS `Commit`;
 
-CREATE TABLE `C_0_Commit` (
+CREATE TABLE `Commit` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `ChangeSets` longtext NOT NULL COMMENT '修改变更集',
   `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
@@ -160,9 +160,9 @@ CREATE TABLE `C_0_Commit` (
 -- Dump of table grayreleaserule
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_GrayReleaseRule`;
+DROP TABLE IF EXISTS `GrayReleaseRule`;
 
-CREATE TABLE `C_0_GrayReleaseRule` (
+CREATE TABLE `GrayReleaseRule` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
   `ClusterName` varchar(32) NOT NULL DEFAULT 'default' COMMENT 'Cluster Name',
@@ -186,9 +186,9 @@ CREATE TABLE `C_0_GrayReleaseRule` (
 -- Dump of table instance
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_Instance`;
+DROP TABLE IF EXISTS `Instance`;
 
-CREATE TABLE `C_0_Instance` (
+CREATE TABLE `Instance` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
   `ClusterName` varchar(32) NOT NULL DEFAULT 'default' COMMENT 'ClusterName',
@@ -207,9 +207,9 @@ CREATE TABLE `C_0_Instance` (
 -- Dump of table instanceconfig
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_InstanceConfig`;
+DROP TABLE IF EXISTS `InstanceConfig`;
 
-CREATE TABLE `C_0_InstanceConfig` (
+CREATE TABLE `InstanceConfig` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `InstanceId` int(11) unsigned DEFAULT NULL COMMENT 'Instance Id',
   `ConfigAppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'Config App Id',
@@ -231,9 +231,9 @@ CREATE TABLE `C_0_InstanceConfig` (
 -- Dump of table item
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_Item`;
+DROP TABLE IF EXISTS `Item`;
 
-CREATE TABLE `C_0_Item` (
+CREATE TABLE `Item` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `NamespaceId` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '集群NamespaceId',
   `Key` varchar(128) NOT NULL DEFAULT 'default' COMMENT '配置项Key',
@@ -257,9 +257,9 @@ CREATE TABLE `C_0_Item` (
 -- Dump of table namespace
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_Namespace`;
+DROP TABLE IF EXISTS `Namespace`;
 
-CREATE TABLE `C_0_Namespace` (
+CREATE TABLE `Namespace` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
   `ClusterName` varchar(500) NOT NULL DEFAULT 'default' COMMENT 'Cluster Name',
@@ -281,9 +281,9 @@ CREATE TABLE `C_0_Namespace` (
 -- Dump of table namespacelock
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_NamespaceLock`;
+DROP TABLE IF EXISTS `NamespaceLock`;
 
-CREATE TABLE `C_0_NamespaceLock` (
+CREATE TABLE `NamespaceLock` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `NamespaceId` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '集群NamespaceId',
   `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' COMMENT '创建人邮箱前缀',
@@ -302,9 +302,9 @@ CREATE TABLE `C_0_NamespaceLock` (
 -- Dump of table release
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_Release`;
+DROP TABLE IF EXISTS `Release`;
 
-CREATE TABLE `C_0_Release` (
+CREATE TABLE `Release` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `ReleaseKey` varchar(64) NOT NULL DEFAULT '' COMMENT '发布的Key',
   `Name` varchar(64) NOT NULL DEFAULT 'default' COMMENT '发布名字',
@@ -330,9 +330,9 @@ CREATE TABLE `C_0_Release` (
 -- Dump of table releasehistory
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_ReleaseHistory`;
+DROP TABLE IF EXISTS `ReleaseHistory`;
 
-CREATE TABLE `C_0_ReleaseHistory` (
+CREATE TABLE `ReleaseHistory` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
   `ClusterName` varchar(32) NOT NULL DEFAULT 'default' COMMENT 'ClusterName',
@@ -359,9 +359,9 @@ CREATE TABLE `C_0_ReleaseHistory` (
 -- Dump of table releasemessage
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_ReleaseMessage`;
+DROP TABLE IF EXISTS `ReleaseMessage`;
 
-CREATE TABLE `C_0_ReleaseMessage` (
+CREATE TABLE `ReleaseMessage` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `Message` varchar(1024) NOT NULL DEFAULT '' COMMENT '发布的消息内容',
   `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
@@ -375,9 +375,9 @@ CREATE TABLE `C_0_ReleaseMessage` (
 -- Dump of table serverconfig
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_ServerConfig`;
+DROP TABLE IF EXISTS `ServerConfig`;
 
-CREATE TABLE `C_0_ServerConfig` (
+CREATE TABLE `ServerConfig` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `Key` varchar(64) NOT NULL DEFAULT 'default' COMMENT '配置项Key',
   `Cluster` varchar(32) NOT NULL DEFAULT 'default' COMMENT '配置对应的集群，default为不针对特定的集群',
@@ -397,9 +397,9 @@ CREATE TABLE `C_0_ServerConfig` (
 -- Dump of table accesskey
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_AccessKey`;
+DROP TABLE IF EXISTS `AccessKey`;
 
-CREATE TABLE `C_0_AccessKey` (
+CREATE TABLE `AccessKey` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
   `Secret` varchar(128) NOT NULL DEFAULT '' COMMENT 'Secret',
@@ -419,9 +419,9 @@ CREATE TABLE `C_0_AccessKey` (
 -- Dump of table serviceregistry
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_ServiceRegistry`;
+DROP TABLE IF EXISTS `ServiceRegistry`;
 
-CREATE TABLE `C_0_ServiceRegistry` (
+CREATE TABLE `ServiceRegistry` (
   `Id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `ServiceName` VARCHAR(64) NOT NULL COMMENT '服务名',
   `Uri` VARCHAR(64) NOT NULL COMMENT '服务地址',
@@ -437,9 +437,9 @@ CREATE TABLE `C_0_ServiceRegistry` (
 -- Dump of table AuditLog
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_AuditLog`;
+DROP TABLE IF EXISTS `AuditLog`;
 
-CREATE TABLE `C_0_AuditLog` (
+CREATE TABLE `AuditLog` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `TraceId` varchar(32) NOT NULL DEFAULT '' COMMENT '链路全局唯一ID',
   `SpanId` varchar(32) NOT NULL DEFAULT '' COMMENT '跨度ID',
@@ -465,9 +465,9 @@ CREATE TABLE `C_0_AuditLog` (
 -- Dump of table AuditLogDataInfluence
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `C_0_AuditLogDataInfluence`;
+DROP TABLE IF EXISTS `AuditLogDataInfluence`;
 
-CREATE TABLE `C_0_AuditLogDataInfluence` (
+CREATE TABLE `AuditLogDataInfluence` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `SpanId` char(32) NOT NULL DEFAULT '' COMMENT '跨度ID',
   `InfluenceEntityId` varchar(50) NOT NULL DEFAULT '0' COMMENT '记录ID',
@@ -489,7 +489,7 @@ CREATE TABLE `C_0_AuditLogDataInfluence` (
 
 -- Config
 -- ------------------------------------------------------------
-INSERT INTO `C_0_ServerConfig` (`Key`, `Cluster`, `Value`, `Comment`)
+INSERT INTO `ServerConfig` (`Key`, `Cluster`, `Value`, `Comment`)
 VALUES
     ('eureka.service.url', 'default', 'http://localhost:8080/eureka/', 'Eureka服务Url，多个service以英文逗号分隔'),
     ('namespace.lock.switch', 'default', 'false', '一次发布只能有一个人修改开关'),

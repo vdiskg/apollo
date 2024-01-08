@@ -61,10 +61,6 @@ public class ApolloMysqlDefaultConverterUtil {
   private static String convertMainMysqlLine(String line, String databaseName) {
     String convertedLine = line;
 
-    convertedLine = convertedLine.replace("P_0_", "");
-
-    convertedLine = convertedLine.replace("C_0_", "");
-
     convertedLine = convertedLine.replace("ApolloAssemblyDB", databaseName);
 
     return convertedLine;

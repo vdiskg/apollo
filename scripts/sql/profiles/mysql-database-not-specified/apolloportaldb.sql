@@ -35,9 +35,9 @@
 -- Dump of table app
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_App`;
+DROP TABLE IF EXISTS `App`;
 
-CREATE TABLE `P_0_App` (
+CREATE TABLE `App` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
   `Name` varchar(500) NOT NULL DEFAULT 'default' COMMENT '应用名',
@@ -62,9 +62,9 @@ CREATE TABLE `P_0_App` (
 -- Dump of table appnamespace
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_AppNamespace`;
+DROP TABLE IF EXISTS `AppNamespace`;
 
-CREATE TABLE `P_0_AppNamespace` (
+CREATE TABLE `AppNamespace` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `Name` varchar(32) NOT NULL DEFAULT '' COMMENT 'namespace名字，注意，需要全局唯一',
   `AppId` varchar(64) NOT NULL DEFAULT '' COMMENT 'app id',
@@ -88,9 +88,9 @@ CREATE TABLE `P_0_AppNamespace` (
 -- Dump of table consumer
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Consumer`;
+DROP TABLE IF EXISTS `Consumer`;
 
-CREATE TABLE `P_0_Consumer` (
+CREATE TABLE `Consumer` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
   `Name` varchar(500) NOT NULL DEFAULT 'default' COMMENT '应用名',
@@ -114,9 +114,9 @@ CREATE TABLE `P_0_Consumer` (
 -- Dump of table consumeraudit
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_ConsumerAudit`;
+DROP TABLE IF EXISTS `ConsumerAudit`;
 
-CREATE TABLE `P_0_ConsumerAudit` (
+CREATE TABLE `ConsumerAudit` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `ConsumerId` int(11) unsigned DEFAULT NULL COMMENT 'Consumer Id',
   `Uri` varchar(1024) NOT NULL DEFAULT '' COMMENT '访问的Uri',
@@ -133,9 +133,9 @@ CREATE TABLE `P_0_ConsumerAudit` (
 -- Dump of table consumerrole
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_ConsumerRole`;
+DROP TABLE IF EXISTS `ConsumerRole`;
 
-CREATE TABLE `P_0_ConsumerRole` (
+CREATE TABLE `ConsumerRole` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `ConsumerId` int(11) unsigned DEFAULT NULL COMMENT 'Consumer Id',
   `RoleId` int(10) unsigned DEFAULT NULL COMMENT 'Role Id',
@@ -156,9 +156,9 @@ CREATE TABLE `P_0_ConsumerRole` (
 -- Dump of table consumertoken
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_ConsumerToken`;
+DROP TABLE IF EXISTS `ConsumerToken`;
 
-CREATE TABLE `P_0_ConsumerToken` (
+CREATE TABLE `ConsumerToken` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `ConsumerId` int(11) unsigned DEFAULT NULL COMMENT 'ConsumerId',
   `Token` varchar(128) NOT NULL DEFAULT '' COMMENT 'token',
@@ -177,9 +177,9 @@ CREATE TABLE `P_0_ConsumerToken` (
 -- Dump of table favorite
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Favorite`;
+DROP TABLE IF EXISTS `Favorite`;
 
-CREATE TABLE `P_0_Favorite` (
+CREATE TABLE `Favorite` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `UserId` varchar(32) NOT NULL DEFAULT 'default' COMMENT '收藏的用户',
   `AppId` varchar(64) NOT NULL DEFAULT 'default' COMMENT 'AppID',
@@ -199,9 +199,9 @@ CREATE TABLE `P_0_Favorite` (
 -- Dump of table permission
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Permission`;
+DROP TABLE IF EXISTS `Permission`;
 
-CREATE TABLE `P_0_Permission` (
+CREATE TABLE `Permission` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `PermissionType` varchar(32) NOT NULL DEFAULT '' COMMENT '权限类型',
   `TargetId` varchar(256) NOT NULL DEFAULT '' COMMENT '权限对象类型',
@@ -221,9 +221,9 @@ CREATE TABLE `P_0_Permission` (
 -- Dump of table role
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Role`;
+DROP TABLE IF EXISTS `Role`;
 
-CREATE TABLE `P_0_Role` (
+CREATE TABLE `Role` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `RoleName` varchar(256) NOT NULL DEFAULT '' COMMENT 'Role name',
   `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal',
@@ -242,9 +242,9 @@ CREATE TABLE `P_0_Role` (
 -- Dump of table rolepermission
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_RolePermission`;
+DROP TABLE IF EXISTS `RolePermission`;
 
-CREATE TABLE `P_0_RolePermission` (
+CREATE TABLE `RolePermission` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `RoleId` int(10) unsigned DEFAULT NULL COMMENT 'Role Id',
   `PermissionId` int(10) unsigned DEFAULT NULL COMMENT 'Permission Id',
@@ -265,9 +265,9 @@ CREATE TABLE `P_0_RolePermission` (
 -- Dump of table serverconfig
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_ServerConfig`;
+DROP TABLE IF EXISTS `ServerConfig`;
 
-CREATE TABLE `P_0_ServerConfig` (
+CREATE TABLE `ServerConfig` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `Key` varchar(64) NOT NULL DEFAULT 'default' COMMENT '配置项Key',
   `Value` varchar(2048) NOT NULL DEFAULT 'default' COMMENT '配置项值',
@@ -288,9 +288,9 @@ CREATE TABLE `P_0_ServerConfig` (
 -- Dump of table userrole
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_UserRole`;
+DROP TABLE IF EXISTS `UserRole`;
 
-CREATE TABLE `P_0_UserRole` (
+CREATE TABLE `UserRole` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `UserId` varchar(128) DEFAULT '' COMMENT '用户身份标识',
   `RoleId` int(10) unsigned DEFAULT NULL COMMENT 'Role Id',
@@ -309,9 +309,9 @@ CREATE TABLE `P_0_UserRole` (
 -- Dump of table Users
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Users`;
+DROP TABLE IF EXISTS `Users`;
 
-CREATE TABLE `P_0_Users` (
+CREATE TABLE `Users` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `Username` varchar(64) NOT NULL DEFAULT 'default' COMMENT '用户登录账户',
   `Password` varchar(512) NOT NULL DEFAULT 'default' COMMENT '密码',
@@ -326,9 +326,9 @@ CREATE TABLE `P_0_Users` (
 -- Dump of table Authorities
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_Authorities`;
+DROP TABLE IF EXISTS `Authorities`;
 
-CREATE TABLE `P_0_Authorities` (
+CREATE TABLE `Authorities` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增Id',
   `Username` varchar(64) NOT NULL,
   `Authority` varchar(50) NOT NULL,
@@ -339,9 +339,9 @@ CREATE TABLE `P_0_Authorities` (
 -- Dump of table SPRING_SESSION
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_SPRING_SESSION`;
+DROP TABLE IF EXISTS `SPRING_SESSION`;
 
-CREATE TABLE `P_0_SPRING_SESSION` (
+CREATE TABLE `SPRING_SESSION` (
   `PRIMARY_ID` char(36) NOT NULL,
   `SESSION_ID` char(36) NOT NULL,
   `CREATION_TIME` bigint NOT NULL,
@@ -358,22 +358,22 @@ CREATE TABLE `P_0_SPRING_SESSION` (
 -- Dump of table SPRING_SESSION_ATTRIBUTES
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_SPRING_SESSION_ATTRIBUTES`;
+DROP TABLE IF EXISTS `SPRING_SESSION_ATTRIBUTES`;
 
-CREATE TABLE `P_0_SPRING_SESSION_ATTRIBUTES` (
+CREATE TABLE `SPRING_SESSION_ATTRIBUTES` (
   `SESSION_PRIMARY_ID` char(36) NOT NULL,
   `ATTRIBUTE_NAME` varchar(200) NOT NULL,
   `ATTRIBUTE_BYTES` blob NOT NULL,
   PRIMARY KEY (`SESSION_PRIMARY_ID`,`ATTRIBUTE_NAME`),
-  CONSTRAINT `SPRING_SESSION_ATTRIBUTES_FK` FOREIGN KEY (`SESSION_PRIMARY_ID`) REFERENCES `P_0_SPRING_SESSION` (`PRIMARY_ID`) ON DELETE CASCADE
+  CONSTRAINT `SPRING_SESSION_ATTRIBUTES_FK` FOREIGN KEY (`SESSION_PRIMARY_ID`) REFERENCES `SPRING_SESSION` (`PRIMARY_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
 -- Dump of table AuditLog
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_AuditLog`;
+DROP TABLE IF EXISTS `AuditLog`;
 
-CREATE TABLE `P_0_AuditLog` (
+CREATE TABLE `AuditLog` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `TraceId` varchar(32) NOT NULL DEFAULT '' COMMENT '链路全局唯一ID',
   `SpanId` varchar(32) NOT NULL DEFAULT '' COMMENT '跨度ID',
@@ -399,9 +399,9 @@ CREATE TABLE `P_0_AuditLog` (
 -- Dump of table AuditLogDataInfluence
 -- ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `P_0_AuditLogDataInfluence`;
+DROP TABLE IF EXISTS `AuditLogDataInfluence`;
 
-CREATE TABLE `P_0_AuditLogDataInfluence` (
+CREATE TABLE `AuditLogDataInfluence` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `SpanId` char(32) NOT NULL DEFAULT '' COMMENT '跨度ID',
   `InfluenceEntityId` varchar(50) NOT NULL DEFAULT '0' COMMENT '记录ID',
@@ -423,7 +423,7 @@ CREATE TABLE `P_0_AuditLogDataInfluence` (
 
 -- Config
 -- ------------------------------------------------------------
-INSERT INTO `P_0_ServerConfig` (`Key`, `Value`, `Comment`)
+INSERT INTO `ServerConfig` (`Key`, `Value`, `Comment`)
 VALUES
     ('apollo.portal.envs', 'dev', '可支持的环境列表'),
     ('organizations', '[{"orgId":"TEST1","orgName":"样例部门1"},{"orgId":"TEST2","orgName":"样例部门2"}]', '部门列表'),
@@ -435,11 +435,11 @@ VALUES
     ('apollo.portal.meta.servers', '{}', '各环境Meta Service列表');
 
 
-INSERT INTO `P_0_Users` (`Username`, `Password`, `UserDisplayName`, `Email`, `Enabled`)
+INSERT INTO `Users` (`Username`, `Password`, `UserDisplayName`, `Email`, `Enabled`)
 VALUES
 	('apollo', '$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo', 'apollo@acme.com', 1);
 
-INSERT INTO `P_0_Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
+INSERT INTO `Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
 
 -- 
 -- ===============================================================================
