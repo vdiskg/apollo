@@ -24,8 +24,10 @@ import com.ctrip.framework.apollo.portal.PortalApplication;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -37,6 +39,7 @@ import org.springframework.context.annotation.Import;
     ApolloAssemblySqlInitializationConfig.class,
 })
 @SpringBootApplication(exclude = {
+    DataSourceAutoConfiguration.class,
     DataSourceTransactionManagerAutoConfiguration.class,
     HibernateJpaAutoConfiguration.class,
     ApolloAuditAutoConfiguration.class,
@@ -49,6 +52,8 @@ public class ApolloApplication {
     /**
      * Common
      */
+    MDC.put("starting_context", "[starting:common] ");
+    logger.info("commonContext starting...");
     ConfigurableApplicationContext commonContext =
         new SpringApplicationBuilder(ApolloApplication.class).web(WebApplicationType.NONE).run(args);
     logger.info("commonContext [{}] isActive: {}", commonContext.getId(), commonContext.isActive());
@@ -56,6 +61,8 @@ public class ApolloApplication {
     /**
      * ConfigService
      */
+    MDC.put("starting_context", "[starting:config] ");
+    logger.info("configContext starting...");
     ConfigurableApplicationContext configContext =
         new SpringApplicationBuilder(ConfigServiceApplication.class).parent(commonContext)
             .profiles("assembly")
@@ -65,20 +72,26 @@ public class ApolloApplication {
     /**
      * AdminService
      */
+    MDC.put("starting_context", "[starting:admin] ");
+    logger.info("adminContext starting...");
     ConfigurableApplicationContext adminContext =
         new SpringApplicationBuilder(AdminServiceApplication.class).parent(commonContext)
             .profiles("assembly")
             .sources(RefreshScope.class).run(args);
-    logger.info("adminContext [{}] isActive: {}" , adminContext.getId(), adminContext.isActive());
+    logger.info("adminContext [{}] isActive: {}", adminContext.getId(), adminContext.isActive());
 
     /**
      * Portal
      */
+    MDC.put("starting_context", "[starting:portal] ");
+    logger.info("portalContext starting...");
     ConfigurableApplicationContext portalContext =
         new SpringApplicationBuilder(PortalApplication.class).parent(commonContext)
             .profiles("assembly")
             .sources(RefreshScope.class).run(args);
     logger.info("portalContext [{}] isActive: {}", portalContext.getId(), portalContext.isActive());
+
+    MDC.clear();
   }
 
 }

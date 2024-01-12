@@ -14,9 +14,8 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.assembly.datasource;
+package com.ctrip.framework.apollo.common.datasource;
 
-import com.ctrip.framework.apollo.assembly.ApolloApplication;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
@@ -25,23 +24,41 @@ import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.sql.init.SqlDataSourceScriptDatabaseInitializer;
 import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.jdbc.DatabaseDriver;
+import org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer;
 import org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver;
 import org.springframework.boot.sql.init.DatabaseInitializationSettings;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
-    SqlDataSourceScriptDatabaseInitializer {
+public class ApolloDataSourceScriptDatabaseInitializer extends
+    DataSourceScriptDatabaseInitializer {
 
-  public ApolloAssemblyDataSourceScriptDatabaseInitializer(DataSource dataSource,
-      SqlInitializationProperties properties) {
-    super(dataSource, getSettings(dataSource, properties));
+  public ApolloDataSourceScriptDatabaseInitializer(DataSource dataSource,
+      ApolloSqlInitializationProperties properties) {
+    super(determineDataSource(dataSource, properties), getSettings(dataSource, properties));
+  }
+
+  private static DataSource determineDataSource(DataSource dataSource,
+      ApolloSqlInitializationProperties properties) {
+
+    String username = properties.getUsername();
+    String password = properties.getPassword();
+    if (StringUtils.hasText(username) && StringUtils.hasText(password)) {
+      return DataSourceBuilder.derivedFrom(dataSource)
+          .username(username)
+          .password(password)
+          .type(SimpleDriverDataSource.class)
+          .build();
+    }
+    return dataSource;
   }
 
   public static DatabaseInitializationSettings getSettings(DataSource dataSource,
-      SqlInitializationProperties properties) {
+      ApolloSqlInitializationProperties properties) {
 
     PlatformPlaceholderDatabaseDriverResolver platformResolver = new PlatformPlaceholderDatabaseDriverResolver().withDriverPlatform(
         DatabaseDriver.MARIADB, "mysql");
@@ -66,7 +83,7 @@ public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
 
   private static List<String> resolveLocations(Collection<String> locations,
       PlatformPlaceholderDatabaseDriverResolver platformResolver, DataSource dataSource,
-      SqlInitializationProperties properties) {
+      ApolloSqlInitializationProperties properties) {
 
     if (CollectionUtils.isEmpty(locations)) {
       return null;
@@ -114,7 +131,8 @@ public class ApolloAssemblyDataSourceScriptDatabaseInitializer extends
   }
 
   private static String findRepositoryDirectory() {
-    CodeSource codeSource = ApolloApplication.class.getProtectionDomain().getCodeSource();
+    CodeSource codeSource = ApolloDataSourceScriptDatabaseInitializer.class.getProtectionDomain()
+        .getCodeSource();
     URL location = codeSource != null ? codeSource.getLocation() : null;
     if (location == null) {
       return null;

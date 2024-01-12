@@ -16,10 +16,7 @@
  */
 package com.ctrip.framework.apollo.biz;
 
-import com.ctrip.framework.apollo.common.jpa.TablePrefixNamingStrategy;
-import com.ctrip.framework.apollo.common.jpa.TablePrefixProperties;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,8 +25,4 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackageClasses = ApolloBizConfig.class)
 public class ApolloBizConfig {
 
-  @Bean
-  public static TablePrefixNamingStrategy tablePrefixNamingStrategy(TablePrefixProperties tablePrefixProperties) {
-    return new TablePrefixNamingStrategy(tablePrefixProperties.getConfigPrefix());
-  }
 }

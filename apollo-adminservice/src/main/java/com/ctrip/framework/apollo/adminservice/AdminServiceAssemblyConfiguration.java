@@ -24,7 +24,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Profile("assembly")
 @Configuration
-public class AdminServiceAssemblyAutoConfiguration {
+public class AdminServiceAssemblyConfiguration {
 
   @Order(99)
   @Configuration

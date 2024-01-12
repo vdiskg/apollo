@@ -14,19 +14,23 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.portal;
+package com.ctrip.framework.apollo.biz;
 
-import com.ctrip.framework.apollo.common.jpa.TablePrefixNamingStrategy;
-import com.ctrip.framework.apollo.common.jpa.TablePrefixProperties;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 
+@Profile("assembly")
 @Configuration
-public class PortalApplicationConfig {
+public class ApolloBizAssemblyConfiguration {
 
-  @Bean
-  public static TablePrefixNamingStrategy tablePrefixNamingStrategy(
-      TablePrefixProperties tablePrefixProperties) {
-    return new TablePrefixNamingStrategy(tablePrefixProperties.getPortalPrefix());
-  }
+ @Primary
+ @ConfigurationProperties(prefix = "spring.config-datasource")
+ @Bean
+ public static DataSourceProperties dataSourceProperties() {
+  return new DataSourceProperties();
+ }
 }

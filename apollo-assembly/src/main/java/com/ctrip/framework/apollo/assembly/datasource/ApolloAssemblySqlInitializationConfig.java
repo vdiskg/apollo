@@ -30,7 +30,7 @@ import org.springframework.util.StringUtils;
 @ConditionalOnProperty(prefix = "spring.sql.init", name = "enabled", matchIfMissing = true)
 @Configuration
 public class ApolloAssemblySqlInitializationConfig {
-
+/*
   @Bean
   ApolloAssemblyDataSourceScriptDatabaseInitializer dataSourceScriptDatabaseInitializer(DataSource dataSource,
       SqlInitializationProperties properties) {
@@ -47,5 +47,5 @@ public class ApolloAssemblySqlInitializationConfig {
           .build();
     }
     return dataSource;
-  }
+  }*/
 }
