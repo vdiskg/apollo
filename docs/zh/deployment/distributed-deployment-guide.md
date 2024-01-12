@@ -215,11 +215,11 @@ Apollo服务端共需要两个数据库：`ApolloPortalDB`和`ApolloConfigDB`，
 
 #### 2.1.1.1 手动导入SQL创建
 
-通过各种MySQL客户端导入[apolloportaldb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/apolloportaldb.sql)即可。
+通过各种MySQL客户端导入[apolloportaldb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/profiles/mysql-default/apolloportaldb.sql)即可。
 
 以MySQL原生客户端为例：
 ```sql
-source /your_local_path/scripts/sql/apolloportaldb.sql
+source /your_local_path/scripts/sql/profiles/mysql-default/apolloportaldb.sql
 ```
 
 #### 2.1.1.2 通过Flyway导入SQL创建
@@ -248,11 +248,11 @@ select `Id`, `Key`, `Value`, `Comment` from `ApolloPortalDB`.`ServerConfig` limi
 
 #### 2.1.2.1 手动导入SQL
 
-通过各种MySQL客户端导入[apolloconfigdb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/apolloconfigdb.sql)即可。
+通过各种MySQL客户端导入[apolloconfigdb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/profiles/mysql-default/apolloconfigdb.sql)即可。
 
 以MySQL原生客户端为例：
 ```sql
-source /your_local_path/scripts/sql/apolloconfigdb.sql
+source /your_local_path/scripts/sql/profiles/mysql-default/apolloconfigdb.sql
 ```
 
 #### 2.1.2.2 通过Flyway导入SQL

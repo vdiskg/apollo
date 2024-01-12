@@ -76,79 +76,108 @@ Quick Start只针对本地测试使用，所以一般用户不需要自己下载
 > 注：使用内存数据库时，任何操作都会在 apollo 进程重启后丢失
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-unset SPRING_SQL_INIT_MODE
+unset SPRING_SQL_CONFIG_INIT_MODE
+unset SPRING_SQL_PORTAL_INIT_MODE
 java -jar apollo-all-in-one.jar
 
 ```
 
 ## 2.2 使用 H2 文件数据库，自动初始化
 #### 注意事项
-1. 脚本中的 SPRING_DATASOURCE_URL 环境变量中的路径 `~/apollo/apolloassemblydb` 可以替换为其它自定义路径，需要保证该路径有读写权限
+1. 脚本中环境变量中的路径 `~/apollo/apollo-config-db` 和 `~/apollo/apollo-portal-db` 可以替换为其它自定义路径，需要保证该路径有读写权限
 
 ### 2.2.1 首次启动
-首次启动使用 SPRING_SQL_INIT_MODE="always" 环境变量来进行初始化
+首次启动使用 SPRING_SQL_CONFIG_INIT_MODE="always" 和 SPRING_SQL_PORTAL_INIT_MODE="always" 环境变量来进行初始化
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-export SPRING_SQL_INIT_MODE="always"
-export SPRING_DATASOURCE_URL="jdbc:h2:file:~/apollo/apolloassemblydb;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+# config db
+export SPRING_SQL_CONFIG_INIT_MODE="always"
+export SPRING_CONFIG_DATASOURCE_URL="jdbc:h2:file:~/apollo/apollo-config-db;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+# portal db
+export SPRING_SQL_PORTAL_INIT_MODE="always"
+export SPRING_PORTAL_DATASOURCE_URL="jdbc:h2:file:~/apollo/apollo-portal-db;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
 java -jar apollo-all-in-one.jar
 
 ```
 
 ### 2.2.2 后续启动
-后续启动去掉 SPRING_SQL_INIT_MODE 环境变量来避免重复初始化
+后续启动去掉 SPRING_SQL_CONFIG_INIT_MODE 和 SPRING_SQL_PORTAL_INIT_MODE 环境变量来避免重复初始化
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-unset SPRING_SQL_INIT_MODE
-export SPRING_DATASOURCE_URL="jdbc:h2:file:~/apollo/apolloassemblydb;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+# config db
+unset SPRING_SQL_CONFIG_INIT_MODE
+export SPRING_CONFIG_DATASOURCE_URL="jdbc:h2:file:~/apollo/apollo-config-db;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+# portal db
+unset SPRING_SQL_PORTAL_INIT_MODE
+export SPRING_PORTAL_DATASOURCE_URL="jdbc:h2:file:~/apollo/apollo-portal-db;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
 java -jar apollo-all-in-one.jar
 
 ```
 
 ## 2.3 使用 mysql 数据库，自动初始化
 #### 注意事项
-1. 脚本中的 SPRING_DATASOURCE_URL 环境变量中的 your-mysql-server:3306 需要替换为实际的 mysql 服务器地址和端口，ApolloAssemblyDB 需要替换为实际的数据库名称
-2. 脚本中的 SPRING_DATASOURCE_USERNAME 和 SPRING_DATASOURCE_PASSWORD 环境变量需要填写实际的用户名和密码
+1. 脚本环境变量中的 your-mysql-server:3306 需要替换为实际的 mysql 服务器地址和端口，ApolloConfigDB 和 ApolloPortalDB 需要替换为实际的数据库名称
+2. 脚本环境变量中的 "apollo-username" 和 "apollo-password" 需要填写实际的用户名和密码
 
 ### 2.3.1 首次启动
 首次启动使用 SPRING_SQL_INIT_MODE="always" 环境变量来进行初始化
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-export SPRING_SQL_INIT_MODE="always"
-export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
-export SPRING_DATASOURCE_USERNAME="apollo-username"
-export SPRING_DATASOURCE_PASSWORD="apollo-password"
+# config db
+export SPRING_SQL_CONFIG_INIT_MODE="always"
+export SPRING_CONFIG_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloConfigDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_CONFIG_DATASOURCE_USERNAME="apollo-username"
+export SPRING_CONFIG_DATASOURCE_PASSWORD="apollo-password"
+# portal db
+export SPRING_SQL_PORTAL_INIT_MODE="always"
+export SPRING_PORTAL_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloPortalDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_PORTAL_DATASOURCE_USERNAME="apollo-username"
+export SPRING_PORTAL_DATASOURCE_PASSWORD="apollo-password"
 java -jar apollo-all-in-one.jar
 
 ```
 
 ### 2.3.2 后续启动
-后续启动去掉 SPRING_SQL_INIT_MODE 环境变量来避免重复初始化
+后续启动去掉 SPRING_SQL_CONFIG_INIT_MODE 和 SPRING_SQL_PORTAL_INIT_MODE 环境变量来避免重复初始化
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-unset SPRING_SQL_INIT_MODE
-export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
-export SPRING_DATASOURCE_USERNAME="apollo-username"
-export SPRING_DATASOURCE_PASSWORD="apollo-password"
+# config db
+unset SPRING_SQL_CONFIG_INIT_MODE
+export SPRING_CONFIG_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloConfigDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_CONFIG_DATASOURCE_USERNAME="apollo-username"
+export SPRING_CONFIG_DATASOURCE_PASSWORD="apollo-password"
+# portal db
+unset SPRING_SQL_PORTAL_INIT_MODE
+export SPRING_PORTAL_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloPortalDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_PORTAL_DATASOURCE_USERNAME="apollo-username"
+export SPRING_PORTAL_DATASOURCE_PASSWORD="apollo-password"
 java -jar apollo-all-in-one.jar
 
 ```
 
 ## 2.4 使用 mysql 数据库，手动初始化
 
-### 2.4.1 手动初始化 ApolloAssemblyDB
-通过各种MySQL客户端导入 [sql/assembly](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/assembly)
+### 2.4.1 手动初始化  ApolloConfigDB 和 ApolloPortalDB
+ApolloConfigDB 通过各种MySQL客户端导入[apolloconfigdb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/profiles/mysql-default/apolloconfigdb.sql)即可。
+ApolloPortalDB 通过各种MySQL客户端导入[apolloportaldb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/profiles/mysql-default/apolloportaldb.sql)即可。
 
 ### 2.4.2 运行
 #### 注意事项
-1. 脚本中的 SPRING_DATASOURCE_URL 环境变量中的 your-mysql-server:3306 需要替换为实际的 mysql 服务器地址和端口，ApolloAssemblyDB 需要替换为实际的数据库名称
-2. 脚本中的 SPRING_DATASOURCE_USERNAME 和 SPRING_DATASOURCE_PASSWORD 环境变量需要填写实际的用户名和密码
+1. 脚本环境变量中的 your-mysql-server:3306 需要替换为实际的 mysql 服务器地址和端口，ApolloConfigDB 和 ApolloPortalDB 需要替换为实际的数据库名称
+2. 脚本环境变量中的 "apollo-username" 和 "apollo-password" 需要填写实际的用户名和密码
+
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-unset SPRING_SQL_INIT_MODE
-export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
-export SPRING_DATASOURCE_USERNAME="apollo-username"
-export SPRING_DATASOURCE_PASSWORD="apollo-password"
+# config db
+unset SPRING_SQL_CONFIG_INIT_MODE
+export SPRING_CONFIG_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloConfigDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_CONFIG_DATASOURCE_USERNAME="apollo-username"
+export SPRING_CONFIG_DATASOURCE_PASSWORD="apollo-password"
+# portal db
+unset SPRING_SQL_PORTAL_INIT_MODE
+export SPRING_PORTAL_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloPortalDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_PORTAL_DATASOURCE_USERNAME="apollo-username"
+export SPRING_PORTAL_DATASOURCE_PASSWORD="apollo-password"
 java -jar apollo-all-in-one.jar
 
 ```

@@ -10,7 +10,7 @@ Use the following steps.
 
 ### 1. Install 0.9.0 or above
 
-> If the previous version is 0.8.0, you need to import [apolloportaldb-v080-v090.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/delta/v080-v090/apolloportaldb-v080-v090.sql)
+> If the previous version is 0.8.0, you need to import [apolloportaldb-v080-v090.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/profiles/mysql-default/delta/v080-v090/apolloportaldb-v080-v090.sql)
 
 Checking ApolloPortalDB, the `Users` table should already exist and have an initial record. The initial user name is apollo and the password is admin.
 
