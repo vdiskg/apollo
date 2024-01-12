@@ -45,7 +45,5 @@
 			</else>
 		</if>
 	</root>
-  <logger
-    name="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener"
-    level="TRACE"/>
+  <!--<logger name="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener" level="TRACE"/>-->
 </configuration>

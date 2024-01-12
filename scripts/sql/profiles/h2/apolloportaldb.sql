@@ -25,7 +25,7 @@
 -- ===============================================================================
 -- ==                                                                           ==
 -- ==                     Generated from 'scripts/sql/src/'                     ==
--- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
+-- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'.  ==
 -- ==                              DO NOT EDIT !!!                              ==
 -- ==                                                                           ==
 -- ===============================================================================
@@ -42,7 +42,7 @@ CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common
 
 
 
-CREATE TABLE `P_0_App` (
+CREATE TABLE `App` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
   `Name` varchar(500) NOT NULL DEFAULT 'default' ,
@@ -69,7 +69,7 @@ CREATE TABLE `P_0_App` (
 
 
 
-CREATE TABLE `P_0_AppNamespace` (
+CREATE TABLE `AppNamespace` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `Name` varchar(32) NOT NULL DEFAULT '' ,
   `AppId` varchar(64) NOT NULL DEFAULT '' ,
@@ -95,7 +95,7 @@ CREATE TABLE `P_0_AppNamespace` (
 
 
 
-CREATE TABLE `P_0_Consumer` (
+CREATE TABLE `Consumer` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
   `Name` varchar(500) NOT NULL DEFAULT 'default' ,
@@ -121,7 +121,7 @@ CREATE TABLE `P_0_Consumer` (
 
 
 
-CREATE TABLE `P_0_ConsumerAudit` (
+CREATE TABLE `ConsumerAudit` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `ConsumerId` int(11) unsigned DEFAULT NULL ,
   `Uri` varchar(1024) NOT NULL DEFAULT '' ,
@@ -140,7 +140,7 @@ CREATE TABLE `P_0_ConsumerAudit` (
 
 
 
-CREATE TABLE `P_0_ConsumerRole` (
+CREATE TABLE `ConsumerRole` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `ConsumerId` int(11) unsigned DEFAULT NULL ,
   `RoleId` int(10) unsigned DEFAULT NULL ,
@@ -163,7 +163,7 @@ CREATE TABLE `P_0_ConsumerRole` (
 
 
 
-CREATE TABLE `P_0_ConsumerToken` (
+CREATE TABLE `ConsumerToken` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `ConsumerId` int(11) unsigned DEFAULT NULL ,
   `Token` varchar(128) NOT NULL DEFAULT '' ,
@@ -184,7 +184,7 @@ CREATE TABLE `P_0_ConsumerToken` (
 
 
 
-CREATE TABLE `P_0_Favorite` (
+CREATE TABLE `Favorite` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `UserId` varchar(32) NOT NULL DEFAULT 'default' ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
@@ -206,7 +206,7 @@ CREATE TABLE `P_0_Favorite` (
 
 
 
-CREATE TABLE `P_0_Permission` (
+CREATE TABLE `Permission` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `PermissionType` varchar(32) NOT NULL DEFAULT '' ,
   `TargetId` varchar(256) NOT NULL DEFAULT '' ,
@@ -228,7 +228,7 @@ CREATE TABLE `P_0_Permission` (
 
 
 
-CREATE TABLE `P_0_Role` (
+CREATE TABLE `Role` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `RoleName` varchar(256) NOT NULL DEFAULT '' ,
   `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
@@ -249,7 +249,7 @@ CREATE TABLE `P_0_Role` (
 
 
 
-CREATE TABLE `P_0_RolePermission` (
+CREATE TABLE `RolePermission` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `RoleId` int(10) unsigned DEFAULT NULL ,
   `PermissionId` int(10) unsigned DEFAULT NULL ,
@@ -272,7 +272,7 @@ CREATE TABLE `P_0_RolePermission` (
 
 
 
-CREATE TABLE `P_0_ServerConfig` (
+CREATE TABLE `ServerConfig` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `Key` varchar(64) NOT NULL DEFAULT 'default' ,
   `Value` varchar(2048) NOT NULL DEFAULT 'default' ,
@@ -295,7 +295,7 @@ CREATE TABLE `P_0_ServerConfig` (
 
 
 
-CREATE TABLE `P_0_UserRole` (
+CREATE TABLE `UserRole` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `UserId` varchar(128) DEFAULT '' ,
   `RoleId` int(10) unsigned DEFAULT NULL ,
@@ -316,7 +316,7 @@ CREATE TABLE `P_0_UserRole` (
 
 
 
-CREATE TABLE `P_0_Users` (
+CREATE TABLE `Users` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `Username` varchar(64) NOT NULL DEFAULT 'default' ,
   `Password` varchar(512) NOT NULL DEFAULT 'default' ,
@@ -333,7 +333,7 @@ CREATE TABLE `P_0_Users` (
 
 
 
-CREATE TABLE `P_0_Authorities` (
+CREATE TABLE `Authorities` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `Username` varchar(64) NOT NULL,
   `Authority` varchar(50) NOT NULL,
@@ -346,7 +346,7 @@ CREATE TABLE `P_0_Authorities` (
 
 
 
-CREATE TABLE `P_0_SPRING_SESSION` (
+CREATE TABLE `SPRING_SESSION` (
   `PRIMARY_ID` char(36) NOT NULL,
   `SESSION_ID` char(36) NOT NULL,
   `CREATION_TIME` bigint NOT NULL,
@@ -365,12 +365,12 @@ CREATE TABLE `P_0_SPRING_SESSION` (
 
 
 
-CREATE TABLE `P_0_SPRING_SESSION_ATTRIBUTES` (
+CREATE TABLE `SPRING_SESSION_ATTRIBUTES` (
   `SESSION_PRIMARY_ID` char(36) NOT NULL,
   `ATTRIBUTE_NAME` varchar(200) NOT NULL,
   `ATTRIBUTE_BYTES` blob NOT NULL,
   PRIMARY KEY (`SESSION_PRIMARY_ID`,`ATTRIBUTE_NAME`),
-  CONSTRAINT `SPRING_SESSION_ATTRIBUTES_FK` FOREIGN KEY (`SESSION_PRIMARY_ID`) REFERENCES `P_0_SPRING_SESSION` (`PRIMARY_ID`) ON DELETE CASCADE
+  CONSTRAINT `SPRING_SESSION_ATTRIBUTES_FK` FOREIGN KEY (`SESSION_PRIMARY_ID`) REFERENCES `SPRING_SESSION` (`PRIMARY_ID`) ON DELETE CASCADE
 )   ;
 
 -- Dump of table AuditLog
@@ -378,7 +378,7 @@ CREATE TABLE `P_0_SPRING_SESSION_ATTRIBUTES` (
 
 
 
-CREATE TABLE `P_0_AuditLog` (
+CREATE TABLE `AuditLog` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `TraceId` varchar(32) NOT NULL DEFAULT '' ,
   `SpanId` varchar(32) NOT NULL DEFAULT '' ,
@@ -406,7 +406,7 @@ CREATE TABLE `P_0_AuditLog` (
 
 
 
-CREATE TABLE `P_0_AuditLogDataInfluence` (
+CREATE TABLE `AuditLogDataInfluence` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `SpanId` char(32) NOT NULL DEFAULT '' ,
   `InfluenceEntityId` varchar(50) NOT NULL DEFAULT '0' ,
@@ -428,7 +428,7 @@ CREATE TABLE `P_0_AuditLogDataInfluence` (
 
 -- Config
 -- ------------------------------------------------------------
-INSERT INTO `P_0_ServerConfig` (`Key`, `Value`, `Comment`)
+INSERT INTO `ServerConfig` (`Key`, `Value`, `Comment`)
 VALUES
     ('apollo.portal.envs', 'dev', '可支持的环境列表'),
     ('organizations', '[{"orgId":"TEST1","orgName":"样例部门1"},{"orgId":"TEST2","orgName":"样例部门2"}]', '部门列表'),
@@ -440,17 +440,17 @@ VALUES
     ('apollo.portal.meta.servers', '{}', '各环境Meta Service列表');
 
 
-INSERT INTO `P_0_Users` (`Username`, `Password`, `UserDisplayName`, `Email`, `Enabled`)
+INSERT INTO `Users` (`Username`, `Password`, `UserDisplayName`, `Email`, `Enabled`)
 VALUES
 	('apollo', '$2a$10$7r20uS.BQ9uBpf3Baj3uQOZvMVvB1RN3PYoKE94gtz2.WAOuiiwXS', 'apollo', 'apollo@acme.com', 1);
 
-INSERT INTO `P_0_Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
+INSERT INTO `Authorities` (`Username`, `Authority`) VALUES ('apollo', 'ROLE_user');
 
 -- 
 -- ===============================================================================
 -- ==                                                                           ==
 -- ==                     Generated from 'scripts/sql/src/'                     ==
--- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
+-- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'.  ==
 -- ==                              DO NOT EDIT !!!                              ==
 -- ==                                                                           ==
 -- ===============================================================================

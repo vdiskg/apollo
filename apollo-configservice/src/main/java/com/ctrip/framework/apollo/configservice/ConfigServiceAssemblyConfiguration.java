@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class ConfigServiceAssemblyConfiguration {
 
-  @ConfigurationProperties(prefix = "apollo.sql.config-init")
+  @ConfigurationProperties(prefix = "spring.sql.config-init")
   @Bean
   public static ApolloSqlInitializationProperties apolloSqlInitializationProperties() {
     return new ApolloSqlInitializationProperties();

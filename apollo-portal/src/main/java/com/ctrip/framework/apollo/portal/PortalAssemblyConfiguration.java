@@ -37,7 +37,7 @@ public class PortalAssemblyConfiguration {
     return new DataSourceProperties();
   }
 
-  @ConfigurationProperties(prefix = "apollo.sql.portal-init")
+  @ConfigurationProperties(prefix = "spring.sql.portal-init")
   @Bean
   public static ApolloSqlInitializationProperties apolloSqlInitializationProperties() {
     return new ApolloSqlInitializationProperties();

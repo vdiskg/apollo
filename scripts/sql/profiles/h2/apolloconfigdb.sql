@@ -25,7 +25,7 @@
 -- ===============================================================================
 -- ==                                                                           ==
 -- ==                     Generated from 'scripts/sql/src/'                     ==
--- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
+-- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'.  ==
 -- ==                              DO NOT EDIT !!!                              ==
 -- ==                                                                           ==
 -- ===============================================================================
@@ -42,7 +42,7 @@ CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common
 
 
 
-CREATE TABLE `C_0_App` (
+CREATE TABLE `App` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
   `Name` varchar(500) NOT NULL DEFAULT 'default' ,
@@ -69,7 +69,7 @@ CREATE TABLE `C_0_App` (
 
 
 
-CREATE TABLE `C_0_AppNamespace` (
+CREATE TABLE `AppNamespace` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `Name` varchar(32) NOT NULL DEFAULT '' ,
   `AppId` varchar(64) NOT NULL DEFAULT '' ,
@@ -95,7 +95,7 @@ CREATE TABLE `C_0_AppNamespace` (
 
 
 
-CREATE TABLE `C_0_Audit` (
+CREATE TABLE `Audit` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `EntityName` varchar(50) NOT NULL DEFAULT 'default' ,
   `EntityId` int(10) unsigned DEFAULT NULL ,
@@ -118,7 +118,7 @@ CREATE TABLE `C_0_Audit` (
 
 
 
-CREATE TABLE `C_0_Cluster` (
+CREATE TABLE `Cluster` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `Name` varchar(32) NOT NULL DEFAULT '' ,
   `AppId` varchar(64) NOT NULL DEFAULT '' ,
@@ -142,7 +142,7 @@ CREATE TABLE `C_0_Cluster` (
 
 
 
-CREATE TABLE `C_0_Commit` (
+CREATE TABLE `Commit` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `ChangeSets` longtext NOT NULL ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
@@ -167,7 +167,7 @@ CREATE TABLE `C_0_Commit` (
 
 
 
-CREATE TABLE `C_0_GrayReleaseRule` (
+CREATE TABLE `GrayReleaseRule` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
   `ClusterName` varchar(32) NOT NULL DEFAULT 'default' ,
@@ -193,7 +193,7 @@ CREATE TABLE `C_0_GrayReleaseRule` (
 
 
 
-CREATE TABLE `C_0_Instance` (
+CREATE TABLE `Instance` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
   `ClusterName` varchar(32) NOT NULL DEFAULT 'default' ,
@@ -214,7 +214,7 @@ CREATE TABLE `C_0_Instance` (
 
 
 
-CREATE TABLE `C_0_InstanceConfig` (
+CREATE TABLE `InstanceConfig` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `InstanceId` int(11) unsigned DEFAULT NULL ,
   `ConfigAppId` varchar(64) NOT NULL DEFAULT 'default' ,
@@ -238,7 +238,7 @@ CREATE TABLE `C_0_InstanceConfig` (
 
 
 
-CREATE TABLE `C_0_Item` (
+CREATE TABLE `Item` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `NamespaceId` int(10) unsigned NOT NULL DEFAULT '0' ,
   `Key` varchar(128) NOT NULL DEFAULT 'default' ,
@@ -264,7 +264,7 @@ CREATE TABLE `C_0_Item` (
 
 
 
-CREATE TABLE `C_0_Namespace` (
+CREATE TABLE `Namespace` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
   `ClusterName` varchar(500) NOT NULL DEFAULT 'default' ,
@@ -288,7 +288,7 @@ CREATE TABLE `C_0_Namespace` (
 
 
 
-CREATE TABLE `C_0_NamespaceLock` (
+CREATE TABLE `NamespaceLock` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `NamespaceId` int(10) unsigned NOT NULL DEFAULT '0' ,
   `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,
@@ -309,7 +309,7 @@ CREATE TABLE `C_0_NamespaceLock` (
 
 
 
-CREATE TABLE `C_0_Release` (
+CREATE TABLE `Release` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `ReleaseKey` varchar(64) NOT NULL DEFAULT '' ,
   `Name` varchar(64) NOT NULL DEFAULT 'default' ,
@@ -337,7 +337,7 @@ CREATE TABLE `C_0_Release` (
 
 
 
-CREATE TABLE `C_0_ReleaseHistory` (
+CREATE TABLE `ReleaseHistory` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
   `ClusterName` varchar(32) NOT NULL DEFAULT 'default' ,
@@ -366,7 +366,7 @@ CREATE TABLE `C_0_ReleaseHistory` (
 
 
 
-CREATE TABLE `C_0_ReleaseMessage` (
+CREATE TABLE `ReleaseMessage` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `Message` varchar(1024) NOT NULL DEFAULT '' ,
   `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
@@ -382,7 +382,7 @@ CREATE TABLE `C_0_ReleaseMessage` (
 
 
 
-CREATE TABLE `C_0_ServerConfig` (
+CREATE TABLE `ServerConfig` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `Key` varchar(64) NOT NULL DEFAULT 'default' ,
   `Cluster` varchar(32) NOT NULL DEFAULT 'default' ,
@@ -404,7 +404,7 @@ CREATE TABLE `C_0_ServerConfig` (
 
 
 
-CREATE TABLE `C_0_AccessKey` (
+CREATE TABLE `AccessKey` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
   `Secret` varchar(128) NOT NULL DEFAULT '' ,
@@ -426,7 +426,7 @@ CREATE TABLE `C_0_AccessKey` (
 
 
 
-CREATE TABLE `C_0_ServiceRegistry` (
+CREATE TABLE `ServiceRegistry` (
   `Id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `ServiceName` VARCHAR(64) NOT NULL ,
   `Uri` VARCHAR(64) NOT NULL ,
@@ -444,7 +444,7 @@ CREATE TABLE `C_0_ServiceRegistry` (
 
 
 
-CREATE TABLE `C_0_AuditLog` (
+CREATE TABLE `AuditLog` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `TraceId` varchar(32) NOT NULL DEFAULT '' ,
   `SpanId` varchar(32) NOT NULL DEFAULT '' ,
@@ -472,7 +472,7 @@ CREATE TABLE `C_0_AuditLog` (
 
 
 
-CREATE TABLE `C_0_AuditLogDataInfluence` (
+CREATE TABLE `AuditLogDataInfluence` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `SpanId` char(32) NOT NULL DEFAULT '' ,
   `InfluenceEntityId` varchar(50) NOT NULL DEFAULT '0' ,
@@ -494,7 +494,7 @@ CREATE TABLE `C_0_AuditLogDataInfluence` (
 
 -- Config
 -- ------------------------------------------------------------
-INSERT INTO `C_0_ServerConfig` (`Key`, `Cluster`, `Value`, `Comment`)
+INSERT INTO `ServerConfig` (`Key`, `Cluster`, `Value`, `Comment`)
 VALUES
     ('eureka.service.url', 'default', 'http://localhost:8080/eureka/', 'Eureka服务Url，多个service以英文逗号分隔'),
     ('namespace.lock.switch', 'default', 'false', '一次发布只能有一个人修改开关'),
@@ -506,7 +506,7 @@ VALUES
 -- ===============================================================================
 -- ==                                                                           ==
 -- ==                     Generated from 'scripts/sql/src/'                     ==
--- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'. ==
+-- == by running 'mvn compile -pl apollo-build-sql-converter -Psql-converter'.  ==
 -- ==                              DO NOT EDIT !!!                              ==
 -- ==                                                                           ==
 -- ===============================================================================
