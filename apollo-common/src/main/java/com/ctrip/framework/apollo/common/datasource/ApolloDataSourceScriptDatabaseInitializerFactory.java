@@ -118,11 +118,16 @@ public class ApolloDataSourceScriptDatabaseInitializerFactory {
 
   private static String findSuffix(DataSource dataSource) {
     DatabaseDriver databaseDriver = DatabaseDriver.fromDataSource(dataSource);
+    if (DatabaseDriver.H2.equals(databaseDriver)) {
+      return "";
+    }
     if (DatabaseDriver.MYSQL.equals(databaseDriver)) {
       JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
       String database = jdbcTemplate.queryForObject("SELECT DATABASE()", String.class);
       if (database != null) {
         return "-database-not-specified";
+      } else {
+        return "-default";
       }
     }
     return "";
