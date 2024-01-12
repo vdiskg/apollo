@@ -122,13 +122,7 @@ public class ApolloDataSourceScriptDatabaseInitializerFactory {
       return "-default";
     }
     if (DatabaseDriver.MYSQL.equals(databaseDriver)) {
-      JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-      String database = jdbcTemplate.queryForObject("SELECT DATABASE()", String.class);
-      if (database != null) {
-        return "-database-not-specified";
-      } else {
-        return "-default";
-      }
+      return "-database-not-specified";
     }
     return "";
   }

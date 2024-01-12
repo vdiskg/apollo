@@ -67,8 +67,6 @@
 									<include>h2-default/apolloportaldb.sql</include>
 									<include>mysql-database-not-specified/apolloconfigdb.sql</include>
 									<include>mysql-database-not-specified/apolloportaldb.sql</include>
-									<include>mysql-default/apolloconfigdb.sql</include>
-									<include>mysql-default/apolloportaldb.sql</include>
 								</includes>
 							</resource>
 						</resources>
