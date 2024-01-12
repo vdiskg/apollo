@@ -172,6 +172,9 @@ class ApolloSqlConverterTest {
           "invalid sql file content, please run '" + GENERATE_TIPS + "' to regenerated\npath: "
               + repositoryTargetSql + "(line: " + lineNumber + ")");
     }
+    Assertions.assertEquals(checkerLines.size(), repositoryLines.size(),
+        "invalid sql file content, please run '" + GENERATE_TIPS + "' to regenerated\npath: "
+            + repositoryTargetSql);
   }
 
   private void checkMysqlDatabaseNotSpecifiedList(List<String> srcSqlList, String srcDir,
