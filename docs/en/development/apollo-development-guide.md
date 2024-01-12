@@ -54,14 +54,21 @@ The following is an example of how to start `apollo-assembly` locally with Intel
 ```
 >Note 1: apollo_profile is specified here as `github` and `auth`, where `github` is a profile required by Apollo for database configuration, and `auth` is added from 0.9.0 to support simple authentication using Spring Security provided by apollo. For more information you can refer to [Portal-implement-user-login-function](en/development/portal-how-to-implement-user-login-function)
 >
->Note 2: If you plan to use a MySQL database, you need to add `spring.datasource.*` related configuration, replace the database connection information with your own, note that the database is `ApolloAssemblyDB`
->
+>Note 2: If you plan to use a MySQL database, you need to add `spring.config-datasource.*` related configuration,
+> the your-mysql-server:3306 needs to be replaced with the actual mysql server address and port,
+> ApolloConfigDB and ApolloPortalDB needs to be replaced with the actual database name,
+> apollo-username and apollo-password need to be replaced with the actual username and password
+
 ![ApolloApplication-Mysql-VM-Options](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ApolloApplication-Mysql-VM-Options.png)
 
 ```
--Dspring.datasource.url=jdbc:mysql://localhost:3306/ApolloAssemblyDB?characterEncoding=utf8
--Dspring.datasource.username=root
--Dspring.datasource.password=
+-Dspring.config-datasource.url=jdbc:mysql://your-mysql-server:3306/ApolloConfigDB?useUnicode=true&characterEncoding=UTF8
+-Dspring.config-datasource.username=apollo-username
+-Dspring.config-datasource.password=apollo-password
+
+-Dspring.portal-datasource.url=jdbc:mysql://your-mysql-server:3306/ApolloPortalDB?useUnicode=true&characterEncoding=UTF8
+-Dspring.portal-datasource.username=apollo-username
+-Dspring.portal-datasource.password=apollo-password
 
 ```
 The initialization script for the MySQL database can be found in the scripts/sql/profiles/mysql-default directory of this project.

@@ -217,12 +217,12 @@ You can choose to create it by manually importing SQL or by automatically import
 
 #### 2.1.1.1 Manual SQL Import
 
-You can import [apolloportaldb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/apolloportaldb.sql) through various MySQL clients.
+You can import [apolloportaldb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/profiles/mysql-default/apolloportaldb.sql) through various MySQL clients.
 
 Using the native MySQL client as an example.
 
 ```sql
-source /your_local_path/scripts/sql/apolloportaldb.sql
+source /your_local_path/scripts/sql/profiles/mysql-default/apolloportaldb.sql
 ```
 
 #### 2.1.1.2 Created via Flyway import SQL
@@ -252,12 +252,12 @@ You can choose to create it by manually importing SQL or automatically importing
 
 #### 2.1.2.1 Importing SQL Manually
 
-You can import [apolloconfigdb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/apolloconfigdb.sql) through various MySQL clients.
+You can import [apolloconfigdb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/profiles/mysql-default/apolloconfigdb.sql) through various MySQL clients.
 
 Using the native MySQL client as an example.
 
 ```sql
-source /your_local_path/scripts/sql/apolloconfigdb.sql
+source /your_local_path/scripts/sql/profiles/mysql-default/apolloconfigdb.sql
 ```
 
 #### 2.1.2.2 SQL import via Flyway

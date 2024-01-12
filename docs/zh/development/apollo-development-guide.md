@@ -45,13 +45,21 @@ Apollo本地开发需要以下组件：
 ```
 >注1：这里指定了apollo_profile是`github`和`auth`，其中`github`是Apollo必须的一个profile，用于数据库的配置，`auth`是从0.9.0新增的，用来支持使用apollo提供的Spring Security简单认证，更多信息可以参考[Portal-实现用户登录功能](zh/development/portal-how-to-implement-user-login-function)
 >
->注2：如果需要使用 mysql 数据库，添加`spring.datasource.*`相关配置，数据库连接信息替换成你自己的，注意数据库是`ApolloAssemblyDB`
+>注2：如果需要使用 mysql 数据库，添加`spring.config-datasource.*` 和 `spring.portal-datasource.*` 相关配置，
+> your-mysql-server:3306 需要替换为实际的 mysql 服务器地址和端口，
+> ApolloConfigDB 和 ApolloPortalDB 需要替换为实际的数据库名称，
+> apollo-username 和 apollo-password 需要替换为实际的用户名和密码
+
 ![ApolloApplication-Mysql-VM-Options](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/ApolloApplication-Mysql-VM-Options.png)
 
 ```
--Dspring.datasource.url=jdbc:mysql://localhost:3306/ApolloAssemblyDB?characterEncoding=utf8
--Dspring.datasource.username=root
--Dspring.datasource.password=
+-Dspring.config-datasource.url=jdbc:mysql://your-mysql-server:3306/ApolloConfigDB?useUnicode=true&characterEncoding=UTF8
+-Dspring.config-datasource.username=apollo-username
+-Dspring.config-datasource.password=apollo-password
+
+-Dspring.portal-datasource.url=jdbc:mysql://your-mysql-server:3306/ApolloPortalDB?useUnicode=true&characterEncoding=UTF8
+-Dspring.portal-datasource.username=apollo-username
+-Dspring.portal-datasource.password=apollo-password
 
 ```
 mysql 数据库初始化脚本见 本项目 scripts/sql/profiles/mysql-default 目录下的文件

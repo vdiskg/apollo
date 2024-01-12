@@ -75,79 +75,108 @@ No configuration is required, just use the following command to start
 > Note: When using the in-memory database, any operation will be lost after the Apollo process restarts
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-unset SPRING_SQL_INIT_MODE
+unset SPRING_SQL_CONFIG_INIT_MODE
+unset SPRING_SQL_PORTAL_INIT_MODE
 java -jar apollo-all-in-one.jar
 
 ```
 
 ## 2.2 Use H2 file database, automatic initialization
 #### Precautions
-1. The path `~/apollo/apolloassemblydb` in the SPRING_DATASOURCE_URL environment variable in the script can be replaced with other custom paths, you need to ensure that this path has read and write permissions
+1. The path `~/apollo/apollo-config-db` and `~/apollo/apollo-portal-db` in the environment variable in the script can be replaced with other custom paths, you need to ensure that this path has read and write permissions
 
 ### 2.2.1 First startup
-Use the SPRING_SQL_INIT_MODE="always" environment variable for initialization at the first startup
+Use the SPRING_SQL_CONFIG_INIT_MODE="always" and SPRING_SQL_PORTAL_INIT_MODE="always" environment variable for initialization at the first startup
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-export SPRING_SQL_INIT_MODE="always"
-export SPRING_DATASOURCE_URL="jdbc:h2:file:~/apollo/apolloassemblydb;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+# config db
+export SPRING_SQL_CONFIG_INIT_MODE="always"
+export SPRING_CONFIG_DATASOURCE_URL="jdbc:h2:file:~/apollo/apollo-config-db;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+# portal db
+export SPRING_SQL_PORTAL_INIT_MODE="always"
+export SPRING_PORTAL_DATASOURCE_URL="jdbc:h2:file:~/apollo/apollo-portal-db;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
 java -jar apollo-all-in-one.jar
 
 ```
 
 ### 2.2.2 Subsequent startup
-Remove the SPRING_SQL_INIT_MODE environment variable to avoid repeated initialization at subsequent startup
+Remove the SPRING_SQL_CONFIG_INIT_MODE and SPRING_SQL_PORTAL_INIT_MODE environment variable to avoid repeated initialization at subsequent startup
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-unset SPRING_SQL_INIT_MODE
-export SPRING_DATASOURCE_URL="jdbc:h2:file:~/apollo/apolloassemblydb;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+# config db
+unset SPRING_SQL_CONFIG_INIT_MODE
+export SPRING_CONFIG_DATASOURCE_URL="jdbc:h2:file:~/apollo/apollo-config-db;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
+# portal db
+unset SPRING_SQL_PORTAL_INIT_MODE
+export SPRING_PORTAL_DATASOURCE_URL="jdbc:h2:file:~/apollo/apollo-portal-db;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE"
 java -jar apollo-all-in-one.jar
 
 ```
 
 ## 2.3 Use mysql database, automatic initialization
 #### Precautions
-1. The your-mysql-server:3306 in the SPRING_DATASOURCE_URL environment variable in the script needs to be replaced with the actual mysql server address and port, ApolloAssemblyDB needs to be replaced with the actual database name
-2. The SPRING_DATASOURCE_USERNAME and SPRING_DATASOURCE_PASSWORD environment variables in the script need to fill in the actual username and password
+1. The your-mysql-server:3306 in the environment variable in the script needs to be replaced with the actual mysql server address and port, ApolloConfigDB and ApolloPortalDB needs to be replaced with the actual database name
+2. The "apollo-username" and "apollo-password" in the environment variables in the script need to fill in the actual username and password
 
 ### 2.3.1 First startup
 Use the SPRING_SQL_INIT_MODE="always" environment variable for initialization at the first startup
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-export SPRING_SQL_INIT_MODE="always"
-export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
-export SPRING_DATASOURCE_USERNAME="apollo-username"
-export SPRING_DATASOURCE_PASSWORD="apollo-password"
+# config db
+export SPRING_SQL_CONFIG_INIT_MODE="always"
+export SPRING_CONFIG_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloConfigDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_CONFIG_DATASOURCE_USERNAME="apollo-username"
+export SPRING_CONFIG_DATASOURCE_PASSWORD="apollo-password"
+# portal db
+export SPRING_SQL_PORTAL_INIT_MODE="always"
+export SPRING_PORTAL_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloPortalDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_PORTAL_DATASOURCE_USERNAME="apollo-username"
+export SPRING_PORTAL_DATASOURCE_PASSWORD="apollo-password"
 java -jar apollo-all-in-one.jar
 
 ```
 
 ### 2.3.2 Subsequent startup
-Remove the SPRING_SQL_INIT_MODE environment variable to avoid repeated initialization at subsequent startup
+Remove the SPRING_SQL_CONFIG_INIT_MODE and SPRING_SQL_PORTAL_INIT_MODE environment variable to avoid repeated initialization at subsequent startup
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-unset SPRING_SQL_INIT_MODE
-export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
-export SPRING_DATASOURCE_USERNAME="apollo-username"
-export SPRING_DATASOURCE_PASSWORD="apollo-password"
+# config db
+unset SPRING_SQL_CONFIG_INIT_MODE
+export SPRING_CONFIG_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloConfigDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_CONFIG_DATASOURCE_USERNAME="apollo-username"
+export SPRING_CONFIG_DATASOURCE_PASSWORD="apollo-password"
+# portal db
+unset SPRING_SQL_PORTAL_INIT_MODE
+export SPRING_PORTAL_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloPortalDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_PORTAL_DATASOURCE_USERNAME="apollo-username"
+export SPRING_PORTAL_DATASOURCE_PASSWORD="apollo-password"
 java -jar apollo-all-in-one.jar
 
 ```
 
 ## 2.4 Use mysql database, manual initialization
 
-### 2.4.1 Manually initialize ApolloAssemblyDB
-Import [sql/assembly](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/assembly) through various MySQL clients
+### 2.4.1 Manually initialize ApolloConfigDB and ApolloPortalDB
+You can import [apolloconfigdb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/profiles/mysql-default/apolloconfigdb.sql) to ApolloConfigDB through various MySQL clients.
+You can import [apolloportaldb.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/profiles/mysql-default/apolloportaldb.sql) to ApolloPortalDB through various MySQL clients.
 
 ### 2.4.2 Run
 #### Precautions
-1. The your-mysql-server:3306 in the SPRING_DATASOURCE_URL environment variable in the script needs to be replaced with the actual mysql server address and port, ApolloAssemblyDB needs to be replaced with the actual database name
-2. The SPRING_DATASOURCE_USERNAME and SPRING_DATASOURCE_PASSWORD environment variables in the script need to fill in the actual username and password
+1. The your-mysql-server:3306 in the environment variable in the script needs to be replaced with the actual mysql server address and port, ApolloConfigDB and ApolloPortalDB needs to be replaced with the actual database name
+2. The "apollo-username" and "apollo-password" in the environment variables in the script need to fill in the actual username and password
+
 ```bash
 export SPRING_PROFILES_ACTIVE="github,auth"
-unset SPRING_SQL_INIT_MODE
-export SPRING_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloAssemblyDB?useUnicode=true&characterEncoding=UTF8"
-export SPRING_DATASOURCE_USERNAME="apollo-username"
-export SPRING_DATASOURCE_PASSWORD="apollo-password"
+# config db
+unset SPRING_SQL_CONFIG_INIT_MODE
+export SPRING_CONFIG_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloConfigDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_CONFIG_DATASOURCE_USERNAME="apollo-username"
+export SPRING_CONFIG_DATASOURCE_PASSWORD="apollo-password"
+# portal db
+unset SPRING_SQL_PORTAL_INIT_MODE
+export SPRING_PORTAL_DATASOURCE_URL="jdbc:mysql://your-mysql-server:3306/ApolloPortalDB?useUnicode=true&characterEncoding=UTF8"
+export SPRING_PORTAL_DATASOURCE_USERNAME="apollo-username"
+export SPRING_PORTAL_DATASOURCE_PASSWORD="apollo-password"
 java -jar apollo-all-in-one.jar
 
 ```

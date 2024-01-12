@@ -8,7 +8,7 @@ Apollo是配置管理系统，会提供权限管理（Authorization），理论�
 使用步骤如下：
 ### 1. 安装0.9.0以上版本
 
->如果之前是0.8.0版本，需要导入[apolloportaldb-v080-v090.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/delta/v080-v090/apolloportaldb-v080-v090.sql)
+>如果之前是0.8.0版本，需要导入[apolloportaldb-v080-v090.sql](https://github.com/apolloconfig/apollo/blob/master/scripts/sql/profiles/mysql-default/delta/v080-v090/apolloportaldb-v080-v090.sql)
 
 查看ApolloPortalDB，应该已经存在`Users`表，并有一条初始记录。初始用户名是apollo，密码是admin。
 
