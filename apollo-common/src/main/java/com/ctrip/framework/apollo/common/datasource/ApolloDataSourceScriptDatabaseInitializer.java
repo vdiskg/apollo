@@ -142,7 +142,11 @@ public class ApolloDataSourceScriptDatabaseInitializer extends
     if ("file".equals(location.getProtocol())) {
       // running with ide
       String locationText = location.toString();
-      return locationText.replace("/apollo-assembly/target/classes/", "/scripts/sql");
+      if (!locationText.endsWith("/apollo-common/target/classes/")) {
+        throw new IllegalStateException(
+            "can not determine repository directory from classpath: " + locationText);
+      }
+      return locationText.replace("/apollo-common/target/classes/", "/scripts/sql");
     }
     return null;
   }
