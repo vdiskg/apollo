@@ -79,7 +79,8 @@ class ApolloSqlConverterTest {
         repositoryTargetDir, repositorySqlList);
     Assertions.assertEquals(0, redundantSqlList.size(),
         "redundant sql files, please add sql files in 'scripts/sql/src' and then run '"
-            + GENERATE_TIPS + "' to generated. Do not edit 'scripts/sql' manually !!!\npath: "
+            + GENERATE_TIPS
+            + "' to generated. Do not edit 'scripts/sql/profiles' manually !!!\npath: "
             + redundantSqlList);
 
     List<String> missingSqlList = this.findMissingSqlList(checkerTargetDir, checkerSqlList,
@@ -172,6 +173,9 @@ class ApolloSqlConverterTest {
           "invalid sql file content, please run '" + GENERATE_TIPS + "' to regenerated\npath: "
               + repositoryTargetSql + "(line: " + lineNumber + ")");
     }
+    Assertions.assertEquals(checkerLines.size(), repositoryLines.size(),
+        "invalid sql file content, please run '" + GENERATE_TIPS + "' to regenerated\npath: "
+            + repositoryTargetSql);
   }
 
   private void checkMysqlDatabaseNotSpecifiedList(List<String> srcSqlList, String srcDir,
