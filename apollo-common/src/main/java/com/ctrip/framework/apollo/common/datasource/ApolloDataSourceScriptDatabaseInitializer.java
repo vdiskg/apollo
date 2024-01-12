@@ -16,161 +16,58 @@
  */
 package com.ctrip.framework.apollo.common.datasource;
 
-import java.net.URL;
-import java.security.CodeSource;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer;
-import org.springframework.boot.jdbc.init.PlatformPlaceholderDatabaseDriverResolver;
+import org.springframework.boot.sql.init.DatabaseInitializationMode;
 import org.springframework.boot.sql.init.DatabaseInitializationSettings;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.AbstractDriverBasedDataSource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 public class ApolloDataSourceScriptDatabaseInitializer extends
     DataSourceScriptDatabaseInitializer {
 
+  private static final Logger log = LoggerFactory.getLogger(
+      ApolloDataSourceScriptDatabaseInitializer.class);
+
   public ApolloDataSourceScriptDatabaseInitializer(DataSource dataSource,
-      ApolloSqlInitializationProperties properties) {
-    super(determineDataSource(dataSource, properties), getSettings(dataSource, properties));
-  }
-
-  private static DataSource determineDataSource(DataSource dataSource,
-      ApolloSqlInitializationProperties properties) {
-
-    String username = properties.getUsername();
-    String password = properties.getPassword();
-    if (StringUtils.hasText(username) && StringUtils.hasText(password)) {
-      return DataSourceBuilder.derivedFrom(dataSource)
-          .username(username)
-          .password(password)
-          .type(SimpleDriverDataSource.class)
-          .build();
-    }
-    return dataSource;
-  }
-
-  public static DatabaseInitializationSettings getSettings(DataSource dataSource,
-      ApolloSqlInitializationProperties properties) {
-
-    PlatformPlaceholderDatabaseDriverResolver platformResolver = new PlatformPlaceholderDatabaseDriverResolver().withDriverPlatform(
-        DatabaseDriver.MARIADB, "mysql");
-
-    List<String> schemaLocations = resolveLocations(properties.getSchemaLocations(),
-        platformResolver,
-        dataSource, properties);
-    List<String> dataLocations = resolveLocations(properties.getDataLocations(), platformResolver,
-        dataSource, properties);
-
-    DatabaseInitializationSettings settings = new DatabaseInitializationSettings();
-    settings.setSchemaLocations(
-        scriptLocations(schemaLocations, "schema", properties.getPlatform()));
-    settings.setDataLocations(scriptLocations(dataLocations, "data", properties.getPlatform()));
-    settings.setContinueOnError(properties.isContinueOnError());
-    settings.setSeparator(properties.getSeparator());
-    settings.setEncoding(properties.getEncoding());
-    settings.setMode(properties.getMode());
-    return settings;
-  }
-
-
-  private static List<String> resolveLocations(Collection<String> locations,
-      PlatformPlaceholderDatabaseDriverResolver platformResolver, DataSource dataSource,
-      ApolloSqlInitializationProperties properties) {
-
-    if (CollectionUtils.isEmpty(locations)) {
-      return null;
-    }
-
-    Collection<String> convertedLocations = convertRepositoryLocations(locations, dataSource);
-    if (CollectionUtils.isEmpty(convertedLocations)) {
-      return null;
-    }
-
-    String platform = properties.getPlatform();
-    if (StringUtils.hasText(platform) && !"all".equals(platform)) {
-      return platformResolver.resolveAll(platform, convertedLocations.toArray(new String[0]));
-    }
-    return platformResolver.resolveAll(dataSource, convertedLocations.toArray(new String[0]));
-  }
-
-  private static Collection<String> convertRepositoryLocations(Collection<String> locations,
-      DataSource dataSource) {
-    if (CollectionUtils.isEmpty(locations)) {
-      return null;
-    }
-    String repositoryDir = findRepositoryDirectory();
-    String suffix = findSuffix(dataSource);
-    List<String> convertedLocations = new ArrayList<>(locations.size());
-    for (String location : locations) {
-      String convertedLocation = convertRepositoryLocation(location, repositoryDir, suffix);
-      if (StringUtils.hasText(convertedLocation)) {
-        convertedLocations.add(convertedLocation);
+      DatabaseInitializationSettings settings) {
+    super(dataSource, settings);
+    if (this.isEnabled(settings)) {
+      log.info("Apollo DataSource Initialize is enabled");
+      if (log.isDebugEnabled()) {
+        String jdbcUrl = this.getJdbcUrl(dataSource);
+        log.debug("Initialize jdbc url: {}", jdbcUrl);
+        List<String> schemaLocations = settings.getSchemaLocations();
+        if (!schemaLocations.isEmpty()) {
+          for (String schemaLocation : schemaLocations) {
+            log.debug("Initialize Schema Location: {}", schemaLocation);
+          }
+        }
       }
+    } else {
+      log.info("Apollo DataSource Initialize is disabled");
     }
-    return convertedLocations;
   }
 
-  private static String findSuffix(DataSource dataSource) {
-    DatabaseDriver databaseDriver = DatabaseDriver.fromDataSource(dataSource);
-    if (DatabaseDriver.MYSQL.equals(databaseDriver)) {
-      JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-      String database = jdbcTemplate.queryForObject("SELECT DATABASE()", String.class);
-      if (database != null) {
-        return "-database-not-specified";
-      }
+  private String getJdbcUrl(DataSource dataSource) {
+    if (dataSource instanceof AbstractDriverBasedDataSource) {
+      AbstractDriverBasedDataSource driverBasedDataSource = (AbstractDriverBasedDataSource) dataSource;
+      return driverBasedDataSource.getUrl();
     }
-    return "";
+    SimpleDriverDataSource simpleDriverDataSource = DataSourceBuilder.derivedFrom(dataSource)
+        .type(SimpleDriverDataSource.class)
+        .build();
+    return simpleDriverDataSource.getUrl();
   }
 
-  private static String findRepositoryDirectory() {
-    CodeSource codeSource = ApolloDataSourceScriptDatabaseInitializer.class.getProtectionDomain()
-        .getCodeSource();
-    URL location = codeSource != null ? codeSource.getLocation() : null;
-    if (location == null) {
-      return null;
+  private boolean isEnabled(DatabaseInitializationSettings settings) {
+    if (settings.getMode() == DatabaseInitializationMode.NEVER) {
+      return false;
     }
-    if ("jar".equals(location.getProtocol())) {
-      // running with jar
-      return "classpath:META-INF/sql";
-    }
-    if ("file".equals(location.getProtocol())) {
-      // running with ide
-      String locationText = location.toString();
-      if (!locationText.endsWith("/apollo-common/target/classes/")) {
-        throw new IllegalStateException(
-            "can not determine repository directory from classpath: " + locationText);
-      }
-      return locationText.replace("/apollo-common/target/classes/", "/scripts/sql");
-    }
-    return null;
-  }
-
-  private static String convertRepositoryLocation(String location, String repositoryDir,
-      String suffix) {
-    if (!StringUtils.hasText(location)) {
-      return location;
-    }
-    if (!StringUtils.hasText(repositoryDir)) {
-      // repository dir not found
-      return null;
-    }
-    return location.replace("@@repository@@", repositoryDir).replace("@@suffix@@", suffix);
-  }
-
-  private static List<String> scriptLocations(List<String> locations, String fallback,
-      String platform) {
-    if (locations != null) {
-      return locations;
-    }
-    List<String> fallbackLocations = new ArrayList<>();
-    fallbackLocations.add("optional:classpath*:" + fallback + "-" + platform + ".sql");
-    fallbackLocations.add("optional:classpath*:" + fallback + ".sql");
-    return fallbackLocations;
+    return settings.getMode() == DatabaseInitializationMode.ALWAYS || this.isEmbeddedDatabase();
   }
 }

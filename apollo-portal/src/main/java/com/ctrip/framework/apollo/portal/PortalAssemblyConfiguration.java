@@ -17,6 +17,7 @@
 package com.ctrip.framework.apollo.portal;
 
 import com.ctrip.framework.apollo.common.datasource.ApolloDataSourceScriptDatabaseInitializer;
+import com.ctrip.framework.apollo.common.datasource.ApolloDataSourceScriptDatabaseInitializerFactory;
 import com.ctrip.framework.apollo.common.datasource.ApolloSqlInitializationProperties;
 import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -47,6 +48,6 @@ public class PortalAssemblyConfiguration {
   public static ApolloDataSourceScriptDatabaseInitializer apolloDataSourceScriptDatabaseInitializer(
       DataSource dataSource,
       ApolloSqlInitializationProperties properties) {
-    return new ApolloDataSourceScriptDatabaseInitializer(dataSource, properties);
+    return ApolloDataSourceScriptDatabaseInitializerFactory.create(dataSource, properties);
   }
 }

@@ -17,6 +17,7 @@
 package com.ctrip.framework.apollo.configservice;
 
 import com.ctrip.framework.apollo.common.datasource.ApolloDataSourceScriptDatabaseInitializer;
+import com.ctrip.framework.apollo.common.datasource.ApolloDataSourceScriptDatabaseInitializerFactory;
 import com.ctrip.framework.apollo.common.datasource.ApolloSqlInitializationProperties;
 import javax.sql.DataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -38,6 +39,6 @@ public class ConfigServiceAssemblyConfiguration {
   public static ApolloDataSourceScriptDatabaseInitializer apolloDataSourceScriptDatabaseInitializer(
       DataSource dataSource,
       ApolloSqlInitializationProperties properties) {
-    return new ApolloDataSourceScriptDatabaseInitializer(dataSource, properties);
+    return ApolloDataSourceScriptDatabaseInitializerFactory.create(dataSource, properties);
   }
 }
