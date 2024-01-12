@@ -119,7 +119,7 @@ public class ApolloDataSourceScriptDatabaseInitializerFactory {
   private static String findSuffix(DataSource dataSource) {
     DatabaseDriver databaseDriver = DatabaseDriver.fromDataSource(dataSource);
     if (DatabaseDriver.H2.equals(databaseDriver)) {
-      return "";
+      return "-default";
     }
     if (DatabaseDriver.MYSQL.equals(databaseDriver)) {
       JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);

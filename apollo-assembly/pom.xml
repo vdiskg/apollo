@@ -63,8 +63,8 @@
 							<resource>
 								<directory>${project.parent.basedir}/scripts/sql/profiles</directory>
 								<includes>
-									<include>h2/apolloconfigdb.sql</include>
-									<include>h2/apolloportaldb.sql</include>
+									<include>h2-default/apolloconfigdb.sql</include>
+									<include>h2-default/apolloportaldb.sql</include>
 									<include>mysql-database-not-specified/apolloconfigdb.sql</include>
 									<include>mysql-database-not-specified/apolloportaldb.sql</include>
 									<include>mysql-default/apolloconfigdb.sql</include>
