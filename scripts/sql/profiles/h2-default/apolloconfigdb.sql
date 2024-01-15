@@ -123,6 +123,7 @@ CREATE TABLE `Cluster` (
   `Name` varchar(32) NOT NULL DEFAULT '' ,
   `AppId` varchar(64) NOT NULL DEFAULT '' ,
   `ParentClusterId` int(10) unsigned NOT NULL DEFAULT '0' ,
+  `Comment` varchar(64) DEFAULT NULL ,
   `IsDeleted` boolean NOT NULL DEFAULT FALSE ,
   `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
   `DataChange_CreatedBy` varchar(64) NOT NULL DEFAULT 'default' ,

@@ -31,6 +31,8 @@ CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common
 
 -- 
 
+ALTER TABLE `Cluster`
+    ADD COLUMN `Comment` varchar(64) DEFAULT NULL ;
 
 -- 
 -- ===============================================================================
