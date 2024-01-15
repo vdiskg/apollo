@@ -128,7 +128,7 @@ public class ConfigsImportService {
       String filePath = entry.getName();
       String content = readContent(dataZip);
 
-      String[] info = filePath.split("/");
+      String[] info = filePath.replace('\\', '/').split("/");
 
       String fileName;
       if (info.length == 1) {
