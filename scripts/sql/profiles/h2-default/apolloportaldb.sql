@@ -41,7 +41,6 @@ CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common
 -- ------------------------------------------------------------
 
 
-
 CREATE TABLE `App` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
@@ -57,16 +56,15 @@ CREATE TABLE `App` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`AppId`,`DeletedAt`),
-  KEY (`DataChange_LastTime`),
-  KEY (`Name`)
+  UNIQUE KEY `App_UK_AppId_DeletedAt` (`AppId`,`DeletedAt`),
+  KEY `App_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `App_IX_Name` (`Name`)
 )   ;
 
 
 
 -- Dump of table appnamespace
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `AppNamespace` (
@@ -83,16 +81,15 @@ CREATE TABLE `AppNamespace` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`AppId`,`Name`,`DeletedAt`),
-  KEY (`Name`,`AppId`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `AppNamespace_UK_AppId_Name_DeletedAt` (`AppId`,`Name`,`DeletedAt`),
+  KEY `AppNamespace_Name_AppId` (`Name`,`AppId`),
+  KEY `AppNamespace_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table consumer
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Consumer` (
@@ -110,15 +107,14 @@ CREATE TABLE `Consumer` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`AppId`,`DeletedAt`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `Consumer_UK_AppId_DeletedAt` (`AppId`,`DeletedAt`),
+  KEY `Consumer_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table consumeraudit
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `ConsumerAudit` (
@@ -129,15 +125,14 @@ CREATE TABLE `ConsumerAudit` (
   `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY (`DataChange_LastTime`),
-  KEY (`ConsumerId`)
+  KEY `ConsumerAudit_IX_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `ConsumerAudit_IX_ConsumerId` (`ConsumerId`)
 )   ;
 
 
 
 -- Dump of table consumerrole
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `ConsumerRole` (
@@ -151,16 +146,15 @@ CREATE TABLE `ConsumerRole` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`ConsumerId`,`RoleId`,`DeletedAt`),
-  KEY (`DataChange_LastTime`),
-  KEY (`RoleId`)
+  UNIQUE KEY `ConsumerRole_UK_ConsumerId_RoleId_DeletedAt` (`ConsumerId`,`RoleId`,`DeletedAt`),
+  KEY `ConsumerRole_IX_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `ConsumerRole_IX_RoleId` (`RoleId`)
 )   ;
 
 
 
 -- Dump of table consumertoken
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `ConsumerToken` (
@@ -175,13 +169,12 @@ CREATE TABLE `ConsumerToken` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`Token`,`DeletedAt`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `ConsumerToken_UK_Token_DeletedAt` (`Token`,`DeletedAt`),
+  KEY `ConsumerToken_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 -- Dump of table favorite
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Favorite` (
@@ -196,14 +189,13 @@ CREATE TABLE `Favorite` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`UserId`,`AppId`,`DeletedAt`),
-  KEY (`AppId`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `Favorite_UK_UserId_AppId_DeletedAt` (`UserId`,`AppId`,`DeletedAt`),
+  KEY `Favorite_AppId` (`AppId`),
+  KEY `Favorite_DataChange_LastTime` (`DataChange_LastTime`)
 )  AUTO_INCREMENT=23  ;
 
 -- Dump of table permission
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Permission` (
@@ -217,15 +209,14 @@ CREATE TABLE `Permission` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`TargetId`,`PermissionType`,`DeletedAt`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `Permission_UK_TargetId_PermissionType_DeletedAt` (`TargetId`,`PermissionType`,`DeletedAt`),
+  KEY `Permission_IX_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table role
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Role` (
@@ -238,15 +229,14 @@ CREATE TABLE `Role` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`RoleName`,`DeletedAt`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `Role_UK_RoleName_DeletedAt` (`RoleName`,`DeletedAt`),
+  KEY `Role_IX_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table rolepermission
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `RolePermission` (
@@ -260,16 +250,15 @@ CREATE TABLE `RolePermission` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`RoleId`,`PermissionId`,`DeletedAt`),
-  KEY (`DataChange_LastTime`),
-  KEY (`PermissionId`)
+  UNIQUE KEY `RolePermission_UK_RoleId_PermissionId_DeletedAt` (`RoleId`,`PermissionId`,`DeletedAt`),
+  KEY `RolePermission_IX_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `RolePermission_IX_PermissionId` (`PermissionId`)
 )   ;
 
 
 
 -- Dump of table serverconfig
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `ServerConfig` (
@@ -284,15 +273,14 @@ CREATE TABLE `ServerConfig` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`Key`,`DeletedAt`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `ServerConfig_UK_Key_DeletedAt` (`Key`,`DeletedAt`),
+  KEY `ServerConfig_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table userrole
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `UserRole` (
@@ -306,14 +294,13 @@ CREATE TABLE `UserRole` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`UserId`,`RoleId`,`DeletedAt`),
-  KEY (`DataChange_LastTime`),
-  KEY (`RoleId`)
+  UNIQUE KEY `UserRole_UK_UserId_RoleId_DeletedAt` (`UserId`,`RoleId`,`DeletedAt`),
+  KEY `UserRole_IX_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `UserRole_IX_RoleId` (`RoleId`)
 )   ;
 
 -- Dump of table Users
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Users` (
@@ -324,13 +311,12 @@ CREATE TABLE `Users` (
   `Email` varchar(64) NOT NULL DEFAULT 'default' ,
   `Enabled` tinyint(4) DEFAULT NULL ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`Username`)
+  UNIQUE KEY `Users_UK_Username` (`Username`)
 )   ;
 
 
 -- Dump of table Authorities
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Authorities` (
@@ -345,7 +331,6 @@ CREATE TABLE `Authorities` (
 -- ------------------------------------------------------------
 
 
-
 CREATE TABLE `SPRING_SESSION` (
   `PRIMARY_ID` char(36) NOT NULL,
   `SESSION_ID` char(36) NOT NULL,
@@ -355,14 +340,13 @@ CREATE TABLE `SPRING_SESSION` (
   `EXPIRY_TIME` bigint NOT NULL,
   `PRINCIPAL_NAME` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`PRIMARY_ID`),
-  UNIQUE KEY (`SESSION_ID`),
-  KEY (`EXPIRY_TIME`),
-  KEY (`PRINCIPAL_NAME`)
+  UNIQUE KEY `SPRING_SESSION_SPRING_SESSION_IX1` (`SESSION_ID`),
+  KEY `SPRING_SESSION_SPRING_SESSION_IX2` (`EXPIRY_TIME`),
+  KEY `SPRING_SESSION_SPRING_SESSION_IX3` (`PRINCIPAL_NAME`)
 )   ;
 
 -- Dump of table SPRING_SESSION_ATTRIBUTES
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `SPRING_SESSION_ATTRIBUTES` (
@@ -375,7 +359,6 @@ CREATE TABLE `SPRING_SESSION_ATTRIBUTES` (
 
 -- Dump of table AuditLog
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `AuditLog` (
@@ -395,15 +378,14 @@ CREATE TABLE `AuditLog` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY (`TraceId`),
-  KEY (`OpName`),
-  KEY (`DataChange_CreatedTime`),
-  KEY (`Operator`)
+  KEY `AuditLog_IX_TraceId` (`TraceId`),
+  KEY `AuditLog_IX_OpName` (`OpName`),
+  KEY `AuditLog_IX_DataChange_CreatedTime` (`DataChange_CreatedTime`),
+  KEY `AuditLog_IX_Operator` (`Operator`)
 )   ;
 
 -- Dump of table AuditLogDataInfluence
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `AuditLogDataInfluence` (
@@ -421,9 +403,9 @@ CREATE TABLE `AuditLogDataInfluence` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY (`SpanId`),
-  KEY (`DataChange_CreatedTime`),
-  KEY (`InfluenceEntityId`)
+  KEY `AuditLogDataInfluence_IX_SpanId` (`SpanId`),
+  KEY `AuditLogDataInfluence_IX_DataChange_CreatedTime` (`DataChange_CreatedTime`),
+  KEY `AuditLogDataInfluence_IX_EntityId` (`InfluenceEntityId`)
 )   ;
 
 -- Config

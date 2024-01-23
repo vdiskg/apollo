@@ -20,6 +20,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
 import java.net.URI;
@@ -34,12 +35,27 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Pattern;
 
 public class ApolloSqlConverterUtil {
 
+  private static final Pattern BASE_PATTERN = Pattern.compile(
+      "(apolloconfigdb|apolloportaldb)-v[0-9]{3,}-v[0-9]{3,}-base.sql");
+
+  private static final Pattern BEFORE_PATTERN = Pattern.compile(
+      "(apolloconfigdb|apolloportaldb)-v[0-9]{3,}-v[0-9]{3,}-before.sql");
+
+  private static final Pattern DELTA_PATTERN = Pattern.compile(
+      "(apolloconfigdb|apolloportaldb)-v[0-9]{3,}-v[0-9]{3,}.sql");
+
+  private static final Pattern AFTER_PATTERN = Pattern.compile(
+      "(apolloconfigdb|apolloportaldb)-v[0-9]{3,}-v[0-9]{3,}-after.sql");
 
   public static String getRepositoryDir() {
     ProtectionDomain protectionDomain = ApolloSqlConverter.class.getProtectionDomain();
@@ -49,7 +65,7 @@ public class ApolloSqlConverterUtil {
     try {
       uri = location.toURI();
     } catch (URISyntaxException e) {
-      throw new IllegalArgumentException(e.getLocalizedMessage(),e);
+      throw new IllegalArgumentException(e.getLocalizedMessage(), e);
     }
     Path path = Paths.get(uri);
     String unixClassPath = path.toString().replace("\\", "/");
@@ -164,13 +180,75 @@ public class ApolloSqlConverterUtil {
     return subPathList;
   }
 
+  public static List<Path> listSorted(Path dir, Comparator<Path> comparator) {
+    List<Path> subPathList = list(dir);
+    List<Path> sortedSubPathList = new ArrayList<>(subPathList);
+    sortedSubPathList.sort(comparator);
+    return sortedSubPathList;
+  }
+
+  public static List<Path> listSorted(Path dir) {
+    return listSorted(dir, Comparator.comparing(Path::toString));
+  }
+
+  public static void deleteDir(Path dir) {
+    try {
+      ApolloSqlConverterUtil.deleteDirInternal(dir);
+    } catch (IOException e) {
+      throw new UncheckedIOException("failed to delete dir " + e.getLocalizedMessage(), e);
+    }
+  }
+
+  private static void deleteDirInternal(Path dir) throws IOException {
+    if (!Files.exists(dir)) {
+      return;
+    }
+    List<Path> files = ApolloSqlConverterUtil.list(dir);
+    for (Path file : files) {
+      if (!Files.exists(file)) {
+        continue;
+      }
+      if (Files.isDirectory(file)) {
+        ApolloSqlConverterUtil.deleteDirInternal(file);
+        Files.delete(file);
+      } else {
+        Files.delete(file);
+      }
+    }
+  }
+
+  public static Comparator<String> deltaSqlComparator() {
+    return Comparator.comparing(path -> {
+      String unixPath = path.replace("\\", "/");
+      int lastIndex = unixPath.lastIndexOf("/");
+      String fileName;
+      if (lastIndex > 0) {
+        fileName = unixPath.substring(lastIndex + 1);
+      } else {
+        fileName = unixPath;
+      }
+      // sort: base < before < delta < after
+      if (BASE_PATTERN.matcher(fileName).matches()) {
+        return "00" + path;
+      } else if (BEFORE_PATTERN.matcher(fileName).matches()) {
+        return "30" + path;
+      } else if (DELTA_PATTERN.matcher(fileName).matches()) {
+        return "50" + path;
+      } else if (AFTER_PATTERN.matcher(fileName).matches()) {
+        return "90" + path;
+      } else {
+        throw new IllegalArgumentException("illegal file name: " + fileName);
+      }
+    });
+  }
+
   private static List<String> getDeltaSqlList(String dir, Set<String> ignoreDirs) {
     Path dirPath = Paths.get(dir + "/delta");
     if (!Files.exists(dirPath)) {
       return Collections.emptyList();
     }
-    List<Path> deltaDirList = list(dirPath);
-    List<String> deltaSqlList = new ArrayList<>();
+    List<Path> deltaDirList = listSorted(dirPath);
+    List<String> allDeltaSqlList = new ArrayList<>();
     for (Path deltaDir : deltaDirList) {
       if (!Files.isDirectory(deltaDir)) {
         continue;
@@ -178,16 +256,17 @@ public class ApolloSqlConverterUtil {
       if (ignoreDirs.contains(deltaDir.toString().replace("\\", "/"))) {
         continue;
       }
-      List<Path> deltaFiles = list(deltaDir);
+      List<Path> deltaFiles = listSorted(deltaDir,
+          Comparator.comparing(Path::toString, deltaSqlComparator()));
       for (Path path : deltaFiles) {
         String fileName = path.toString();
         if (fileName.endsWith(".sql")) {
-          deltaSqlList.add(fileName.replace("\\", "/"));
+          allDeltaSqlList.add(fileName.replace("\\", "/"));
         }
       }
     }
 
-    return deltaSqlList;
+    return allDeltaSqlList;
   }
 
 
@@ -205,5 +284,125 @@ public class ApolloSqlConverterUtil {
       templateList.add(new SqlTemplate(srcSql, template));
     }
     return templateList;
+  }
+
+  public static List<SqlStatement> toStatements(String rawText) {
+    List<SqlStatement> sqlStatementList = new ArrayList<>();
+    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(rawText))) {
+      AtomicReference<StringJoiner>rawTextJoinerRef = new AtomicReference<>(new StringJoiner("\n"));
+      StringBuilder singleLineTextBuilder = new StringBuilder();
+      List<String> textLines = new ArrayList<>();
+      AtomicBoolean comment = new AtomicBoolean(false);
+      for (String line = bufferedReader.readLine(); line != null;
+          line = bufferedReader.readLine()) {
+        if (line.startsWith("--")) {
+          commentLine(line, rawTextJoinerRef, singleLineTextBuilder, textLines, comment,
+              sqlStatementList);
+        } else {
+          noCommentLine(line, rawTextJoinerRef, singleLineTextBuilder, textLines, comment,
+              sqlStatementList);
+        }
+      }
+      if (!textLines.isEmpty()) {
+        StringJoiner sqlStatementRawTextJoiner = rawTextJoinerRef.get();
+        SqlStatement sqlStatement = createStatement(
+            sqlStatementRawTextJoiner, singleLineTextBuilder, textLines);
+        sqlStatementList.add(sqlStatement);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return sqlStatementList;
+  }
+
+  private static void commentLine(String line,AtomicReference<StringJoiner> rawTextJoinerRef,
+      StringBuilder singleLineTextBuilder, List<String> textLines, AtomicBoolean comment,
+       List<SqlStatement> sqlStatementList) {
+
+    if (!comment.get()) {
+      comment.set(true);
+      if (!textLines.isEmpty()) {
+        StringJoiner sqlStatementRawTextJoiner = rawTextJoinerRef.get();
+        SqlStatement sqlStatement = createStatement(
+            sqlStatementRawTextJoiner, singleLineTextBuilder, textLines);
+
+        resetStatementBuffer(rawTextJoinerRef, singleLineTextBuilder,
+            textLines);
+        sqlStatementList.add(sqlStatement);
+      }
+    }
+    StringJoiner sqlStatementRawTextJoiner = rawTextJoinerRef.get();
+    // raw text
+    sqlStatementRawTextJoiner.add(line);
+    // single line text
+    singleLineTextBuilder.append(line);
+    // text lines
+    textLines.add(line);
+  }
+
+  private static void noCommentLine(String line, AtomicReference<StringJoiner>rawTextJoinerRef ,
+      StringBuilder singleLineTextBuilder, List<String> textLines,
+      AtomicBoolean comment, List<SqlStatement> sqlStatementList) {
+
+    if (comment.get()) {
+      comment.set(false);
+      if (!textLines.isEmpty()) {
+        StringJoiner sqlStatementRawTextJoiner = rawTextJoinerRef.get();
+        SqlStatement sqlStatement = createStatement(
+            sqlStatementRawTextJoiner, singleLineTextBuilder, textLines);
+
+        resetStatementBuffer(rawTextJoinerRef, singleLineTextBuilder,
+            textLines);
+        sqlStatementList.add(sqlStatement);
+      }
+    }
+
+    StringJoiner sqlStatementRawTextJoiner = rawTextJoinerRef.get();
+    // ; is the end of a statement
+    int indexOfSemicolon = line.indexOf(';');
+    if (indexOfSemicolon == -1) {
+      // raw text
+      sqlStatementRawTextJoiner.add(line);
+      // single line text
+      singleLineTextBuilder.append(line);
+      // text lines
+      textLines.add(line);
+    } else {
+      String lineBeforeSemicolon = line.substring(0, indexOfSemicolon + 1);
+      // raw text
+      sqlStatementRawTextJoiner.add(lineBeforeSemicolon);
+      // single line text
+      singleLineTextBuilder.append(lineBeforeSemicolon);
+      // text lines
+      textLines.add(lineBeforeSemicolon);
+
+      SqlStatement sqlStatement = createStatement(
+          sqlStatementRawTextJoiner, singleLineTextBuilder, textLines);
+
+      resetStatementBuffer(rawTextJoinerRef, singleLineTextBuilder,
+          textLines);
+
+      sqlStatementList.add(sqlStatement);
+    }
+  }
+
+  private static SqlStatement createStatement(StringJoiner sqlStatementRawTextJoiner,
+      StringBuilder singleLineTextBuilder, List<String> textLines) {
+    return SqlStatement.builder()
+        .rawText(sqlStatementRawTextJoiner.toString())
+        .singleLineText(singleLineTextBuilder.toString())
+        .textLines(new ArrayList<>(textLines))
+        .build();
+  }
+
+  private static void resetStatementBuffer(
+      AtomicReference<StringJoiner> rawTextJoinerRef,
+      StringBuilder singleLineTextBuilder, List<String> textLines) {
+    // raw text
+    rawTextJoinerRef.set(new StringJoiner("\n"));
+    // single line text
+    singleLineTextBuilder.setLength(0);
+    // text lines
+    textLines.clear();
   }
 }

@@ -27,19 +27,18 @@ public class ApolloSqlConverter {
 
   public static void main(String[] args) {
     String repositoryDir = ApolloSqlConverterUtil.getRepositoryDir();
+    String srcDir = repositoryDir + "/scripts/sql/src";
     String targetParentDir = repositoryDir + "/scripts";
 
-    convert(targetParentDir);
+    SqlTemplateGist gists = ApolloSqlConverterUtil.getGists(repositoryDir);
+
+    convert(repositoryDir, srcDir, targetParentDir, gists);
   }
 
-  public static List<String> convert(String targetParentDir) {
+  public static List<String> convert(String repositoryDir, String srcDir, String targetParentDir,
+      SqlTemplateGist gists) {
 
-    String repositoryDir = ApolloSqlConverterUtil.getRepositoryDir();
-    String srcDir = repositoryDir + "/scripts/sql/src";
-
-    Configuration configuration = createConfiguration(repositoryDir);
-
-    SqlTemplateGist gists = ApolloSqlConverterUtil.getGists(repositoryDir);
+    Configuration configuration = createConfiguration(srcDir);
 
     // 'scripts/sql/src/apolloconfigdb.sql'
     // 'scripts/sql/src/apolloportaldb.sql'
@@ -60,10 +59,10 @@ public class ApolloSqlConverter {
     return srcSqlList;
   }
 
-  private static Configuration createConfiguration(String repositoryDir) {
+  private static Configuration createConfiguration(String srcDir) {
     Configuration configuration = new Configuration(Configuration.VERSION_2_3_32);
     try {
-      configuration.setDirectoryForTemplateLoading(new File(repositoryDir + "/scripts/sql/src"));
+      configuration.setDirectoryForTemplateLoading(new File(srcDir));
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -86,7 +85,8 @@ public class ApolloSqlConverter {
         .build();
 
     for (SqlTemplate sqlTemplate : templateList) {
-      String targetSql = ApolloSqlConverterUtil.replacePath(sqlTemplate.getSrcPath(), srcDir, targetDir);
+      String targetSql = ApolloSqlConverterUtil.replacePath(sqlTemplate.getSrcPath(), srcDir,
+          targetDir);
       ApolloMysqlDefaultConverterUtil.convert(sqlTemplate, targetSql, context);
     }
   }
@@ -106,7 +106,8 @@ public class ApolloSqlConverter {
         .gists(mainMysqlGists)
         .build();
     for (SqlTemplate sqlTemplate : templateList) {
-      String targetSql = ApolloSqlConverterUtil.replacePath(sqlTemplate.getSrcPath(), srcDir, targetDir);
+      String targetSql = ApolloSqlConverterUtil.replacePath(sqlTemplate.getSrcPath(), srcDir,
+          targetDir);
       ApolloMysqlDefaultConverterUtil.convert(sqlTemplate, targetSql, context);
     }
   }
@@ -125,7 +126,8 @@ public class ApolloSqlConverter {
         .gists(mainMysqlGists)
         .build();
     for (SqlTemplate sqlTemplate : templateList) {
-      String targetSql = ApolloSqlConverterUtil.replacePath(sqlTemplate.getSrcPath(), srcDir, targetDir);
+      String targetSql = ApolloSqlConverterUtil.replacePath(sqlTemplate.getSrcPath(), srcDir,
+          targetDir);
       ApolloH2ConverterUtil.convert(sqlTemplate, targetSql, context);
     }
   }

@@ -24,6 +24,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApolloMysqlDefaultConverterUtil {
 
@@ -43,13 +45,12 @@ public class ApolloMysqlDefaultConverterUtil {
 
     String rawText = ApolloSqlConverterUtil.process(sqlTemplate, context);
 
-    try (BufferedReader bufferedReader = new BufferedReader(new StringReader(rawText));
-        BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(targetSql),
+    List<SqlStatement> sqlStatements = ApolloSqlConverterUtil.toStatements(rawText);
+    try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(targetSql),
             StandardCharsets.UTF_8, StandardOpenOption.CREATE,
             StandardOpenOption.TRUNCATE_EXISTING)) {
-      for (String line = bufferedReader.readLine(); line != null;
-          line = bufferedReader.readLine()) {
-        String convertedLine = convertMainMysqlLine(line, databaseName);
+      for (SqlStatement sqlStatement : sqlStatements) {
+        String convertedLine = convertMainMysqlLine(sqlStatement, databaseName);
         bufferedWriter.write(convertedLine);
         bufferedWriter.write('\n');
       }
@@ -58,8 +59,8 @@ public class ApolloMysqlDefaultConverterUtil {
     }
   }
 
-  private static String convertMainMysqlLine(String line, String databaseName) {
-    String convertedLine = line;
+  private static String convertMainMysqlLine(SqlStatement sqlStatement, String databaseName) {
+    String convertedLine = sqlStatement.getRawText();
 
     convertedLine = convertedLine.replace("ApolloAssemblyDB", databaseName);
 

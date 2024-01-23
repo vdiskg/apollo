@@ -41,7 +41,6 @@ CREATE ALIAS IF NOT EXISTS UNIX_TIMESTAMP FOR "com.ctrip.framework.apollo.common
 -- ------------------------------------------------------------
 
 
-
 CREATE TABLE `App` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `AppId` varchar(64) NOT NULL DEFAULT 'default' ,
@@ -57,16 +56,15 @@ CREATE TABLE `App` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`AppId`,`DeletedAt`),
-  KEY (`DataChange_LastTime`),
-  KEY (`Name`)
+  UNIQUE KEY `App_UK_AppId_DeletedAt` (`AppId`,`DeletedAt`),
+  KEY `App_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `App_IX_Name` (`Name`)
 )   ;
 
 
 
 -- Dump of table appnamespace
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `AppNamespace` (
@@ -83,16 +81,15 @@ CREATE TABLE `AppNamespace` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`AppId`,`Name`,`DeletedAt`),
-  KEY (`Name`,`AppId`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `AppNamespace_UK_AppId_Name_DeletedAt` (`AppId`,`Name`,`DeletedAt`),
+  KEY `AppNamespace_Name_AppId` (`Name`,`AppId`),
+  KEY `AppNamespace_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table audit
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Audit` (
@@ -108,14 +105,13 @@ CREATE TABLE `Audit` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY (`DataChange_LastTime`)
+  KEY `Audit_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table cluster
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Cluster` (
@@ -131,16 +127,15 @@ CREATE TABLE `Cluster` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`AppId`,`Name`,`DeletedAt`),
-  KEY (`ParentClusterId`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `Cluster_UK_AppId_Name_DeletedAt` (`AppId`,`Name`,`DeletedAt`),
+  KEY `Cluster_IX_ParentClusterId` (`ParentClusterId`),
+  KEY `Cluster_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table commit
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Commit` (
@@ -157,15 +152,14 @@ CREATE TABLE `Commit` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY (`DataChange_LastTime`),
-  KEY (`AppId`),
-  KEY (`ClusterName`),
-  KEY (`NamespaceName`)
+  KEY `Commit_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `Commit_AppId` (`AppId`),
+  KEY `Commit_ClusterName` (`ClusterName`),
+  KEY `Commit_NamespaceName` (`NamespaceName`)
 )   ;
 
 -- Dump of table grayreleaserule
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `GrayReleaseRule` (
@@ -184,14 +178,13 @@ CREATE TABLE `GrayReleaseRule` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY (`DataChange_LastTime`),
-  KEY (`AppId`,`ClusterName`,`NamespaceName`)
+  KEY `GrayReleaseRule_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `GrayReleaseRule_IX_Namespace` (`AppId`,`ClusterName`,`NamespaceName`)
 )   ;
 
 
 -- Dump of table instance
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Instance` (
@@ -203,16 +196,15 @@ CREATE TABLE `Instance` (
   `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`AppId`,`ClusterName`,`Ip`,`DataCenter`),
-  KEY (`Ip`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `Instance_IX_UNIQUE_KEY` (`AppId`,`ClusterName`,`Ip`,`DataCenter`),
+  KEY `Instance_IX_IP` (`Ip`),
+  KEY `Instance_IX_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table instanceconfig
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `InstanceConfig` (
@@ -226,17 +218,16 @@ CREATE TABLE `InstanceConfig` (
   `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`InstanceId`,`ConfigAppId`,`ConfigNamespaceName`),
-  KEY (`ReleaseKey`),
-  KEY (`DataChange_LastTime`),
-  KEY (`ConfigAppId`,`ConfigClusterName`,`ConfigNamespaceName`,`DataChange_LastTime`)
+  UNIQUE KEY `InstanceConfig_IX_UNIQUE_KEY` (`InstanceId`,`ConfigAppId`,`ConfigNamespaceName`),
+  KEY `InstanceConfig_IX_ReleaseKey` (`ReleaseKey`),
+  KEY `InstanceConfig_IX_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `InstanceConfig_IX_Valid_Namespace` (`ConfigAppId`,`ConfigClusterName`,`ConfigNamespaceName`,`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table item
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Item` (
@@ -254,15 +245,14 @@ CREATE TABLE `Item` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY (`NamespaceId`),
-  KEY (`DataChange_LastTime`)
+  KEY `Item_IX_GroupId` (`NamespaceId`),
+  KEY `Item_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table namespace
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Namespace` (
@@ -277,16 +267,15 @@ CREATE TABLE `Namespace` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`AppId`,`ClusterName`,`NamespaceName`,`DeletedAt`),
-  KEY (`DataChange_LastTime`),
-  KEY (`NamespaceName`)
+  UNIQUE KEY `Namespace_UK_AppId_ClusterName_NamespaceName_DeletedAt` (`AppId`,`ClusterName`,`NamespaceName`,`DeletedAt`),
+  KEY `Namespace_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `Namespace_IX_NamespaceName` (`NamespaceName`)
 )   ;
 
 
 
 -- Dump of table namespacelock
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `NamespaceLock` (
@@ -299,15 +288,14 @@ CREATE TABLE `NamespaceLock` (
   `IsDeleted` boolean DEFAULT FALSE ,
   `DeletedAt` BIGINT(20) NOT NULL DEFAULT '0' ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`NamespaceId`,`DeletedAt`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `NamespaceLock_UK_NamespaceId_DeletedAt` (`NamespaceId`,`DeletedAt`),
+  KEY `NamespaceLock_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 
 -- Dump of table release
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `Release` (
@@ -327,15 +315,14 @@ CREATE TABLE `Release` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`ReleaseKey`,`DeletedAt`),
-  KEY (`AppId`,`ClusterName`,`NamespaceName`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `Release_UK_ReleaseKey_DeletedAt` (`ReleaseKey`,`DeletedAt`),
+  KEY `Release_AppId_ClusterName_GroupName` (`AppId`,`ClusterName`,`NamespaceName`),
+  KEY `Release_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 -- Dump of table releasehistory
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `ReleaseHistory` (
@@ -355,10 +342,10 @@ CREATE TABLE `ReleaseHistory` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY (`AppId`,`ClusterName`,`NamespaceName`,`BranchName`),
-  KEY (`ReleaseId`),
-  KEY (`DataChange_LastTime`),
-  KEY (`PreviousReleaseId`)
+  KEY `ReleaseHistory_IX_Namespace` (`AppId`,`ClusterName`,`NamespaceName`,`BranchName`),
+  KEY `ReleaseHistory_IX_ReleaseId` (`ReleaseId`),
+  KEY `ReleaseHistory_IX_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `ReleaseHistory_IX_PreviousReleaseId` (`PreviousReleaseId`)
 )   ;
 
 
@@ -366,21 +353,19 @@ CREATE TABLE `ReleaseHistory` (
 -- ------------------------------------------------------------
 
 
-
 CREATE TABLE `ReleaseMessage` (
   `Id` int(11) unsigned NOT NULL AUTO_INCREMENT ,
   `Message` varchar(1024) NOT NULL DEFAULT '' ,
   `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY (`DataChange_LastTime`),
-  KEY (`Message`)
+  KEY `ReleaseMessage_DataChange_LastTime` (`DataChange_LastTime`),
+  KEY `ReleaseMessage_IX_Message` (`Message`)
 )   ;
 
 
 
 -- Dump of table serverconfig
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `ServerConfig` (
@@ -396,13 +381,12 @@ CREATE TABLE `ServerConfig` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`Key`,`Cluster`,`DeletedAt`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `ServerConfig_UK_Key_Cluster_DeletedAt` (`Key`,`Cluster`,`DeletedAt`),
+  KEY `ServerConfig_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 -- Dump of table accesskey
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `AccessKey` (
@@ -417,14 +401,13 @@ CREATE TABLE `AccessKey` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY (`AppId`,`Secret`,`DeletedAt`),
-  KEY (`DataChange_LastTime`)
+  UNIQUE KEY `AccessKey_UK_AppId_Secret_DeletedAt` (`AppId`,`Secret`,`DeletedAt`),
+  KEY `AccessKey_DataChange_LastTime` (`DataChange_LastTime`)
 )   ;
 
 
 -- Dump of table serviceregistry
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `ServiceRegistry` (
@@ -444,7 +427,6 @@ CREATE TABLE `ServiceRegistry` (
 -- ------------------------------------------------------------
 
 
-
 CREATE TABLE `AuditLog` (
   `Id` int(10) unsigned NOT NULL AUTO_INCREMENT ,
   `TraceId` varchar(32) NOT NULL DEFAULT '' ,
@@ -462,15 +444,14 @@ CREATE TABLE `AuditLog` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY (`TraceId`),
-  KEY (`OpName`),
-  KEY (`DataChange_CreatedTime`),
-  KEY (`Operator`)
+  KEY `AuditLog_IX_TraceId` (`TraceId`),
+  KEY `AuditLog_IX_OpName` (`OpName`),
+  KEY `AuditLog_IX_DataChange_CreatedTime` (`DataChange_CreatedTime`),
+  KEY `AuditLog_IX_Operator` (`Operator`)
 )   ;
 
 -- Dump of table AuditLogDataInfluence
 -- ------------------------------------------------------------
-
 
 
 CREATE TABLE `AuditLogDataInfluence` (
@@ -488,9 +469,9 @@ CREATE TABLE `AuditLogDataInfluence` (
   `DataChange_LastModifiedBy` varchar(64) DEFAULT '' ,
   `DataChange_LastTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
   PRIMARY KEY (`Id`),
-  KEY (`SpanId`),
-  KEY (`DataChange_CreatedTime`),
-  KEY (`InfluenceEntityId`)
+  KEY `AuditLogDataInfluence_IX_SpanId` (`SpanId`),
+  KEY `AuditLogDataInfluence_IX_DataChange_CreatedTime` (`DataChange_CreatedTime`),
+  KEY `AuditLogDataInfluence_IX_EntityId` (`InfluenceEntityId`)
 )   ;
 
 -- Config
