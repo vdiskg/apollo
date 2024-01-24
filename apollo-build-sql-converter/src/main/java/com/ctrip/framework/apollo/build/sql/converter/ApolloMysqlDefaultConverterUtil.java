@@ -50,8 +50,8 @@ public class ApolloMysqlDefaultConverterUtil {
             StandardCharsets.UTF_8, StandardOpenOption.CREATE,
             StandardOpenOption.TRUNCATE_EXISTING)) {
       for (SqlStatement sqlStatement : sqlStatements) {
-        String convertedLine = convertMainMysqlLine(sqlStatement, databaseName);
-        bufferedWriter.write(convertedLine);
+        String convertedText = convertMainMysqlLine(sqlStatement, databaseName);
+        bufferedWriter.write(convertedText);
         bufferedWriter.write('\n');
       }
     } catch (IOException e) {
@@ -60,10 +60,10 @@ public class ApolloMysqlDefaultConverterUtil {
   }
 
   private static String convertMainMysqlLine(SqlStatement sqlStatement, String databaseName) {
-    String convertedLine = sqlStatement.getRawText();
+    String convertedText = sqlStatement.getRawText();
 
-    convertedLine = convertedLine.replace("ApolloAssemblyDB", databaseName);
+    convertedText = convertedText.replace("ApolloAssemblyDB", databaseName);
 
-    return convertedLine;
+    return convertedText;
   }
 }
