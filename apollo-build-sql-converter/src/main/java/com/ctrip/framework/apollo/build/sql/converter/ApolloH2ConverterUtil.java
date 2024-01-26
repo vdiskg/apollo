@@ -59,7 +59,7 @@ public class ApolloH2ConverterUtil {
 
 
   private static final Pattern OPERATION_TABLE_PATTERN = Pattern.compile(
-      "(?<operation>DROP|CREATE|ALTER)\\s+TABLE\\s+(`)?(?<tableName>[a-zA-Z0-9\\-_]+)(`)?",
+      "(?<operation>DROP|CREATE|ALTER)\\s+TABLE\\s+(`)?(?<tableName>[a-zA-Z0-9\\-_]+)(`)?\\s*",
       Pattern.CASE_INSENSITIVE);
 
   private static final Pattern CREATE_INDEX_ON_PATTERN = Pattern.compile(
@@ -185,25 +185,25 @@ public class ApolloH2ConverterUtil {
   }
 
   private static final Pattern ADD_COLUMN_PATTERN = Pattern.compile(
-      "ADD\\s+COLUMN\\s+(`)?(?<columnName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
+      "\\s*ADD\\s+COLUMN\\s+(`)?(?<columnName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
       Pattern.CASE_INSENSITIVE);
   private static final Pattern MODIFY_COLUMN_PATTERN = Pattern.compile(
-      "MODIFY\\s+COLUMN\\s+(`)?(?<columnName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
+      "\\s*MODIFY\\s+COLUMN\\s+(`)?(?<columnName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
       Pattern.CASE_INSENSITIVE);
   private static final Pattern CHANGE_PATTERN = Pattern.compile(
-      "CHANGE\\s+(`)?(?<oldColumnName>[a-zA-Z0-9\\-_]+)(`)?\\s+(`)?(?<newColumnName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
+      "\\s*CHANGE\\s+(`)?(?<oldColumnName>[a-zA-Z0-9\\-_]+)(`)?\\s+(`)?(?<newColumnName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
       Pattern.CASE_INSENSITIVE);
   private static final Pattern DROP_COLUMN_PATTERN = Pattern.compile(
-      "DROP\\s+(COLUMN\\s+)?(`)?(?<columnName>[a-zA-Z0-9\\-_]+)(`)?\\s*[,;]",
+      "\\s*DROP\\s+(COLUMN\\s+)?(`)?(?<columnName>[a-zA-Z0-9\\-_]+)(`)?\\s*[,;]",
       Pattern.CASE_INSENSITIVE);
   private static final Pattern ADD_KEY_PATTERN = Pattern.compile(
-      "ADD\\s+(?<indexType>(UNIQUE\\s+)?KEY)\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
+      "\\s*ADD\\s+(?<indexType>(UNIQUE\\s+)?KEY)\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
       Pattern.CASE_INSENSITIVE);
   private static final Pattern ADD_INDEX_PATTERN = Pattern.compile(
-      "ADD\\s+(?<indexType>(UNIQUE\\s+)?INDEX)\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
+      "\\s*ADD\\s+(?<indexType>(UNIQUE\\s+)?INDEX)\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
       Pattern.CASE_INSENSITIVE);
   private static final Pattern DROP_INDEX_PATTERN = Pattern.compile(
-      "DROP\\s+INDEX\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?\\s*[,;]", Pattern.CASE_INSENSITIVE);
+      "\\s*DROP\\s+INDEX\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?\\s*[,;]", Pattern.CASE_INSENSITIVE);
 
   private static String convertAlterTableMulti(String convertedText, SqlStatement sqlStatement,
       String tableName) {
