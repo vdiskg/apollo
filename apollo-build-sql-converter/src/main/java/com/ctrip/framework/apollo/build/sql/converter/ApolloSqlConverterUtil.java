@@ -227,6 +227,10 @@ public class ApolloSqlConverterUtil {
       } else {
         fileName = unixPath;
       }
+      if (!fileName.endsWith(".sql")) {
+        // not sql file
+        return path;
+      }
       // sort: base < before < delta < after
       if (BASE_PATTERN.matcher(fileName).matches()) {
         return "00" + path;

@@ -76,21 +76,21 @@ class ApolloSqlConverterH2Test {
     String h2Path = "test-h2";
     this.checkConfigDatabase(h2Path, checkerSqlList, testCheckerSqlList);
 
-    this.checkPortalDatabase(h2Path, testSrcSqlList, srcSqlList, testCheckerParentDir,
-        checkerParentDir);
+    this.checkPortalDatabase(h2Path, checkerSqlList, testCheckerSqlList);
 
   }
 
   private void checkSort(List<String> testSrcSqlList) {
-    int baseIndex = this.getIndex(testSrcSqlList, "apolloconfigdb-v040-v050-base.sql");
+    int baseIndex = this.getIndex(testSrcSqlList, "apolloconfigdb-v000-v010-base.sql");
     Assertions.assertTrue(baseIndex >= 0);
-    int beforeIndex = this.getIndex(testSrcSqlList, "apolloconfigdb-v040-v050-before.sql");
+    int beforeIndex = this.getIndex(testSrcSqlList, "apolloconfigdb-v000-v010-before.sql");
     Assertions.assertTrue(beforeIndex >= 0);
-    int deltaIndex = this.getIndex(testSrcSqlList, "apolloconfigdb-v040-v050.sql");
+    int deltaIndex = this.getIndex(testSrcSqlList, "apolloconfigdb-v000-v010.sql");
     Assertions.assertTrue(deltaIndex >= 0);
-    int afterIndex = this.getIndex(testSrcSqlList, "apolloconfigdb-v040-v050-after.sql");
+    int afterIndex = this.getIndex(testSrcSqlList, "apolloconfigdb-v000-v010-after.sql");
     Assertions.assertTrue(afterIndex >= 0);
 
+    // base < before < delta < after
     Assertions.assertTrue(baseIndex < beforeIndex);
     Assertions.assertTrue(beforeIndex < deltaIndex);
     Assertions.assertTrue(deltaIndex < afterIndex);
@@ -133,13 +133,31 @@ class ApolloSqlConverterH2Test {
     DatabasePopulatorUtils.execute(populator, configDataSource);
   }
 
-  private void checkPortalDatabase(String h2Path, List<String> testSrcSqlList,
-      List<String> srcSqlList,
-      String testCheckerParentDir, String checkerParentDir) {
+  private void checkPortalDatabase(String h2Path, List<String> checkerSqlList,
+      List<String> testCheckerSqlList) {
     SimpleDriverDataSource portalDataSource = new SimpleDriverDataSource();
     portalDataSource.setUrl("jdbc:h2:mem:~/" + h2Path
         + "/apollo-portal-db;mode=mysql;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;BUILTIN_ALIAS_OVERRIDE=TRUE;DATABASE_TO_UPPER=FALSE");
     portalDataSource.setDriverClass(org.h2.Driver.class);
+
+    ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+    populator.setContinueOnError(false);
+    populator.setSeparator(";");
+    populator.setSqlScriptEncoding(StandardCharsets.UTF_8.name());
+
+    for (String sqlFile : testCheckerSqlList) {
+      if (sqlFile.contains("apolloportaldb-")) {
+        populator.addScript(new PathResource(Paths.get(sqlFile)));
+      }
+    }
+
+    for (String sqlFile : checkerSqlList) {
+      if (sqlFile.contains("apolloportaldb-")) {
+        populator.addScript(new PathResource(Paths.get(sqlFile)));
+      }
+    }
+
+    DatabasePopulatorUtils.execute(populator, portalDataSource);
   }
 
 }

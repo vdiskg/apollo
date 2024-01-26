@@ -30,11 +30,160 @@ import java.util.regex.Pattern;
 
 public class ApolloH2ConverterUtil {
 
-  private static final Pattern CREATE_TABLE_PATTERN = Pattern.compile(
-      "CREATE\\s+TABLE\\s+(`)?(?<tableName>[a-zA-Z0-9\\-_]+)(`)?", Pattern.CASE_INSENSITIVE);
+  public static void convert(SqlTemplate sqlTemplate, String targetSql,
+      SqlTemplateContext context) {
 
-  private static final Pattern ALTER_TABLE_PATTERN = Pattern.compile(
-      "ALTER\\s+TABLE\\s+(`)?(?<tableName>[a-zA-Z0-9\\-_]+)(`)?", Pattern.CASE_INSENSITIVE);
+    ApolloSqlConverterUtil.ensureDirectories(targetSql);
+
+    String rawText = ApolloSqlConverterUtil.process(sqlTemplate, context);
+
+    List<SqlStatement> sqlStatements = ApolloSqlConverterUtil.toStatements(rawText);
+    try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(targetSql),
+        StandardCharsets.UTF_8, StandardOpenOption.CREATE,
+        StandardOpenOption.TRUNCATE_EXISTING)) {
+      for (SqlStatement sqlStatement : sqlStatements) {
+        String convertedText;
+        try {
+          convertedText = convertAssemblyH2Line(sqlStatement);
+        } catch (Throwable e) {
+          throw new RuntimeException("convert error: " + sqlStatement.getRawText(), e);
+        }
+        bufferedWriter.write(convertedText);
+        bufferedWriter.write('\n');
+      }
+
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
+
+
+  private static final Pattern OPERATION_TABLE_PATTERN = Pattern.compile(
+      "(?<operation>DROP|CREATE|ALTER)\\s+TABLE\\s+(`)?(?<tableName>[a-zA-Z0-9\\-_]+)(`)?",
+      Pattern.CASE_INSENSITIVE);
+
+  private static final Pattern CREATE_INDEX_ON_PATTERN = Pattern.compile(
+      "CREATE\\s+INDEX\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?\\s+ON\\s+(`)?(?<tableName>[a-zA-Z0-9\\-_]+)(`)?",
+      Pattern.CASE_INSENSITIVE);
+
+  private static String convertAssemblyH2Line(SqlStatement sqlStatement) {
+    String convertedText = sqlStatement.getRawText();
+
+    // <operation> TABLE `<tableName>`
+    Matcher opTableMatcher = OPERATION_TABLE_PATTERN.matcher(convertedText);
+    if (opTableMatcher.find()) {
+      String operation = opTableMatcher.group("operation");
+      if ("DROP".equalsIgnoreCase(operation)) {
+        return "";
+      } else if ("CREATE".equalsIgnoreCase(operation)) {
+        return convertCreateTable(convertedText, sqlStatement, opTableMatcher);
+      } else if ("ALTER".equalsIgnoreCase(operation)) {
+        return convertAlterTable(convertedText, sqlStatement, opTableMatcher);
+      }
+    }
+
+    // CREATE INDEX `<indexName>` ON `<tableName>`
+    Matcher createIndexOnMatcher = CREATE_INDEX_ON_PATTERN.matcher(convertedText);
+    if (createIndexOnMatcher.find()) {
+      String createIndexOnTableName = createIndexOnMatcher.group("tableName");
+      // index with table
+      return convertIndexOnTable(convertedText, createIndexOnTableName, sqlStatement);
+    }
+
+    // others
+    return convertedText;
+  }
+
+  private static String convertCreateTable(String convertedText, SqlStatement sqlStatement,
+      Matcher opTableMatcher) {
+    String tableName = opTableMatcher.group("tableName");
+    // table config
+    convertedText = convertTableConfig(convertedText, sqlStatement);
+    // index with table
+    convertedText = convertIndexWithTable(convertedText, tableName, sqlStatement);
+    // column
+    convertedText = convertColumn(convertedText, sqlStatement);
+    return convertedText;
+  }
+
+  private static final Pattern ENGINE_PATTERN = Pattern.compile(
+      "ENGINE\\s*=\\s*InnoDB", Pattern.CASE_INSENSITIVE);
+
+  private static final Pattern DEFAULT_CHARSET_PATTERN = Pattern.compile(
+      "DEFAULT\\s+CHARSET\\s*=\\s*utf8mb4", Pattern.CASE_INSENSITIVE);
+
+  private static final Pattern ROW_FORMAT_PATTERN = Pattern.compile(
+      "ROW_FORMAT\\s*=\\s*DYNAMIC", Pattern.CASE_INSENSITIVE);
+
+  private static String convertTableConfig(String convertedText, SqlStatement sqlStatement) {
+    Matcher engineMatcher = ENGINE_PATTERN.matcher(convertedText);
+    if (engineMatcher.find()) {
+      convertedText = engineMatcher.replaceAll("");
+    }
+    Matcher defaultCharsetMatcher = DEFAULT_CHARSET_PATTERN.matcher(convertedText);
+    if (defaultCharsetMatcher.find()) {
+      convertedText = defaultCharsetMatcher.replaceAll("");
+    }
+    Matcher rowFormatMatcher = ROW_FORMAT_PATTERN.matcher(convertedText);
+    if (rowFormatMatcher.find()) {
+      convertedText = rowFormatMatcher.replaceAll("");
+    }
+    return convertedText;
+  }
+
+  private static final Pattern INDEX_NAME_PATTERN = Pattern.compile(
+      "KEY\\s*(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?", Pattern.CASE_INSENSITIVE);
+
+  private static String convertIndexWithTable(String convertedText, String tableName,
+      SqlStatement sqlStatement) {
+    String[] lines = convertedText.split("\n");
+    StringJoiner joiner = new StringJoiner("\n");
+    for (String line : lines) {
+      String convertedLine = line;
+      if (convertedLine.contains("KEY")) {
+        // replace index name
+        // KEY `AppId_ClusterName_GroupName` (`AppId`,`ClusterName`(191),`NamespaceName`(191))
+        // ->
+        // KEY `tableName_AppId_ClusterName_GroupName` (`AppId`,`ClusterName`(191),`NamespaceName`(191))
+        Matcher indexNameMatcher = INDEX_NAME_PATTERN.matcher(convertedLine);
+        if (indexNameMatcher.find()) {
+          convertedLine = indexNameMatcher.replaceAll("KEY `" + tableName + "_${indexName}`");
+        }
+        convertedLine = removePrefixIndex(convertedLine);
+      }
+      joiner.add(convertedLine);
+    }
+    return joiner.toString();
+  }
+
+  private static String convertColumn(String convertedText, SqlStatement sqlStatement) {
+    // convert bit(1) to boolean
+    // `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal'
+    // ->
+    // `IsDeleted` boolean NOT NULL DEFAULT FALSE
+    if (convertedText.contains("bit(1)")) {
+      convertedText = convertedText.replace("bit(1)", "boolean");
+    }
+    if (convertedText.contains("b'0'")) {
+      convertedText = convertedText.replace("b'0'", "FALSE");
+    }
+    if (convertedText.contains("b'1'")) {
+      convertedText = convertedText.replace("b'1'", "TRUE");
+    }
+
+    return convertedText;
+  }
+
+  private static String convertAlterTable(String convertedText, SqlStatement sqlStatement,
+      Matcher opTableMatcher) {
+    String tableName = opTableMatcher.group("tableName");
+    // remove first table name
+    convertedText = opTableMatcher.replaceAll("");
+    convertedText = convertAlterTableMulti(convertedText, sqlStatement, tableName);
+
+    return convertedText;
+  }
+
   private static final Pattern ADD_COLUMN_PATTERN = Pattern.compile(
       "ADD\\s+COLUMN\\s+(`)?(?<columnName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
       Pattern.CASE_INSENSITIVE);
@@ -53,146 +202,10 @@ public class ApolloH2ConverterUtil {
   private static final Pattern ADD_INDEX_PATTERN = Pattern.compile(
       "ADD\\s+(?<indexType>(UNIQUE\\s+)?INDEX)\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
       Pattern.CASE_INSENSITIVE);
-
-  private static final Pattern CREATE_INDEX_ON_PATTERN = Pattern.compile(
-      "CREATE\\s+INDEX\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?\\s+ON\\s+(`)?(?<tableName>[a-zA-Z0-9\\-_]+)(`)?",
-      Pattern.CASE_INSENSITIVE);
-
-  private static final Pattern INDEX_NAME_PATTERN = Pattern.compile(
-      "KEY\\s*(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?", Pattern.CASE_INSENSITIVE);
   private static final Pattern DROP_INDEX_PATTERN = Pattern.compile(
       "DROP\\s+INDEX\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?\\s*[,;]", Pattern.CASE_INSENSITIVE);
-  private static final Pattern CREATE_INDEX_PATTERN = Pattern.compile(
-      "CREATE\\s+(?<indexType>(UNIQUE\\s+)?INDEX)\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?",
-      Pattern.CASE_INSENSITIVE);
-  private static final Pattern PREFIX_INDEX_PATTERN = Pattern.compile(
-      "(?<prefix>\\("
-          + "((`)?[a-zA-Z0-9\\-_]+(`)?\\s*(\\([0-9]+\\))?,)*)"
-          + "(`)?(?<columnName>[a-zA-Z0-9\\-_]+)(`)?\\s*\\([0-9]+\\)"
-          + "(?<suffix>(,(`)?[a-zA-Z0-9\\-_]+(`)?\\s*(\\([0-9]+\\))?)*"
-          + "\\))");
 
-  public static void convert(SqlTemplate sqlTemplate, String targetSql,
-      SqlTemplateContext context) {
-
-    ApolloSqlConverterUtil.ensureDirectories(targetSql);
-
-    String rawText = ApolloSqlConverterUtil.process(sqlTemplate, context);
-
-    List<SqlStatement> sqlStatements = ApolloSqlConverterUtil.toStatements(rawText);
-    try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(targetSql),
-        StandardCharsets.UTF_8, StandardOpenOption.CREATE,
-        StandardOpenOption.TRUNCATE_EXISTING)) {
-      for (SqlStatement sqlStatement : sqlStatements) {
-        String convertedText = convertAssemblyH2Line(sqlStatement);
-        bufferedWriter.write(convertedText);
-        bufferedWriter.write('\n');
-      }
-
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
-  }
-
-  private static String convertAssemblyH2Line(SqlStatement sqlStatement) {
-    String convertedText = sqlStatement.getRawText();
-
-    // remove drop table
-    if (convertedText.contains("DROP TABLE")) {
-      return "";
-    }
-
-    Matcher createTableMatcher = CREATE_TABLE_PATTERN.matcher(convertedText);
-    Matcher alterTableMatcher = ALTER_TABLE_PATTERN.matcher(convertedText);
-    Matcher createIndexOnMatcher = CREATE_INDEX_ON_PATTERN.matcher(convertedText);
-    if (createTableMatcher.find()) {
-      String createTableName = createTableMatcher.group("tableName");
-      // table config
-      convertedText = convertTableConfig(convertedText, sqlStatement);
-      // index with table
-      convertedText = convertIndexWithTable(convertedText, createTableName, sqlStatement);
-    } else if (alterTableMatcher.find()) {
-      String alterTableName = alterTableMatcher.group("tableName");
-      // alter table
-      convertedText = convertTableAlter(convertedText, sqlStatement, alterTableMatcher,
-          alterTableName);
-    } else if (createIndexOnMatcher.find()) {
-      String createIndexOnTableName = createIndexOnMatcher.group("tableName");
-      // index with table
-      convertedText = convertIndexOnTable(convertedText, createIndexOnTableName, sqlStatement);
-    }
-
-    // column
-    convertedText = convertColumn(convertedText, sqlStatement);
-    return convertedText;
-  }
-
-  private static String convertTableConfig(String convertedText, SqlStatement sqlStatement) {
-    if (convertedText.contains("ENGINE=InnoDB")) {
-      convertedText = convertedText.replace("ENGINE=InnoDB", "");
-    }
-    if (convertedText.contains("DEFAULT CHARSET=utf8mb4")) {
-      convertedText = convertedText.replace("DEFAULT CHARSET=utf8mb4", "");
-    }
-    if (convertedText.contains("ROW_FORMAT=DYNAMIC")) {
-      convertedText = convertedText.replace("ROW_FORMAT=DYNAMIC", "");
-    }
-
-    return convertedText;
-  }
-
-  private static String convertTableAlter(String convertedText, SqlStatement sqlStatement,
-      Matcher alterTableMatcher, String tableName) {
-    int foundCount = getSubStatementCount(convertedText, sqlStatement, tableName);
-    if (foundCount == 0) {
-      throw new IllegalStateException("Unsupported alter table statement: " + convertedText);
-    } else if (foundCount == 1) {
-      // index with alter
-      convertedText = convertIndexNameWithAlter(convertedText, tableName, sqlStatement);
-      return convertedText;
-    } else if (foundCount > 1) {
-      convertedText = alterTableMatcher.replaceAll("");
-      convertedText = convertTableAlterMulti(convertedText, sqlStatement, tableName);
-    }
-
-    return convertedText;
-  }
-
-  private static int getSubStatementCount(String convertedText, SqlStatement sqlStatement,
-      String tableName) {
-    int foundCount = 0;
-    Matcher addColumnMatcher = ADD_COLUMN_PATTERN.matcher(convertedText);
-    while (addColumnMatcher.find()) {
-      foundCount++;
-    }
-    Matcher modifyColumnMatcher = MODIFY_COLUMN_PATTERN.matcher(convertedText);
-    while (modifyColumnMatcher.find()) {
-      foundCount++;
-    }
-    Matcher changeMatcher = CHANGE_PATTERN.matcher(convertedText);
-    while (changeMatcher.find()) {
-      foundCount++;
-    }
-    Matcher dropColumnMatcher = DROP_COLUMN_PATTERN.matcher(convertedText);
-    while (dropColumnMatcher.find()) {
-      foundCount++;
-    }
-    Matcher addKeyMatcher = ADD_KEY_PATTERN.matcher(convertedText);
-    while (addKeyMatcher.find()) {
-      foundCount++;
-    }
-    Matcher addIndexMatcher = ADD_INDEX_PATTERN.matcher(convertedText);
-    while (addIndexMatcher.find()) {
-      foundCount++;
-    }
-    Matcher dropIndexMatcher = DROP_INDEX_PATTERN.matcher(convertedText);
-    while (dropIndexMatcher.find()) {
-      foundCount++;
-    }
-    return foundCount;
-  }
-
-  private static String convertTableAlterMulti(String convertedText, SqlStatement sqlStatement,
+  private static String convertAlterTableMulti(String convertedText, SqlStatement sqlStatement,
       String tableName) {
     Matcher addColumnMatcher = ADD_COLUMN_PATTERN.matcher(convertedText);
     if (addColumnMatcher.find()) {
@@ -207,7 +220,7 @@ public class ApolloH2ConverterUtil {
     Matcher changeMatcher = CHANGE_PATTERN.matcher(convertedText);
     if (changeMatcher.find()) {
       convertedText = changeMatcher.replaceAll("ALTER TABLE `" + tableName
-          + "` CHANGE `${oldColumnName` `${newColumnName}` ${subStatement};");
+          + "` CHANGE `${oldColumnName}` `${newColumnName}` ${subStatement};");
     }
 
     Matcher dropColumnMatcher = DROP_COLUMN_PATTERN.matcher(convertedText);
@@ -237,6 +250,10 @@ public class ApolloH2ConverterUtil {
     return convertedText;
   }
 
+  private static final Pattern CREATE_INDEX_PATTERN = Pattern.compile(
+      "CREATE\\s+(?<indexType>(UNIQUE\\s+)?INDEX)\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?",
+      Pattern.CASE_INSENSITIVE);
+
   private static String convertIndexOnTable(String convertedText, String tableName,
       SqlStatement sqlStatement) {
     Matcher createIndexMatcher = CREATE_INDEX_PATTERN.matcher(convertedText);
@@ -248,84 +265,26 @@ public class ApolloH2ConverterUtil {
     return convertedText;
   }
 
-  private static String convertIndexWithTable(String convertedText, String tableName,
-      SqlStatement sqlStatement) {
-    String[] lines = convertedText.split("\n");
-    StringJoiner joiner = new StringJoiner("\n");
-    for (String line : lines) {
-      String convertedLine = line;
-      if (convertedLine.contains("KEY")) {
-        // replace index name
-        // KEY `AppId_ClusterName_GroupName` (`AppId`,`ClusterName`(191),`NamespaceName`(191))
-        // ->
-        // KEY `tableName_AppId_ClusterName_GroupName` (`AppId`,`ClusterName`(191),`NamespaceName`(191))
-        Matcher indexNameMatcher = INDEX_NAME_PATTERN.matcher(convertedLine);
-        if (indexNameMatcher.find()) {
-          convertedLine = indexNameMatcher.replaceAll("KEY `" + tableName + "_${indexName}`");
-        }
-
-        convertedLine = removePrefixIndex(convertedLine);
-      }
-      joiner.add(convertedLine);
-    }
-    return joiner.toString();
-  }
-
-  private static String convertIndexNameWithAlter(String convertedText, String tableName,
-      SqlStatement sqlStatement) {
-    Matcher addKeyMatcher = ADD_KEY_PATTERN.matcher(convertedText);
-    if (addKeyMatcher.find()) {
-      convertedText = addKeyMatcher.replaceAll(
-          "ADD ${indexType} `" + tableName + "_${indexName}` ${subStatement};");
-      convertedText = removePrefixIndex(convertedText);
-    }
-    Matcher addIndexMatcher = ADD_INDEX_PATTERN.matcher(convertedText);
-    if (addIndexMatcher.find()) {
-      convertedText = addIndexMatcher.replaceAll(
-          "ADD ${indexType} `" + tableName + "_${indexName}` ${subStatement};");
-      convertedText = removePrefixIndex(convertedText);
-    }
-    Matcher createIndexMatcher = CREATE_INDEX_PATTERN.matcher(convertedText);
-    if (createIndexMatcher.find()) {
-      convertedText = createIndexMatcher.replaceAll(
-          "CREATE ${indexType} `" + tableName + "_${indexName}`");
-      convertedText = removePrefixIndex(convertedText);
-    }
-    Matcher dropIndexMatcher = DROP_INDEX_PATTERN.matcher(convertedText);
-    if (dropIndexMatcher.find()) {
-      convertedText = dropIndexMatcher.replaceAll("DROP INDEX `" + tableName + "_${indexName}`;");
-    }
-    return convertedText;
-  }
+  private static final Pattern PREFIX_INDEX_PATTERN = Pattern.compile(
+      "(?<prefix>\\("
+          // other columns
+          + "((`)?[a-zA-Z0-9\\-_]+(`)?\\s*(\\([0-9]+\\))?,)*)"
+          // `<columnName>`(191)
+          + "(`)?(?<columnName>[a-zA-Z0-9\\-_]+)(`)?\\s*\\([0-9]+\\)"
+          // other columns
+          + "(?<suffix>(,(`)?[a-zA-Z0-9\\-_]+(`)?\\s*(\\([0-9]+\\))?)*"
+          + "\\))");
 
   private static String removePrefixIndex(String convertedText) {
     // convert prefix index
-    // CREATE INDEX `IX_NAME` ON App (`AppId`,`ClusterName`(191),`NamespaceName`(191))
+    // (`AppId`,`ClusterName`(191),`NamespaceName`(191))
     // ->
-    // CREATE INDEX `IX_NAME` ON App (`AppId`,`ClusterName`,`NamespaceName`)
+    // (`AppId`,`ClusterName`,`NamespaceName`)
     for (Matcher prefixIndexMatcher = PREFIX_INDEX_PATTERN.matcher(convertedText);
         prefixIndexMatcher.find();
         prefixIndexMatcher = PREFIX_INDEX_PATTERN.matcher(convertedText)) {
       convertedText = prefixIndexMatcher.replaceAll("${prefix}`${columnName}`${suffix}");
     }
-    return convertedText;
-  }
-
-  private static String convertColumn(String convertedText, SqlStatement sqlStatement) {
-    // convert bit(1) to boolean
-    // `IsDeleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '1: deleted, 0: normal'
-    // ->
-    // `IsDeleted` boolean NOT NULL DEFAULT FALSE
-    if (convertedText.contains("bit(1)")) {
-      convertedText = convertedText.replace("bit(1)", "boolean");
-    }
-    if (convertedText.contains("b'0'")) {
-      convertedText = convertedText.replace("b'0'", "FALSE");
-    }
-    if (convertedText.contains("b'1'")) {
-      convertedText = convertedText.replace("b'1'", "TRUE");
-    }
-
     return convertedText;
   }
 }
