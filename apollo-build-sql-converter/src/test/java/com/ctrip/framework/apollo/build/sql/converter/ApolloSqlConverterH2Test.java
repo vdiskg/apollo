@@ -36,6 +36,7 @@ class ApolloSqlConverterH2Test {
     String srcDir = repositoryDir + "/scripts/sql/src";
     String checkerParentDir =
         repositoryDir + "/apollo-build-sql-converter/target/scripts/sql/checker-h2";
+
     String testSrcDir =
         repositoryDir + "/apollo-build-sql-converter/src/test/resources/META-INF/sql/h2-test";
     String testCheckerParentDir =

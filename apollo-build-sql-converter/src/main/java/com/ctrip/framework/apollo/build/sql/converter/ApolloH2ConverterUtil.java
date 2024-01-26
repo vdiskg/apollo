@@ -210,42 +210,42 @@ public class ApolloH2ConverterUtil {
     Matcher addColumnMatcher = ADD_COLUMN_PATTERN.matcher(convertedText);
     if (addColumnMatcher.find()) {
       convertedText = addColumnMatcher.replaceAll(
-          "ALTER TABLE `" + tableName + "` ADD COLUMN `${columnName}`${subStatement};");
+          "\nALTER TABLE `" + tableName + "` ADD COLUMN `${columnName}`${subStatement};");
     }
     Matcher modifyColumnMatcher = MODIFY_COLUMN_PATTERN.matcher(convertedText);
     if (modifyColumnMatcher.find()) {
       convertedText = modifyColumnMatcher.replaceAll(
-          "ALTER TABLE `" + tableName + "` MODIFY COLUMN `${columnName}`${subStatement};");
+          "\nALTER TABLE `" + tableName + "` MODIFY COLUMN `${columnName}`${subStatement};");
     }
     Matcher changeMatcher = CHANGE_PATTERN.matcher(convertedText);
     if (changeMatcher.find()) {
-      convertedText = changeMatcher.replaceAll("ALTER TABLE `" + tableName
+      convertedText = changeMatcher.replaceAll("\nALTER TABLE `" + tableName
           + "` CHANGE `${oldColumnName}` `${newColumnName}` ${subStatement};");
     }
 
     Matcher dropColumnMatcher = DROP_COLUMN_PATTERN.matcher(convertedText);
     if (dropColumnMatcher.find()) {
       convertedText = dropColumnMatcher.replaceAll(
-          "ALTER TABLE `" + tableName + "` DROP `${columnName}`;");
+          "\nALTER TABLE `" + tableName + "` DROP `${columnName}`;");
     }
     Matcher addKeyMatcher = ADD_KEY_PATTERN.matcher(convertedText);
     if (addKeyMatcher.find()) {
       convertedText = addKeyMatcher.replaceAll(
-          "ALTER TABLE `" + tableName + "` ADD ${indexType} `" + tableName
+          "\nALTER TABLE `" + tableName + "` ADD ${indexType} `" + tableName
               + "_${indexName}` ${subStatement};");
       convertedText = removePrefixIndex(convertedText);
     }
     Matcher addIndexMatcher = ADD_INDEX_PATTERN.matcher(convertedText);
     if (addIndexMatcher.find()) {
       convertedText = addIndexMatcher.replaceAll(
-          "ALTER TABLE `" + tableName + "` ADD ${indexType} `" + tableName
+          "\nALTER TABLE `" + tableName + "` ADD ${indexType} `" + tableName
               + "_${indexName}` ${subStatement};");
       convertedText = removePrefixIndex(convertedText);
     }
     Matcher dropIndexMatcher = DROP_INDEX_PATTERN.matcher(convertedText);
     if (dropIndexMatcher.find()) {
       convertedText = dropIndexMatcher.replaceAll(
-          "ALTER TABLE `" + tableName + "` DROP INDEX `" + tableName + "_${indexName}`;");
+          "\nALTER TABLE `" + tableName + "` DROP INDEX `" + tableName + "_${indexName}`;");
     }
     return convertedText;
   }
