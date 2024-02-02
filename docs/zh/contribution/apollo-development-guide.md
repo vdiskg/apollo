@@ -104,7 +104,7 @@ mysql 数据库初始化脚本见 本项目 scripts/sql/profiles/mysql-default �
 
 为了更好的开发和调试，一般我们都会自己创建一个demo项目给自己使用。
 
-可以参考[一、普通应用接入指南](zh/usage/apollo-user-guide#一、普通应用接入指南)创建自己的demo项目。
+可以参考[一、普通应用接入指南](zh/portal/apollo-user-guide#一、普通应用接入指南)创建自己的demo项目。
 
 ## 2.2 Java样例客户端启动
 
@@ -123,7 +123,7 @@ mysql 数据库初始化脚本见 本项目 scripts/sql/profiles/mysql-default �
 
 > 对于公共Namespace的配置，没有AppId也可以获取到配置，但是就失去了应用覆盖公共Namespace配置的能力。
 
-> 更多配置AppId的方式可以参考[1.2.1 AppId](zh/usage/java-sdk-user-guide#_121-appid)
+> 更多配置AppId的方式可以参考[1.2.1 AppId](zh/client/java-sdk-user-guide#_121-appid)
 
 ### 2.2.2 新建运行配置
 ![NewConfiguration-Application](https://cdn.jsdelivr.net/gh/apolloconfig/apollo@master/doc/images/local-development/NewConfiguration-Application.png)
@@ -138,7 +138,7 @@ mysql 数据库初始化脚本见 本项目 scripts/sql/profiles/mysql-default �
 
 > 注：这里当前环境的meta server地址为`http://localhost:8080`，也就是`apollo-configservice`的地址。
 
-> 更多配置Apollo Meta Server的方式可以参考[1.2.2 Apollo Meta Server](zh/usage/java-sdk-user-guide#_122-apollo-meta-server)
+> 更多配置Apollo Meta Server的方式可以参考[1.2.2 Apollo Meta Server](zh/client/java-sdk-user-guide#_122-apollo-meta-server)
 
 ### 2.2.5 概览
 
@@ -212,12 +212,12 @@ Apollo客户端针对不同的环境会从不同的服务器获取配置，所�
 
 ## 3.1 Portal 实现用户登录功能
 
-请参考[Portal 实现用户登录功能](zh/development/portal-how-to-implement-user-login-function)
+请参考[Portal 实现用户登录功能](zh/extension/portal-how-to-implement-user-login-function)
 
 ## 3.2 Portal 接入邮件服务
 
-请参考[Portal 接入邮件服务](zh/development/portal-how-to-enable-email-service)
+请参考[Portal 接入邮件服务](zh/extension/portal-how-to-enable-email-service)
 
 ## 3.3 Portal 集群部署时共享 session
 
-请参考[Portal 共享 session](zh/development/portal-how-to-enable-session-store)
+请参考[Portal 共享 session](zh/extension/portal-how-to-enable-session-store)
