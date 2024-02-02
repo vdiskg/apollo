@@ -26,7 +26,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 public class AdminServiceAssemblyConfiguration {
 
-  @Order(99)
+  @Order(100)
   @Configuration
   static class AdminServiceSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
