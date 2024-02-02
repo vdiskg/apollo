@@ -132,7 +132,7 @@ public class ApolloH2ConverterUtil {
   }
 
   private static final Pattern INDEX_NAME_PATTERN = Pattern.compile(
-      "KEY\\s*(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?", Pattern.CASE_INSENSITIVE);
+      "(KEY\\s*`|KEY\\s+)(?<indexName>[a-zA-Z0-9\\-_]+)(`)?", Pattern.CASE_INSENSITIVE);
 
   private static String convertIndexWithTable(String convertedText, String tableName,
       SqlStatement sqlStatement) {
@@ -140,7 +140,7 @@ public class ApolloH2ConverterUtil {
     StringJoiner joiner = new StringJoiner("\n");
     for (String line : lines) {
       String convertedLine = line;
-      if (convertedLine.contains("KEY")) {
+      if (convertedLine.contains("KEY") || convertedLine.contains("key")) {
         // replace index name
         // KEY `AppId_ClusterName_GroupName` (`AppId`,`ClusterName`(191),`NamespaceName`(191))
         // ->
