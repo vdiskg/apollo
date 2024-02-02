@@ -132,7 +132,16 @@ public class ApolloH2ConverterUtil {
   }
 
   private static final Pattern INDEX_NAME_PATTERN = Pattern.compile(
-      "(KEY\\s*`|KEY\\s+)(?<indexName>[a-zA-Z0-9\\-_]+)(`)?", Pattern.CASE_INSENSITIVE);
+      // KEY `AppId_ClusterName_GroupName`
+      "(KEY\\s*`|KEY\\s+)(?<indexName>[a-zA-Z0-9\\-_]+)(`)?\\s*"
+          // (`AppId`,`ClusterName`(191),`NamespaceName`(191))
+          + "\\((?<indexColumns>"
+          + "(`)?[a-zA-Z0-9\\-_]+(`)?\\s*(\\([0-9]+\\))?"
+          + "(,"
+          + "(`)?[a-zA-Z0-9\\-_]+(`)?\\s*(\\([0-9]+\\))?"
+          + ")*"
+          + ")\\)",
+      Pattern.CASE_INSENSITIVE);
 
   private static String convertIndexWithTable(String convertedText, String tableName,
       SqlStatement sqlStatement) {
@@ -147,7 +156,8 @@ public class ApolloH2ConverterUtil {
         // KEY `tableName_AppId_ClusterName_GroupName` (`AppId`,`ClusterName`(191),`NamespaceName`(191))
         Matcher indexNameMatcher = INDEX_NAME_PATTERN.matcher(convertedLine);
         if (indexNameMatcher.find()) {
-          convertedLine = indexNameMatcher.replaceAll("KEY `" + tableName + "_${indexName}`");
+          convertedLine = indexNameMatcher.replaceAll(
+              "KEY `" + tableName + "_${indexName}` (${indexColumns})");
         }
         convertedLine = removePrefixIndex(convertedLine);
       }
@@ -203,7 +213,8 @@ public class ApolloH2ConverterUtil {
       "\\s*ADD\\s+(?<indexType>(UNIQUE\\s+)?INDEX)\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?(?<subStatement>.*)[,;]",
       Pattern.CASE_INSENSITIVE);
   private static final Pattern DROP_INDEX_PATTERN = Pattern.compile(
-      "\\s*DROP\\s+INDEX\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?\\s*[,;]", Pattern.CASE_INSENSITIVE);
+      "\\s*DROP\\s+INDEX\\s+(`)?(?<indexName>[a-zA-Z0-9\\-_]+)(`)?\\s*[,;]",
+      Pattern.CASE_INSENSITIVE);
 
   private static String convertAlterTableMulti(String convertedText, SqlStatement sqlStatement,
       String tableName) {
