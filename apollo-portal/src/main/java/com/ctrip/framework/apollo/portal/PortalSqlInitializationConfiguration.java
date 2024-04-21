@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package com.ctrip.framework.apollo.configservice;
+package com.ctrip.framework.apollo.portal;
 
 import com.ctrip.framework.apollo.common.datasource.ApolloDataSourceScriptDatabaseInitializer;
 import com.ctrip.framework.apollo.common.datasource.ApolloDataSourceScriptDatabaseInitializerFactory;
@@ -23,13 +23,11 @@ import javax.sql.DataSource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
-@Profile("assembly")
 @Configuration
-public class ConfigServiceAssemblyConfiguration {
+public class PortalSqlInitializationConfiguration {
 
-  @ConfigurationProperties(prefix = "spring.sql.config-init")
+  @ConfigurationProperties(prefix = "spring.sql.portal-init")
   @Bean
   public static ApolloSqlInitializationProperties apolloSqlInitializationProperties() {
     return new ApolloSqlInitializationProperties();

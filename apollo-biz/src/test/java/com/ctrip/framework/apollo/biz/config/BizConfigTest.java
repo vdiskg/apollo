@@ -16,23 +16,22 @@
  */
 package com.ctrip.framework.apollo.biz.config;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
 import com.ctrip.framework.apollo.biz.repository.ServerConfigRepository;
 import com.ctrip.framework.apollo.biz.service.BizDBPropertySource;
+import javax.sql.DataSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.cloud.loadbalancer.support.SimpleObjectProvider;
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import javax.sql.DataSource;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Jason Song(song_s@ctrip.com)
@@ -52,7 +51,9 @@ public class BizConfigTest {
 
   @Before
   public void setUp() throws Exception {
-    bizConfig = new BizConfig(new BizDBPropertySource(serverConfigRepository, dataSource, environment));
+    bizConfig = new BizConfig(
+        new BizDBPropertySource(serverConfigRepository, dataSource, environment,
+            new SimpleObjectProvider<>(null)));
     ReflectionTestUtils.setField(bizConfig, "environment", environment);
   }
 

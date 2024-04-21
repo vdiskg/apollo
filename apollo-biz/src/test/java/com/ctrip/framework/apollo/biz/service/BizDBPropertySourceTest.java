@@ -16,27 +16,25 @@
  */
 package com.ctrip.framework.apollo.biz.service;
 
-import com.google.common.collect.Lists;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import com.ctrip.framework.apollo.biz.AbstractUnitTest;
 import com.ctrip.framework.apollo.biz.MockBeanFactory;
 import com.ctrip.framework.apollo.biz.entity.ServerConfig;
 import com.ctrip.framework.apollo.biz.repository.ServerConfigRepository;
 import com.ctrip.framework.apollo.core.ConfigConsts;
-
+import com.google.common.collect.Lists;
+import java.util.List;
+import javax.sql.DataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.cloud.loadbalancer.support.SimpleObjectProvider;
 import org.springframework.core.env.Environment;
-
-import javax.sql.DataSource;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Jason Song(song_s@ctrip.com)
@@ -63,7 +61,8 @@ public class BizDBPropertySourceTest extends AbstractUnitTest {
 
   @Before
   public void initTestData() {
-    propertySource = spy(new BizDBPropertySource(serverConfigRepository, dataSource, environment));
+    propertySource = spy(new BizDBPropertySource(serverConfigRepository, dataSource, environment,
+        new SimpleObjectProvider<>(null)));
 
     List<ServerConfig> configs = Lists.newLinkedList();
 

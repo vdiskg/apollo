@@ -16,10 +16,6 @@
  */
 package com.ctrip.framework.apollo.portal;
 
-import com.ctrip.framework.apollo.common.datasource.ApolloDataSourceScriptDatabaseInitializer;
-import com.ctrip.framework.apollo.common.datasource.ApolloDataSourceScriptDatabaseInitializerFactory;
-import com.ctrip.framework.apollo.common.datasource.ApolloSqlInitializationProperties;
-import javax.sql.DataSource;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -36,18 +32,5 @@ public class PortalAssemblyConfiguration {
   @Bean
   public static DataSourceProperties dataSourceProperties() {
     return new DataSourceProperties();
-  }
-
-  @ConfigurationProperties(prefix = "spring.sql.portal-init")
-  @Bean
-  public static ApolloSqlInitializationProperties apolloSqlInitializationProperties() {
-    return new ApolloSqlInitializationProperties();
-  }
-
-  @Bean
-  public static ApolloDataSourceScriptDatabaseInitializer apolloDataSourceScriptDatabaseInitializer(
-      DataSource dataSource,
-      ApolloSqlInitializationProperties properties) {
-    return ApolloDataSourceScriptDatabaseInitializerFactory.create(dataSource, properties);
   }
 }
